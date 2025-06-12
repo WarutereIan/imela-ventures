@@ -64,7 +64,7 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden ml-auto">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-700 hover:text-white p-2"

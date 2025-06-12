@@ -41,19 +41,25 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
           {/* Desktop Navigation - Centered and Spread Out */}
           <div className="hidden md:flex flex-1 justify-center">
             <div className="flex justify-between max-w-4xl w-full px-8">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleNavClick(item.id)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    activeSection === item.id
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleNavClick(item.id)}
+                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                  activeSection === item.id
+                    ? 'font-semibold'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+                style={activeSection === item.id ? { 
+                  backgroundColor: '#E6F7F6', 
+                  color: '#3AAFA9' 
+                } : undefined}
+                onMouseEnter={activeSection !== item.id ? (e) => e.currentTarget.style.color = '#3AAFA9' : undefined}
+                onMouseLeave={activeSection !== item.id ? (e) => e.currentTarget.style.color = '#374151' : undefined}
+              >
+                {item.label}
+              </button>
+            ))}
             </div>
           </div>
 
@@ -61,7 +67,9 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-blue-600 p-2"
+              className="text-gray-700 hover:text-white p-2"
+              onMouseEnter={(e) => e.currentTarget.style.color = '#3AAFA9'}
+              onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -78,9 +86,15 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
                   onClick={() => handleNavClick(item.id)}
                   className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 ${
                     activeSection === item.id
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
+                      ? 'font-semibold'
+                      : 'text-gray-700 hover:bg-gray-50'
                   }`}
+                  style={activeSection === item.id ? { 
+                    backgroundColor: '#E6F7F6', 
+                    color: '#3AAFA9' 
+                  } : undefined}
+                  onMouseEnter={activeSection !== item.id ? (e) => e.currentTarget.style.color = '#3AAFA9' : undefined}
+                  onMouseLeave={activeSection !== item.id ? (e) => e.currentTarget.style.color = '#374151' : undefined}
                 >
                   {item.label}
                 </button>

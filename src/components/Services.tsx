@@ -158,26 +158,31 @@ const Services: React.FC = () => {
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{ transform: `translateX(-${currentSlide * 100}%)` }}
               >
-                {services.map((service, index) => (
+          {services.map((service, index) => (
                   <div key={index} className="w-full flex-shrink-0 px-4">
                     <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-4 hover:shadow-xl transition-shadow duration-300 h-full">
                       <div className={`inline-flex p-2 rounded-lg ${getColorClasses(service.color)} mb-3`}>
-                        {service.icon}
-                      </div>
-                      
+                {service.icon}
+              </div>
+              
                       <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
                       <p className="text-gray-600 mb-4 text-sm leading-relaxed">{service.description}</p>
-                      
+              
                       <div className="space-y-2 mb-4">
-                        {service.features.map((feature, i) => (
+                {service.features.map((feature, i) => (
                           <div key={i} className="flex items-center text-xs text-gray-600">
-                            <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
-                            {feature}
-                          </div>
-                        ))}
-                      </div>
-                      
-                      <button className="w-full bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 text-sm">
+                            <div className="w-1.5 h-1.5 rounded-full mr-2" style={{ backgroundColor: '#3AAFA9' }}></div>
+                    {feature}
+                  </div>
+                ))}
+              </div>
+              
+                      <button 
+                        className="w-full text-white py-2.5 rounded-lg font-semibold transition-colors duration-200 text-sm" 
+                        style={{ backgroundColor: '#3AAFA9' }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                      >
                         Learn More
                       </button>
                     </div>
@@ -195,11 +200,12 @@ const Services: React.FC = () => {
                 onClick={() => goToSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-200 ${
                   currentSlide === index 
-                    ? 'bg-blue-600 scale-110' 
+                    ? 'bg-gray-200'
                     : 'bg-gray-300 hover:bg-gray-400'
                 }`}
-              />
-            ))}
+                style={{ backgroundColor: currentSlide === index ? '#3AAFA9' : undefined }}
+              ></button>
+          ))}
           </div>
         </div>
 
@@ -215,7 +221,7 @@ const Services: React.FC = () => {
           <div className="grid md:grid-cols-4 gap-4">
             {values.map((value, index) => (
               <div key={index} className="bg-white rounded-lg p-4 text-center shadow-md hover:shadow-lg transition-shadow duration-300">
-                <div className="text-blue-600 mb-3 flex justify-center">
+                <div className="text-gray-600 mb-3 flex justify-center">
                   {value.icon}
                 </div>
                 <h4 className="text-lg font-bold text-gray-900 mb-2">{value.title}</h4>
@@ -227,12 +233,17 @@ const Services: React.FC = () => {
 
         {/* CTA Section */}
         <div className="text-center mt-10">
-          <div className="bg-blue-600 rounded-xl p-6 text-white">
+          <div className="rounded-xl p-6 text-white" style={{ backgroundColor: '#3AAFA9' }}>
             <h3 className="text-2xl font-bold mb-3">Ready to Transform Your Organization?</h3>
             <p className="text-lg mb-4 opacity-90">
               Invest in mental health and well-being to create a fulfilling and productive future for your organization.
             </p>
-            <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+            <button 
+              className="px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+              style={{ backgroundColor: 'white', color: '#3AAFA9' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+            >
               Schedule a Consultation
             </button>
           </div>

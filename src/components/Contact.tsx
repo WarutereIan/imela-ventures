@@ -47,7 +47,10 @@ const Contact: React.FC = () => {
           </p>
           <button 
             onClick={() => setIsSubmitted(false)}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+            className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+            style={{ backgroundColor: '#3AAFA9' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
           >
             Send Another Message
           </button>
@@ -176,7 +179,10 @@ const Contact: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center"
+                className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                style={{ backgroundColor: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
               >
                 <Send className="h-4 w-4 mr-2" />
                 Send Message
@@ -191,25 +197,25 @@ const Contact: React.FC = () => {
           {/* Contact Information */}
           <div className="space-y-6">
             {/* Contact Details */}
-            <div className="bg-blue-50 rounded-xl p-5">
+            <div className="rounded-xl p-5" style={{ backgroundColor: '#E6F7F6' }}>
               <h3 className="text-lg font-bold text-gray-900 mb-4">Contact Information</h3>
               <div className="space-y-4">
                 <div className="flex items-start">
-                  <MapPin className="h-5 w-5 text-blue-600 mr-3 mt-1" />
+                  <MapPin className="h-5 w-5 mr-3 mt-1" style={{ color: '#3AAFA9' }} />
                   <div>
                     <p className="font-medium text-gray-900 text-sm">Nairobi, Kenya</p>
                     <p className="text-gray-600 text-xs">Serving organizations across Kenya and East Africa</p>
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Mail className="h-5 w-5 text-blue-600 mr-3" />
+                  <Mail className="h-5 w-5 mr-3" style={{ color: '#3AAFA9' }} />
                   <div>
                     <p className="font-medium text-gray-900 text-sm">info@imelaventures.com</p>
                     <p className="text-xs text-gray-600">Email for inquiries and consultations</p>
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <Phone className="h-5 w-5 text-blue-600 mr-3" />
+                  <Phone className="h-5 w-5 mr-3" style={{ color: '#3AAFA9' }} />
                   <div>
                     <p className="font-medium text-gray-900 text-sm">+254 xxx xxx xxx</p>
                     <p className="text-xs text-gray-600">Call for immediate assistance</p>
@@ -254,14 +260,19 @@ const Contact: React.FC = () => {
             </div>
 
             {/* Call to Action */}
-            <div className="bg-blue-600 rounded-xl p-5 text-white text-center">
+            <div className="rounded-xl p-5 text-white text-center" style={{ backgroundColor: '#3AAFA9' }}>
               <h4 className="text-lg font-bold mb-2">
                 Ready to Transform Your Organization?
               </h4>
               <p className="mb-3 opacity-90 text-sm">
                 Let's discuss how we can help enhance your employee well-being and leadership capabilities.
               </p>
-              <button className="bg-white text-blue-600 px-5 py-2.5 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200 text-sm">
+              <button 
+                className="px-5 py-2.5 rounded-lg font-semibold transition-colors duration-200 text-sm"
+                style={{ backgroundColor: 'white', color: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+              >
                 Schedule Free Consultation
               </button>
             </div>

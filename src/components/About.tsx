@@ -53,7 +53,7 @@ const About: React.FC = () => {
               />
               <div className="absolute -bottom-3 -right-3 bg-white p-4 rounded-lg shadow-lg">
                 <div className="text-center">
-                  <MapPin className="h-6 w-6 text-blue-600 mx-auto mb-1" />
+                  <MapPin className="h-6 w-6 mx-auto mb-1" style={{ color: '#3AAFA9' }} />
                   <div className="text-xs text-gray-600">Nairobi, Kenya</div>
                 </div>
               </div>
@@ -64,7 +64,7 @@ const About: React.FC = () => {
           <div className="space-y-6">
             {/* Mission & Vision */}
             <div className="grid gap-4">
-              <div className="bg-blue-50 rounded-lg p-4 border-2 border-blue-200 shadow-md">
+              <div className="rounded-lg p-4 border-2 shadow-md" style={{ backgroundColor: '#E6F7F6', borderColor: '#3AAFA9' }}>
                 <h3 className="text-lg font-extrabold text-gray-900 mb-2">{mission.title}</h3>
                 <p className="text-gray-700 leading-relaxed text-sm font-medium">{mission.description}</p>
               </div>
@@ -114,7 +114,12 @@ const About: React.FC = () => {
                 provide employees with a safe and confidential space to address emotional challenges, 
                 work-life balance, and personal growth.
               </p>
-              <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold hover:bg-blue-700 transition-colors duration-200 text-sm shadow-md">
+              <button 
+                className="text-white px-5 py-2.5 rounded-lg font-bold transition-colors duration-200 text-sm shadow-md"
+                style={{ backgroundColor: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+              >
                 Learn About Our Services
               </button>
             </div>

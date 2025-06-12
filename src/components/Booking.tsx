@@ -322,7 +322,10 @@ const Booking: React.FC = () => {
                 additionalInfo: ''
               });
             }}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+            className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+            style={{ backgroundColor: '#3AAFA9' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
           >
             Book Another Session
           </button>
@@ -350,14 +353,16 @@ const Booking: React.FC = () => {
             {[1, 2, 3, 4].map((stepNumber) => (
               <div key={stepNumber} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                  step >= stepNumber ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600'
-                }`}>
+                  step >= stepNumber ? 'text-white' : 'text-gray-600'
+                }`}
+                style={{ backgroundColor: step >= stepNumber ? '#3AAFA9' : '#d1d5db' }}>
                   {stepNumber}
                 </div>
                 {stepNumber < 4 && (
-                  <div className={`w-12 h-1 mx-2 ${
-                    step > stepNumber ? 'bg-blue-600' : 'bg-gray-300'
-                  }`}></div>
+                  <div className={`flex-1 h-1 rounded ${
+                    step > stepNumber ? '' : 'bg-gray-300'
+                  }`}
+                  style={{ backgroundColor: step > stepNumber ? '#3AAFA9' : undefined }}></div>
                 )}
               </div>
             ))}
@@ -375,9 +380,10 @@ const Booking: React.FC = () => {
                     key={service.id}
                     className={`border-2 rounded-lg p-6 cursor-pointer transition-colors duration-200 ${
                       selectedService === service.id
-                        ? 'border-blue-600 bg-blue-50'
-                        : 'border-gray-200 hover:border-blue-300'
+                                              ? 'text-white'
+                      : 'border-gray-200 hover:border-gray-300'
                     }`}
+                    style={selectedService === service.id ? { backgroundColor: '#3AAFA9', borderColor: '#3AAFA9' } : undefined}
                     onClick={() => setSelectedService(service.id)}
                   >
                     <div className="flex justify-between items-start mb-3">
@@ -443,12 +449,13 @@ const Booking: React.FC = () => {
                           ${!day.isCurrentMonth ? 'text-gray-300' : ''}
                           ${day.isPast ? 'text-gray-400 cursor-not-allowed' : ''}
                           ${day.isToday ? 'font-bold' : ''}
-                          ${isSelected ? 'bg-blue-600 text-white' : ''}
-                          ${canSelect && !isSelected ? 'hover:bg-blue-100 text-gray-900' : ''}
+                          ${isSelected ? 'text-white' : ''}
+                          ${canSelect && !isSelected ? 'hover:bg-gray-100 text-gray-900' : ''}
                           ${day.status === 'unavailable' ? 'text-gray-400 cursor-not-allowed' : ''}
                           ${day.status === 'partially-booked' && !isSelected ? 'bg-yellow-100 text-yellow-800' : ''}
                           ${day.status === 'available' && !isSelected ? 'bg-green-100 text-green-800' : ''}
                         `}
+                        style={isSelected ? { backgroundColor: '#3AAFA9' } : undefined}
                       >
                         <span>{day.date.getDate()}</span>
                         {/* Status indicator dots */}
@@ -482,10 +489,10 @@ const Booking: React.FC = () => {
 
               {/* Selected date info */}
               {selectedDate && (
-                <div className="bg-blue-50 p-4 rounded-lg">
+                <div className="p-4 rounded-lg" style={{ backgroundColor: '#E6F7F6' }}>
                   <div className="flex items-center">
-                    <Calendar className="h-5 w-5 text-blue-600 mr-2" />
-                    <span className="font-medium text-blue-900">
+                    <Calendar className="h-5 w-5 mr-2" style={{ color: '#3AAFA9' }} />
+                                          <span className="font-medium" style={{ color: '#2D5A58' }}>
                       Selected: {new Date(selectedDate).toLocaleDateString('en-US', { 
                         weekday: 'long', 
                         year: 'numeric', 
@@ -494,7 +501,7 @@ const Booking: React.FC = () => {
                       })}
                     </span>
                   </div>
-                  <div className="text-sm text-blue-700 mt-1">
+                                      <div className="text-sm mt-1" style={{ color: '#2D5A58' }}>
                     {getAvailableTimeSlotsForDate(selectedDate).length} time slots available
                   </div>
                 </div>
@@ -534,16 +541,18 @@ const Booking: React.FC = () => {
                       disabled={!isAvailable}
                       className={`p-4 rounded-lg border-2 transition-colors duration-200 relative ${
                         isSelected
-                          ? 'border-blue-600 bg-blue-50 text-blue-600'
+                          ? 'text-white'
                           : isAvailable
-                          ? 'border-gray-200 hover:border-blue-300 text-gray-900'
+                                                      ? 'border-gray-200 hover:border-gray-300 text-gray-900'
                           : 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
-                      }`}
-                      onClick={() => isAvailable ? setSelectedTime(time) : null}
+                                              }`}
+                        style={isSelected ? { backgroundColor: '#3AAFA9', borderColor: '#3AAFA9' } : undefined}
+                        onClick={() => isAvailable ? setSelectedTime(time) : null}
                     >
                       <Clock className={`h-5 w-5 mx-auto mb-2 ${
-                        isSelected ? 'text-blue-600' : isAvailable ? 'text-gray-600' : 'text-gray-400'
-                      }`} />
+                        isSelected ? '' : isAvailable ? 'text-gray-600' : 'text-gray-400'
+                      }`} 
+                      style={{ color: isSelected ? 'white' : undefined }} />
                       <div className="text-sm font-medium">{time}</div>
                       {!isAvailable && (
                         <div className="absolute inset-0 flex items-center justify-center">
@@ -565,7 +574,10 @@ const Booking: React.FC = () => {
                   </div>
                   <button
                     onClick={() => setStep(2)}
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                    className="text-white px-6 py-2 rounded-lg transition-colors duration-200"
+                    style={{ backgroundColor: '#3AAFA9' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
                   >
                     Choose Different Date
                   </button>
@@ -685,7 +697,10 @@ const Booking: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors duration-200"
+                  className="w-full text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
+                  style={{ backgroundColor: '#3AAFA9' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
                 >
                   Confirm Booking
                 </button>
@@ -721,10 +736,25 @@ const Booking: React.FC = () => {
                   (step === 2 && !selectedDate) ||
                   (step === 3 && !selectedTime)
                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
-              >
-                Next
+                    : 'text-white'
+                                  }`}
+                  style={
+                    !((step === 1 && !selectedService) ||
+                    (step === 2 && !selectedDate) ||
+                    (step === 3 && !selectedTime)) ? { backgroundColor: '#3AAFA9' } : undefined
+                  }
+                  onMouseEnter={
+                    !((step === 1 && !selectedService) ||
+                    (step === 2 && !selectedDate) ||
+                    (step === 3 && !selectedTime)) ? (e) => e.currentTarget.style.backgroundColor = '#339B95' : undefined
+                  }
+                  onMouseLeave={
+                    !((step === 1 && !selectedService) ||
+                    (step === 2 && !selectedDate) ||
+                    (step === 3 && !selectedTime)) ? (e) => e.currentTarget.style.backgroundColor = '#3AAFA9' : undefined
+                  }
+                >
+                  Next
                 <ArrowRight className="h-5 w-5 ml-2" />
               </button>
             )}
@@ -733,7 +763,7 @@ const Booking: React.FC = () => {
 
         {/* Contact Info */}
         <div className="text-center mt-8 text-gray-600">
-          <p>Need help? Contact us at <a href="tel:+254721803569" className="text-blue-600 hover:underline">+254 721 803 569</a></p>
+          <p>Need help? Contact us at <a href="tel:+254721803569" className="text-blue-600 hover:underline" style={{ color: '#3AAFA9' }}>+254 721 803 569</a></p>
         </div>
       </div>
     </section>

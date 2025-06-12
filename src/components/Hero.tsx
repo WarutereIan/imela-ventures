@@ -11,7 +11,7 @@ const Hero: React.FC = () => {
             <div className="space-y-3">
               <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 leading-tight">
                 Professional Therapy
-                <span className="text-blue-600 block">& Counseling Services</span>
+                <span className="text-[#3AAFA9] block">& Counseling Services</span>
                 for Individuals & Organizations
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed">
@@ -23,7 +23,7 @@ const Hero: React.FC = () => {
             {/* Value Props */}
             <div className="grid grid-cols-3 gap-4 py-4">
               <div className="text-center">
-                <Users className="h-6 w-6 text-blue-600 mx-auto mb-1.5" />
+                <Users className="h-6 w-6 mx-auto mb-1.5" style={{ color: '#3AAFA9' }} />
                 <div className="text-xs text-gray-600">Individual Therapy</div>
               </div>
               <div className="text-center">
@@ -40,7 +40,10 @@ const Hero: React.FC = () => {
             <div className="flex flex-col sm:flex-row gap-3">
               <button 
                 onClick={() => window.scrollTo({ top: document.getElementById('client-groups')?.offsetTop || 0, behavior: 'smooth' })}
-                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center group"
+                className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center group"
+                style={{ backgroundColor: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
               >
                 Explore Our Services
                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
@@ -50,7 +53,16 @@ const Hero: React.FC = () => {
                   const event = new CustomEvent('navigate', { detail: 'booking' });
                   window.dispatchEvent(event);
                 }}
-                className="border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:border-blue-600 hover:text-blue-600 transition-colors duration-200 flex items-center justify-center"
+                className="border-2 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center"
+                style={{ borderColor: '#d1d5db' }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#3AAFA9';
+                  e.currentTarget.style.color = '#3AAFA9';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#d1d5db';
+                  e.currentTarget.style.color = '#374151';
+                }}
               >
                 <Phone className="h-4 w-4 mr-2" />
                 Book Session
@@ -85,7 +97,7 @@ const Hero: React.FC = () => {
             </div>
             {/* Floating elements */}
             <div className="absolute -top-2 -right-2 bg-white p-3 rounded-lg shadow-lg">
-              <div className="text-lg font-bold text-blue-600">100%</div>
+              <div className="text-lg font-bold" style={{ color: '#3AAFA9' }}>100%</div>
               <div className="text-xs text-gray-600">Confidential</div>
             </div>
             <div className="absolute -bottom-2 -left-2 bg-white p-3 rounded-lg shadow-lg">

@@ -152,7 +152,7 @@ const MemberPortal: React.FC = () => {
         <div className="max-w-md mx-auto px-4">
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <div className="text-center mb-8">
-              <Lock className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+              <Lock className="h-12 w-12 mx-auto mb-4" style={{ color: '#3AAFA9' }} />
               <h2 className="text-3xl font-bold text-gray-900 mb-2">Member Portal</h2>
               <p className="text-gray-600">Access exclusive content and resources</p>
             </div>
@@ -190,7 +190,10 @@ const MemberPortal: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200"
+                className="w-full text-white py-3 rounded-lg font-semibold transition-colors duration-200"
+                style={{ backgroundColor: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
               >
                 Sign In
               </button>
@@ -199,7 +202,7 @@ const MemberPortal: React.FC = () => {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Don't have access? 
-                <a href="#contact" className="text-blue-600 hover:underline ml-1">Contact us</a>
+                <a href="#contact" className="hover:underline ml-1" style={{ color: '#3AAFA9' }}>Contact us</a>
               </p>
             </div>
 
@@ -208,19 +211,19 @@ const MemberPortal: React.FC = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">What's Inside:</h3>
               <div className="space-y-3">
                 <div className="flex items-center text-sm text-gray-600">
-                  <Video className="h-4 w-4 mr-3 text-blue-600" />
+                  <Video className="h-4 w-4 mr-3" style={{ color: '#3AAFA9' }} />
                   Exclusive therapy videos and workshops
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
-                  <BookOpen className="h-4 w-4 mr-3 text-blue-600" />
+                  <BookOpen className="h-4 w-4 mr-3" style={{ color: '#3AAFA9' }} />
                   Downloadable worksheets and tools
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
-                  <Users className="h-4 w-4 mr-3 text-blue-600" />
+                  <Users className="h-4 w-4 mr-3" style={{ color: '#3AAFA9' }} />
                   Live webinars and group sessions
                 </div>
                 <div className="flex items-center text-sm text-gray-600">
-                  <User className="h-4 w-4 mr-3 text-blue-600" />
+                  <User className="h-4 w-4 mr-3" style={{ color: '#3AAFA9' }} />
                   Personalized resources
                 </div>
               </div>
@@ -251,18 +254,19 @@ const MemberPortal: React.FC = () => {
         {/* Navigation Tabs */}
         <div className="flex space-x-1 mb-8">
           {[
-            { id: 'videos', label: 'Videos', icon: <Video className="h-5 w-5" /> },
-            { id: 'worksheets', label: 'Worksheets', icon: <BookOpen className="h-5 w-5" /> },
-            { id: 'webinars', label: 'Webinars', icon: <Users className="h-5 w-5" /> }
+            { id: 'videos', label: 'Videos', icon: <Video className="h-5 w-5" style={{ color: '#3AAFA9' }} /> },
+            { id: 'worksheets', label: 'Worksheets', icon: <BookOpen className="h-5 w-5" style={{ color: '#3AAFA9' }} /> },
+            { id: 'webinars', label: 'Webinars', icon: <Users className="h-5 w-5" style={{ color: '#3AAFA9' }} /> }
           ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 ${
                 activeTab === tab.id
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white text-gray-700 hover:bg-gray-100'
+                  ? 'text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
               }`}
+              style={activeTab === tab.id ? { backgroundColor: '#3AAFA9' } : undefined}
             >
               {tab.icon}
               <span>{tab.label}</span>
@@ -319,7 +323,7 @@ const MemberPortal: React.FC = () => {
                 
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-blue-600 font-semibold uppercase">{video.category}</span>
+                    <span className="text-xs font-semibold uppercase" style={{ color: '#3AAFA9' }}>{video.category}</span>
                     <div className="flex items-center">
                       <Star className="h-4 w-4 text-yellow-400 fill-current" />
                       <span className="text-sm text-gray-600 ml-1">{video.rating}</span>
@@ -334,7 +338,12 @@ const MemberPortal: React.FC = () => {
                     <span>{video.views} views</span>
                   </div>
                   
-                  <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center">
+                  <button 
+                    className="w-full text-white py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center"
+                    style={{ backgroundColor: '#3AAFA9' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                  >
                     <Play className="h-4 w-4 mr-2" />
                     Watch Now
                   </button>
@@ -349,7 +358,7 @@ const MemberPortal: React.FC = () => {
             {premiumContent.worksheets.map(worksheet => (
               <div key={worksheet.id} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center justify-between mb-4">
-                  <BookOpen className="h-8 w-8 text-blue-600" />
+                  <BookOpen className="h-8 w-8" style={{ color: '#3AAFA9' }} />
                   <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{worksheet.type}</span>
                 </div>
                 
@@ -357,8 +366,13 @@ const MemberPortal: React.FC = () => {
                 <p className="text-gray-600 text-sm mb-4">{worksheet.description}</p>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-blue-600 font-semibold uppercase">{worksheet.category}</span>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center">
+                  <span className="text-xs font-semibold uppercase" style={{ color: '#3AAFA9' }}>{worksheet.category}</span>
+                  <button 
+                    className="text-white px-4 py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center"
+                    style={{ backgroundColor: '#3AAFA9' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                  >
                     <Download className="h-4 w-4 mr-2" />
                     Download
                   </button>
@@ -375,7 +389,7 @@ const MemberPortal: React.FC = () => {
                 <div className="flex flex-col md:flex-row md:items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center mb-2">
-                      <Calendar className="h-5 w-5 text-blue-600 mr-2" />
+                      <Calendar className="h-5 w-5 mr-2" style={{ color: '#3AAFA9' }} />
                       <span className="text-sm text-gray-600">{webinar.date} at {webinar.time}</span>
                     </div>
                     
@@ -386,12 +400,17 @@ const MemberPortal: React.FC = () => {
                       <Users className="h-4 w-4 mr-1" />
                       <span>{webinar.attendees} attendees</span>
                       <span className="mx-2">•</span>
-                      <span className="text-blue-600 font-semibold uppercase">{webinar.category}</span>
+                      <span className="font-semibold uppercase" style={{ color: '#3AAFA9' }}>{webinar.category}</span>
                     </div>
                   </div>
                   
                   <div className="mt-4 md:mt-0 md:ml-6">
-                    <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200">
+                    <button 
+                      className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                      style={{ backgroundColor: '#3AAFA9' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                    >
                       Join Webinar
                     </button>
                   </div>

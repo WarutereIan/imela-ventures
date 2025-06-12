@@ -38,9 +38,21 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
               corporate training to enhance well-being, resilience, and leadership excellence.
             </p>
             <div className="flex space-x-4">
-              <Linkedin className="h-6 w-6 text-gray-400 hover:text-blue-400 cursor-pointer transition-colors duration-200" />
-              <Twitter className="h-6 w-6 text-gray-400 hover:text-blue-400 cursor-pointer transition-colors duration-200" />
-              <Facebook className="h-6 w-6 text-gray-400 hover:text-blue-400 cursor-pointer transition-colors duration-200" />
+              <Linkedin 
+                className="h-6 w-6 text-gray-400 cursor-pointer transition-colors duration-200"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#3AAFA9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+              />
+              <Twitter 
+                className="h-6 w-6 text-gray-400 cursor-pointer transition-colors duration-200"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#3AAFA9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+              />
+              <Facebook 
+                className="h-6 w-6 text-gray-400 cursor-pointer transition-colors duration-200"
+                onMouseEnter={(e) => e.currentTarget.style.color = '#3AAFA9'}
+                onMouseLeave={(e) => e.currentTarget.style.color = '#9ca3af'}
+              />
             </div>
           </div>
 
@@ -52,7 +64,9 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
                 <li key={link.id}>
                   <button
                     onClick={() => setActiveSection(link.id)}
-                    className="text-gray-300 hover:text-white transition-colors duration-200"
+                    className="text-gray-300 transition-colors duration-200"
+                    onMouseEnter={(e) => e.currentTarget.style.color = '#3AAFA9'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = '#d1d5db'}
                   >
                     {link.label}
                   </button>
@@ -78,18 +92,18 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
             <h3 className="text-lg font-semibold mb-6">Contact Information</h3>
             <div className="space-y-4">
               <div className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 text-blue-400 mt-1 flex-shrink-0" />
+                <MapPin className="h-5 w-5 mt-1 flex-shrink-0" style={{ color: '#3AAFA9' }} />
                 <div>
                   <p className="text-gray-300">Nairobi, Kenya</p>
                   <p className="text-gray-400 text-sm">Serving East Africa</p>
                 </div>
               </div>
               <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                <Mail className="h-5 w-5 flex-shrink-0" style={{ color: '#3AAFA9' }} />
                 <p className="text-gray-300">info@imelaventures.com</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-blue-400 flex-shrink-0" />
+                <Phone className="h-5 w-5 flex-shrink-0" style={{ color: '#3AAFA9' }} />
                 <p className="text-gray-300">+254 xxx xxx xxx</p>
               </div>
             </div>
@@ -118,9 +132,9 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
       </div>
 
       {/* Mission Statement */}
-      <div className="bg-blue-900 py-4">
+      <div className="py-4" style={{ backgroundColor: '#2D5A58' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-blue-100 text-sm">
+          <p className="text-center text-sm" style={{ color: '#B8E6E3' }}>
             <strong>Our Mission:</strong> Empowering organizations through psychological counseling and 
             corporate training to enhance employee well-being, resilience, and leadership skills.
           </p>

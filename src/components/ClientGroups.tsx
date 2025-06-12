@@ -104,11 +104,10 @@ const ClientGroups: React.FC = () => {
   const getColorClasses = (color: string) => {
     const colors = {
       blue: {
-        bg: 'bg-blue-50',
-        text: 'text-blue-600',
-        border: 'border-blue-200',
-        button: 'bg-blue-600 hover:bg-blue-700',
-        accent: 'bg-blue-600'
+        bg: '',
+        text: '',
+        button: '',
+        accent: ''
       },
       purple: {
         bg: 'bg-purple-50',
@@ -265,10 +264,25 @@ const ClientGroups: React.FC = () => {
 
                       {/* Action Buttons */}
                       <div className="flex flex-col sm:flex-row gap-2">
-                        <button className={`${getColorClasses(group.color).button} text-white px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors duration-200 flex-1`}>
+                        <button 
+                          className="text-white px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors duration-200 flex-1"
+                          style={{ backgroundColor: '#3AAFA9' }}
+                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                        >
                           Book Session
                         </button>
-                        <button className="border-2 border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg font-semibold text-sm hover:border-blue-600 hover:text-blue-600 transition-colors duration-200 flex-1">
+                        <button 
+                          className="border-2 border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors duration-200 flex-1"
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.borderColor = '#3AAFA9';
+                            e.currentTarget.style.color = '#3AAFA9';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.borderColor = '#d1d5db';
+                            e.currentTarget.style.color = '#374151';
+                          }}
+                        >
                           Learn More
                         </button>
                       </div>
@@ -302,10 +316,11 @@ const ClientGroups: React.FC = () => {
                 onClick={() => goToSlide(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-200 ${
                   index === currentIndex 
-                    ? 'bg-blue-600 scale-125' 
-                    : 'bg-gray-300 hover:bg-gray-400'
-                }`}
-              />
+                                    ? 'scale-125'
+                : 'bg-gray-300 hover:bg-gray-400'
+            }`}
+            style={{ backgroundColor: currentIndex === index ? '#3AAFA9' : undefined }}
+          />
             ))}
           </div>
 
@@ -348,7 +363,12 @@ const ClientGroups: React.FC = () => {
 
                 <p className="text-gray-600 mb-4">{workshop.description}</p>
 
-                <button className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center">
+                <button 
+                className="w-full text-white py-2 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center"
+                style={{ backgroundColor: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+              >
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Workshop
                 </button>
@@ -359,17 +379,32 @@ const ClientGroups: React.FC = () => {
 
         {/* CTA Section */}
         <div className="text-center mt-16">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+          <div className="bg-gradient-to-r rounded-2xl p-8 text-white" style={{ background: 'linear-gradient(to right, #3AAFA9, #8b5cf6)' }}>
             <h3 className="text-3xl font-bold mb-4">Ready to Begin Your Journey?</h3>
             <p className="text-xl mb-6 opacity-90">
               Take the first step towards better mental health and personal growth. 
               Book a consultation today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+              <button 
+                className="px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+                style={{ backgroundColor: 'white', color: '#3AAFA9' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+              >
                 Book Free Consultation
               </button>
-              <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors duration-200">
+              <button 
+                className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold transition-colors duration-200"
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'white';
+                  e.currentTarget.style.color = '#3AAFA9';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = 'white';
+                }}
+              >
                 View All Services
               </button>
             </div>

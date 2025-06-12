@@ -104,7 +104,7 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 flex-shrink-0" style={{ color: '#3AAFA9' }} />
-                <p className="text-gray-300">+254 xxx xxx xxx</p>
+                <p className="text-gray-300">+254 721 803 569</p>
               </div>
             </div>
           </div>

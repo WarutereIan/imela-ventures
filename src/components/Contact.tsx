@@ -217,7 +217,7 @@ const Contact: React.FC = () => {
                 <div className="flex items-center">
                   <Phone className="h-5 w-5 mr-3" style={{ color: '#3AAFA9' }} />
                   <div>
-                    <p className="font-medium text-gray-900 text-sm">+254 xxx xxx xxx</p>
+                    <p className="font-medium text-gray-900 text-sm">+254 721 803 569</p>
                     <p className="text-xs text-gray-600">Call for immediate assistance</p>
                   </div>
                 </div>

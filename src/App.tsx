@@ -6,7 +6,7 @@ import ClientGroups from './components/ClientGroups';
 import About from './components/About';
 import Contact from './components/Contact';
 import Booking from './components/Booking';
-import MemberPortal from './components/MemberPortal';
+import Articles from './components/Articles';
 import Footer from './components/Footer';
 
 function App() {
@@ -15,6 +15,12 @@ function App() {
   useEffect(() => {
     const handleNavigate = (e: CustomEvent) => {
       setActiveSection(e.detail);
+      
+      // Scroll to top of page smoothly when navigating between sections
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     };
 
     window.addEventListener('navigate', handleNavigate as EventListener);
@@ -36,8 +42,8 @@ function App() {
         return <Contact />;
       case 'booking':
         return <Booking />;
-      case 'member-portal':
-        return <MemberPortal />;
+      case 'articles':
+        return <Articles />;
       default:
         return (
           <>

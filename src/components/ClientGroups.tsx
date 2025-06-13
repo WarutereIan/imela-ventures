@@ -1,9 +1,252 @@
-import React, { useState, useEffect } from 'react';
-import { Users, Heart, MessageCircle, Calendar, Shield, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Users, Heart, MessageCircle, Calendar, Shield, CheckCircle, ChevronLeft, ChevronRight, X } from 'lucide-react';
+
+// Custom hook for intersection observer
+const useIntersectionObserver = (options = {}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1, ...options });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, isVisible] as const;
+};
+
+// CSS animations
+const animationStyles = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-left {
+    animation: fadeInLeft 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-right {
+    animation: fadeInRight 0.8s ease-out forwards;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animate-delay-400 {
+    animation-delay: 0.4s;
+  }
+
+  .animate-delay-600 {
+    animation-delay: 0.6s;
+  }
+`;
 
 const ClientGroups: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<any>(null);
+  const [selectedGroupIndex, setSelectedGroupIndex] = useState<number>(-1);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  // Animation refs
+  const [headerRef, isHeaderVisible] = useIntersectionObserver();
+  const [cardsRef, isCardsVisible] = useIntersectionObserver();
+  const [ctaRef, isCtaVisible] = useIntersectionObserver();
+
+  // Inject CSS animations
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = animationStyles;
+    document.head.appendChild(styleElement);
+    
+    return () => {
+      if (document.head.contains(styleElement)) {
+        document.head.removeChild(styleElement);
+      }
+    };
+  }, []);
+
+  // Navigation functions for buttons
+  const handleScheduleWorkshop = () => {
+    // Navigate to booking section with workshop pre-selected
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: 'booking'
+    });
+    window.dispatchEvent(navigateEvent);
+    
+    // Pre-select group workshop service
+    setTimeout(() => {
+      const workshopEvent = new CustomEvent('preSelectConsultation', {
+        detail: { 
+          serviceId: 'group-workshop',
+          consultationFor: null
+        }
+      });
+      window.dispatchEvent(workshopEvent);
+    }, 100);
+  };
+
+  const handleBookFreeConsultation = () => {
+    // Navigate to booking section with consultation pre-selected
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: 'booking'
+    });
+    window.dispatchEvent(navigateEvent);
+    
+    // Pre-select consultation service
+    setTimeout(() => {
+      const consultationEvent = new CustomEvent('preSelectConsultation', {
+        detail: { 
+          serviceId: 'consultation',
+          consultationFor: {
+            title: 'General Consultation',
+            description: 'Initial consultation to discuss your mental health and wellness needs'
+          }
+        }
+      });
+      window.dispatchEvent(consultationEvent);
+    }, 100);
+  };
+
+  const handleViewAllServices = () => {
+    // Navigate to services section
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: 'services'
+    });
+    window.dispatchEvent(navigateEvent);
+  };
+
+  const handleBookSession = (groupType: string) => {
+    // Navigate to booking section
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: 'booking'
+    });
+    window.dispatchEvent(navigateEvent);
+    
+    // Pre-select appropriate service based on group type
+    setTimeout(() => {
+      let serviceId = 'individual-adult'; // default
+      let consultationDetails = null;
+      
+      if (groupType.toLowerCase().includes('teen') || groupType.toLowerCase().includes('adolescent')) {
+        serviceId = 'individual-teen';
+      } else if (groupType.toLowerCase().includes('couple') || groupType.toLowerCase().includes('family')) {
+        serviceId = 'couples-therapy';
+      }
+      
+      const bookingEvent = new CustomEvent('preSelectConsultation', {
+        detail: { 
+          serviceId: serviceId,
+          consultationFor: consultationDetails
+        }
+      });
+      window.dispatchEvent(bookingEvent);
+    }, 100);
+  };
+
+  const handleLearnMore = (groupTitle: string) => {
+    const groupIndex = clientGroups.findIndex(group => group.title === groupTitle);
+    if (groupIndex !== -1) {
+      openModal(clientGroups[groupIndex], groupIndex);
+    }
+  };
+
+  // Modal functions
+  const openModal = (group: any, index: number) => {
+    setSelectedGroup(group);
+    setSelectedGroupIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedGroup(null);
+    setSelectedGroupIndex(-1);
+  };
+
+  const navigateToGroup = (index: number) => {
+    if (index < 0 || index >= clientGroups.length || isTransitioning) return;
+    
+    setIsTransitioning(true);
+    setSelectedGroup(clientGroups[index]);
+    setSelectedGroupIndex(index);
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const navigateToNext = () => {
+    const nextIndex = selectedGroupIndex === clientGroups.length - 1 ? 0 : selectedGroupIndex + 1;
+    navigateToGroup(nextIndex);
+  };
+
+  const navigateToPrevious = () => {
+    const prevIndex = selectedGroupIndex === 0 ? clientGroups.length - 1 : selectedGroupIndex - 1;
+    navigateToGroup(prevIndex);
+  };
+
+  // Handle keyboard navigation
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!isModalOpen || isTransitioning) return;
+      
+      if (e.key === 'ArrowLeft') {
+        navigateToPrevious();
+      } else if (e.key === 'ArrowRight') {
+        navigateToNext();
+      } else if (e.key === 'Escape') {
+        closeModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [isModalOpen, selectedGroupIndex, isTransitioning]);
 
   const clientGroups = [
     {
@@ -27,7 +270,25 @@ const ClientGroups: React.FC = () => {
         'Flexible Scheduling'
       ],
       color: 'blue',
-      image: 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=800'
+      image: 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=800',
+      heroImage: 'https://images.pexels.com/photos/5699456/pexels-photo-5699456.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      sections: [
+        {
+          title: 'Understanding Adult Mental Health',
+          image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'Adult mental health encompasses the emotional, psychological, and social well-being of individuals in their professional and personal lives. Our approach recognizes that adults face unique challenges including career pressures, relationship dynamics, financial stress, and life transitions that require specialized therapeutic interventions.'
+        },
+        {
+          title: 'Our Therapeutic Approach',
+          image: 'https://images.pexels.com/photos/3184394/pexels-photo-3184394.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'We utilize evidence-based therapeutic modalities including Cognitive Behavioral Therapy (CBT), Mindfulness-Based Stress Reduction (MBSR), and Solution-Focused Brief Therapy. Our therapists are trained to address the complex interplay between work stress, personal relationships, and individual well-being.'
+        },
+        {
+          title: 'Common Areas We Address',
+          image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'Work-related stress and burnout, relationship challenges, life transitions (career changes, divorce, loss), anxiety and depression, self-esteem and confidence issues, work-life balance, and personal growth and development. Each session is tailored to your specific needs and goals.'
+        }
+      ]
     },
     {
       icon: <Heart className="h-12 w-12" />,
@@ -50,7 +311,25 @@ const ClientGroups: React.FC = () => {
         'Creative Therapy Methods'
       ],
       color: 'purple',
-      image: 'https://images.pexels.com/photos/5212317/pexels-photo-5212317.jpeg?auto=compress&cs=tinysrgb&w=800'
+      image: 'https://images.pexels.com/photos/5212317/pexels-photo-5212317.jpeg?auto=compress&cs=tinysrgb&w=800',
+      heroImage: 'https://images.pexels.com/photos/5212317/pexels-photo-5212317.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      sections: [
+        {
+          title: 'Understanding Adolescent Development',
+          image: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'Adolescence is a critical period of physical, emotional, and cognitive development. Teenagers face unique challenges including identity formation, peer pressure, academic stress, and family dynamics. Our teen-focused therapy provides a safe space for young people to explore their feelings, develop coping strategies, and build resilience.'
+        },
+        {
+          title: 'Specialized Teen Therapy Techniques',
+          image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'We use age-appropriate therapeutic approaches including art therapy, music therapy, narrative therapy, and cognitive-behavioral techniques adapted for adolescents. Our therapists are specially trained to communicate effectively with teenagers and understand the unique challenges they face in today\'s world.'
+        },
+        {
+          title: 'Common Teen Issues We Address',
+          image: 'https://images.pexels.com/photos/3184418/pexels-photo-3184418.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'Academic pressure and performance anxiety, social media and peer pressure, identity and self-esteem issues, family conflicts and communication problems, depression and anxiety, behavioral challenges, and future planning and career guidance. We also provide support for teens dealing with trauma, grief, or major life changes.'
+        }
+      ]
     },
     {
       icon: <MessageCircle className="h-12 w-12" />,
@@ -73,7 +352,25 @@ const ClientGroups: React.FC = () => {
         'Progress Tracking'
       ],
       color: 'green',
-      image: 'https://images.pexels.com/photos/6146990/pexels-photo-6146990.jpeg?auto=compress&cs=tinysrgb&w=800'
+      image: 'https://images.pexels.com/photos/6146990/pexels-photo-6146990.jpeg?auto=compress&cs=tinysrgb&w=800',
+      heroImage: 'https://images.pexels.com/photos/6146990/pexels-photo-6146990.jpeg?auto=compress&cs=tinysrgb&w=1200',
+      sections: [
+        {
+          title: 'The Foundation of Healthy Relationships',
+          image: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'Strong relationships are built on trust, communication, mutual respect, and emotional intimacy. Our couples therapy approach focuses on helping partners understand each other\'s needs, improve communication patterns, and develop healthy conflict resolution skills. We believe that with the right tools and guidance, couples can overcome challenges and build lasting, fulfilling relationships.'
+        },
+        {
+          title: 'Evidence-Based Couples Therapy',
+          image: 'https://images.pexels.com/photos/3184287/pexels-photo-3184287.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'We utilize proven therapeutic approaches including Emotionally Focused Therapy (EFT), the Gottman Method, and Imago Relationship Therapy. These evidence-based methods help couples identify negative patterns, enhance emotional connection, and develop practical skills for maintaining a healthy relationship long-term.'
+        },
+        {
+          title: 'What We Help Couples With',
+          image: 'https://images.pexels.com/photos/3184431/pexels-photo-3184431.jpeg?auto=compress&cs=tinysrgb&w=600',
+          content: 'Communication breakdowns and frequent arguments, trust issues and infidelity recovery, intimacy and connection challenges, financial stress and disagreements, parenting conflicts and blended family issues, pre-marital preparation and relationship strengthening, separation and divorce counseling, and rebuilding relationships after major life changes or trauma.'
+        }
+      ]
     }
   ];
 
@@ -174,7 +471,7 @@ const ClientGroups: React.FC = () => {
     <section id="client-groups" className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-16">
+        <div ref={headerRef} className={`text-center mb-16 ${isHeaderVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Specialized Therapy Services
           </h2>
@@ -185,7 +482,7 @@ const ClientGroups: React.FC = () => {
         </div>
 
         {/* Client Groups - Full Width Carousel */}
-        <div className="mb-20 relative">
+        <div ref={cardsRef} className={`mb-20 relative ${isCardsVisible ? 'opacity-0 animate-fade-in-up animate-delay-200' : 'opacity-0'}`}>
           {/* Main Carousel Container */}
           <div className="relative overflow-hidden rounded-2xl bg-white shadow-2xl">
             <div 
@@ -269,6 +566,7 @@ const ClientGroups: React.FC = () => {
                           style={{ backgroundColor: '#3AAFA9' }}
                           onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
                           onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                          onClick={() => handleBookSession(group.title)}
                         >
                           Book Session
                         </button>
@@ -282,6 +580,7 @@ const ClientGroups: React.FC = () => {
                             e.currentTarget.style.borderColor = '#d1d5db';
                             e.currentTarget.style.color = '#374151';
                           }}
+                          onClick={() => handleLearnMore(group.title)}
                         >
                           Learn More
                         </button>
@@ -333,7 +632,7 @@ const ClientGroups: React.FC = () => {
         </div>
 
         {/* Workshops Section */}
-        <div className="bg-white rounded-2xl p-8 shadow-lg">
+        <div ref={ctaRef} className={`bg-white rounded-2xl p-8 shadow-lg ${isCtaVisible ? 'opacity-0 animate-fade-in-up animate-delay-400' : 'opacity-0'}`}>
           <div className="text-center mb-8">
             <h3 className="text-3xl font-bold text-gray-900 mb-4">Group Classes & Workshops</h3>
             <p className="text-lg text-gray-600">
@@ -368,6 +667,7 @@ const ClientGroups: React.FC = () => {
                 style={{ backgroundColor: '#3AAFA9' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                onClick={handleScheduleWorkshop}
               >
                   <Calendar className="h-4 w-4 mr-2" />
                   Schedule Workshop
@@ -391,6 +691,7 @@ const ClientGroups: React.FC = () => {
                 style={{ backgroundColor: 'white', color: '#3AAFA9' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f3f4f6'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                onClick={handleBookFreeConsultation}
               >
                 Book Free Consultation
               </button>
@@ -404,12 +705,199 @@ const ClientGroups: React.FC = () => {
                   e.currentTarget.style.backgroundColor = 'transparent';
                   e.currentTarget.style.color = 'white';
                 }}
+                onClick={handleViewAllServices}
               >
                 View All Services
               </button>
             </div>
           </div>
         </div>
+
+        {/* Modal for Group Details */}
+        {isModalOpen && selectedGroup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white sticky top-0 z-10">
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg" style={{ backgroundColor: '#3AAFA9' }}>
+                    {selectedGroup.icon}
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900">{selectedGroup.title} Therapy</h2>
+                    <p className="text-sm text-gray-600">{selectedGroup.subtitle}</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  {/* Previous Button */}
+                  <button
+                    onClick={navigateToPrevious}
+                    disabled={isTransitioning}
+                    className={`p-2 rounded-lg transition-colors duration-200 group ${
+                      isTransitioning 
+                        ? 'bg-gray-50 cursor-not-allowed' 
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                    title="Previous Group (←)"
+                  >
+                    <ChevronLeft className={`h-5 w-5 transition-colors duration-200 ${
+                      isTransitioning 
+                        ? 'text-gray-400' 
+                        : 'text-gray-600 group-hover:text-gray-800'
+                    }`} />
+                  </button>
+                  
+                  {/* Next Button */}
+                  <button
+                    onClick={navigateToNext}
+                    disabled={isTransitioning}
+                    className={`p-2 rounded-lg transition-colors duration-200 group ${
+                      isTransitioning 
+                        ? 'bg-gray-50 cursor-not-allowed' 
+                        : 'bg-gray-100 hover:bg-gray-200'
+                    }`}
+                    title="Next Group (→)"
+                  >
+                    <ChevronRight className={`h-5 w-5 transition-colors duration-200 ${
+                      isTransitioning 
+                        ? 'text-gray-400' 
+                        : 'text-gray-600 group-hover:text-gray-800'
+                    }`} />
+                  </button>
+                  
+                  {/* Close Button */}
+                  <button
+                    onClick={closeModal}
+                    className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors duration-200 group"
+                    title="Close (Esc)"
+                  >
+                    <X className="h-5 w-5 text-gray-600 group-hover:text-gray-800" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="overflow-y-auto max-h-[calc(90vh-80px)]">
+                {/* Hero Section */}
+                <div className="relative h-64 overflow-hidden">
+                  <img
+                    src={selectedGroup.heroImage}
+                    alt={selectedGroup.title}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                    <div className="text-center text-white">
+                      <h3 className="text-3xl font-bold mb-2">{selectedGroup.title} Therapy Services</h3>
+                      <p className="text-lg opacity-90">{selectedGroup.subtitle}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Content Sections */}
+                <div className="p-6 space-y-8">
+                  {selectedGroup.sections?.map((section: any, index: number) => (
+                    <div key={index} className="flex flex-col md:flex-row gap-6 items-start">
+                      <div className="md:w-1/3">
+                        <img
+                          src={section.image}
+                          alt={section.title}
+                          className="w-full h-48 object-cover rounded-lg shadow-md"
+                        />
+                      </div>
+                      <div className="md:w-2/3">
+                        <h4 className="text-xl font-bold text-gray-900 mb-3">{section.title}</h4>
+                        <p className="text-gray-700 leading-relaxed">{section.content}</p>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Services and Features */}
+                  <div className="grid md:grid-cols-2 gap-8 mt-8 pt-8 border-t border-gray-200">
+                    <div>
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">Our Services Include:</h4>
+                      <div className="space-y-2">
+                        {selectedGroup.services.map((service: string, i: number) => (
+                          <div key={i} className="flex items-center text-gray-700">
+                            <CheckCircle className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
+                            {service}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-gray-900 mb-4">What to Expect:</h4>
+                      <div className="space-y-2">
+                        {selectedGroup.features.map((feature: string, i: number) => (
+                          <div key={i} className="flex items-center text-gray-700">
+                            <Shield className="h-4 w-4 text-blue-500 mr-3 flex-shrink-0" />
+                            {feature}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Call to Action */}
+                  <div className="bg-gray-50 rounded-lg p-6 text-center mt-8">
+                    <h4 className="text-xl font-bold text-gray-900 mb-3">Ready to Get Started?</h4>
+                    <p className="text-gray-600 mb-4">
+                      Take the first step towards better mental health and personal growth.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                      <button 
+                        className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                        style={{ backgroundColor: '#3AAFA9' }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                        onClick={() => {
+                          closeModal();
+                          handleBookSession(selectedGroup.title);
+                        }}
+                      >
+                        Book Session
+                      </button>
+                      <button 
+                        className="border-2 border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.borderColor = '#3AAFA9';
+                          e.currentTarget.style.color = '#3AAFA9';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.borderColor = '#d1d5db';
+                          e.currentTarget.style.color = '#374151';
+                        }}
+                        onClick={() => {
+                          closeModal();
+                          handleBookFreeConsultation();
+                        }}
+                      >
+                        Free Consultation
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Navigation Dots */}
+                <div className="flex justify-center py-4 space-x-2 border-t border-gray-200">
+                  {clientGroups.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => navigateToGroup(index)}
+                      disabled={isTransitioning}
+                      className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                        index === selectedGroupIndex 
+                          ? 'scale-125' 
+                          : 'hover:scale-110'
+                      } ${isTransitioning ? 'cursor-not-allowed opacity-50' : ''}`}
+                      style={{ backgroundColor: index === selectedGroupIndex ? '#3AAFA9' : '#d1d5db' }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

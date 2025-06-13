@@ -1,5 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
+
+// Add CSS for consultation highlight effect
+const consultationHighlightStyles = `
+  .consultation-highlight {
+    animation: consultationPulse 2s ease-in-out;
+    border: 2px solid #3AAFA9;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(58, 175, 169, 0.3);
+  }
+
+  @keyframes consultationPulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(58, 175, 169, 0.7);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(58, 175, 169, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(58, 175, 169, 0);
+    }
+  }
+`;
 
 const Booking: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -16,6 +38,58 @@ const Booking: React.FC = () => {
   const [isBooked, setIsBooked] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [availableSlots, setAvailableSlots] = useState<{[key: string]: string[]}>({});
+  const [consultationDetails, setConsultationDetails] = useState<{
+    title: string;
+    description: string;
+  } | null>(null);
+
+  // Listen for service pre-selection event
+  useEffect(() => {
+    const handlePreSelectService = (event: CustomEvent) => {
+      const { serviceId, consultationFor } = event.detail;
+      if (serviceId === 'consultation' || serviceId === 'group-workshop') {
+        setSelectedService(serviceId);
+        setConsultationDetails(consultationFor);
+        setStep(2); // Move to date selection step
+        
+        // Add a visual highlight effect
+        const bookingSection = document.getElementById('booking');
+        if (bookingSection) {
+          bookingSection.classList.add('consultation-highlight');
+          setTimeout(() => {
+            bookingSection.classList.remove('consultation-highlight');
+          }, 2000);
+        }
+      }
+    };
+
+    window.addEventListener('preSelectConsultation', handlePreSelectService as EventListener);
+    
+    return () => {
+      window.removeEventListener('preSelectConsultation', handlePreSelectService as EventListener);
+    };
+  }, []);
+
+  // Inject CSS styles for consultation highlight
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = consultationHighlightStyles;
+    document.head.appendChild(styleElement);
+    
+    return () => {
+      document.head.removeChild(styleElement);
+    };
+  }, []);
+
+  // Check URL parameters for service pre-selection
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const serviceParam = urlParams.get('service');
+    if (serviceParam === 'consultation') {
+      setSelectedService('consultation');
+      setStep(2);
+    }
+  }, []);
 
   const services = [
     {
@@ -305,6 +379,15 @@ const Booking: React.FC = () => {
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
             <div className="text-sm text-gray-600 mb-2">Your Appointment:</div>
             <div className="font-semibold text-gray-900">{services.find(s => s.id === selectedService)?.title}</div>
+            {(selectedService === 'consultation' || selectedService === 'group-workshop') && consultationDetails && (
+              <div className="bg-white p-3 rounded-lg border-l-4 mt-3 mb-3" style={{ borderLeftColor: '#3AAFA9' }}>
+                <div className="text-xs text-gray-600 mb-1">
+                  {selectedService === 'consultation' ? 'Consultation Focus:' : 'Workshop Focus:'}
+                </div>
+                <div className="font-medium text-gray-900 text-sm mb-1">{consultationDetails.title}</div>
+                <div className="text-gray-600 text-xs">{consultationDetails.description}</div>
+              </div>
+            )}
             <div className="text-gray-600">{selectedDate} at {selectedTime}</div>
           </div>
           <button 
@@ -314,6 +397,7 @@ const Booking: React.FC = () => {
               setSelectedService('');
               setSelectedDate('');
               setSelectedTime('');
+              setConsultationDetails(null);
               setFormData({
                 name: '',
                 email: '',
@@ -335,7 +419,7 @@ const Booking: React.FC = () => {
   }
 
   return (
-    <section className="py-20 bg-gray-50 min-h-screen">
+    <section id="booking" className="py-20 bg-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-12">
@@ -403,6 +487,26 @@ const Booking: React.FC = () => {
           {/* Step 2: Enhanced Date Picker */}
           {step === 2 && (
             <div>
+              {/* Service Pre-selection Notice */}
+              {(selectedService === 'consultation' || selectedService === 'group-workshop') && (
+                <div className="mb-6 p-4 bg-gradient-to-r from-teal-50 to-green-50 border border-teal-200 rounded-lg">
+                  <div className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-teal-600 mr-2" />
+                    <div>
+                      <p className="text-teal-800 font-medium">
+                        {selectedService === 'consultation' ? 'Initial Consultation Selected' : 'Group Workshop Selected'}
+                      </p>
+                      <p className="text-teal-600 text-sm">
+                        {selectedService === 'consultation' 
+                          ? "Perfect choice! Let's schedule your 30-minute consultation to discuss your needs."
+                          : "Great choice! Let's schedule your group workshop session for collaborative learning."
+                        }
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
               <h3 className="text-2xl font-bold text-gray-900 mb-6">Choose a Date</h3>
               
               {/* Calendar Header */}
@@ -680,6 +784,21 @@ const Booking: React.FC = () => {
                       <span className="text-gray-600">Service:</span>
                       <span className="font-medium">{services.find(s => s.id === selectedService)?.title}</span>
                     </div>
+                    {(selectedService === 'consultation' || selectedService === 'group-workshop') && consultationDetails && (
+                      <div className="bg-white p-4 rounded-lg border-l-4 mt-3" style={{ borderLeftColor: '#3AAFA9' }}>
+                        <div className="mb-2">
+                          <span className="text-gray-600 text-xs font-medium">
+                            {selectedService === 'consultation' ? 'Consultation Focus:' : 'Workshop Focus:'}
+                          </span>
+                        </div>
+                        <div className="mb-2">
+                          <span className="font-semibold text-gray-900 text-sm">{consultationDetails.title}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-600 text-xs leading-relaxed">{consultationDetails.description}</span>
+                        </div>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-gray-600">Date:</span>
                       <span className="font-medium">{selectedDate}</span>

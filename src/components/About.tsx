@@ -1,7 +1,113 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Award, BookOpen, Users, Target, CheckCircle, MapPin } from 'lucide-react';
 
+// Custom hook for intersection observer
+const useIntersectionObserver = (options = {}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.1, ...options });
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return [ref, isVisible] as const;
+};
+
+// CSS animations
+const animationStyles = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes fadeInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-left {
+    animation: fadeInLeft 0.8s ease-out forwards;
+  }
+
+  .animate-fade-in-right {
+    animation: fadeInRight 0.8s ease-out forwards;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 0.2s;
+  }
+
+  .animate-delay-400 {
+    animation-delay: 0.4s;
+  }
+`;
+
 const About: React.FC = () => {
+  // Animation refs
+  const [headerRef, isHeaderVisible] = useIntersectionObserver();
+  const [imageRef, isImageVisible] = useIntersectionObserver();
+  const [contentRef, isContentVisible] = useIntersectionObserver();
+
+  // Navigation handler
+  const handleLearnAboutServices = () => {
+    // Navigate to services section
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: 'services'
+    });
+    window.dispatchEvent(navigateEvent);
+  };
+
+  // Inject CSS animations
+  useEffect(() => {
+    const styleElement = document.createElement('style');
+    styleElement.textContent = animationStyles;
+    document.head.appendChild(styleElement);
+    
+    return () => {
+      if (document.head.contains(styleElement)) {
+        document.head.removeChild(styleElement);
+      }
+    };
+  }, []);
+
   const credentials = [
     { icon: <Award className="h-6 w-6" />, text: 'Experienced Counselor & Leader' },
     { icon: <BookOpen className="h-6 w-6" />, text: 'Corporate Training Specialist' },
@@ -32,7 +138,7 @@ const About: React.FC = () => {
     <section id="about" className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-10">
+        <div ref={headerRef} className={`text-center mb-10 ${isHeaderVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
           <h2 className="text-3xl font-bold text-gray-900 mb-3">
             About Imela Ventures
           </h2>
@@ -44,7 +150,7 @@ const About: React.FC = () => {
 
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           {/* Image */}
-          <div>
+          <div ref={imageRef} className={`${isImageVisible ? 'opacity-0 animate-fade-in-left' : 'opacity-0'}`}>
             <div className="relative">
               <img
                 src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800"
@@ -61,7 +167,7 @@ const About: React.FC = () => {
           </div>
 
           {/* Content */}
-          <div className="space-y-6">
+          <div ref={contentRef} className={`space-y-6 ${isContentVisible ? 'opacity-0 animate-fade-in-right animate-delay-200' : 'opacity-0'}`}>
             {/* Mission & Vision */}
             <div className="grid gap-4">
               <div className="rounded-lg p-4 border-2 shadow-md" style={{ backgroundColor: '#E6F7F6', borderColor: '#3AAFA9' }}>
@@ -115,6 +221,7 @@ const About: React.FC = () => {
                 work-life balance, and personal growth.
               </p>
               <button 
+                onClick={handleLearnAboutServices}
                 className="text-white px-5 py-2.5 rounded-lg font-bold transition-colors duration-200 text-sm shadow-md"
                 style={{ backgroundColor: '#3AAFA9' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}

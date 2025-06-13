@@ -15,15 +15,18 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
     { id: 'services', label: 'Services' },
     { id: 'client-groups', label: 'Client Groups' },
     { id: 'about', label: 'About' },
+    { id: 'articles', label: 'Articles & Resources' },
     { id: 'booking', label: 'Book Session' },
-    { id: 'member-portal', label: 'Member Portal' },
     { id: 'contact', label: 'Contact' },
   ];
 
   const handleNavClick = (sectionId: string) => {
-    setActiveSection(sectionId);
+    // Use the custom navigation event system
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: sectionId
+    });
+    window.dispatchEvent(navigateEvent);
     setIsMenuOpen(false);
-    window.scrollTo(0, 0);
   };
 
   return (

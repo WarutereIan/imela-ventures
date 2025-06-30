@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Users, TrendingUp, Heart, MessageSquare, Shield, Target, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Users, TrendingUp, Heart, MessageSquare, Shield, Target, ChevronLeft, ChevronRight, X, Building2, Brain, Lightbulb } from 'lucide-react';
+import { PersonaType } from '../App';
 
 // Custom hook for intersection observer
 const useIntersectionObserver = (options = {}) => {
@@ -163,7 +164,11 @@ const animationStyles = `
   }
 `;
 
-const Services: React.FC = () => {
+interface ServicesProps {
+  selectedPersona: PersonaType;
+}
+
+const Services: React.FC<ServicesProps> = ({ selectedPersona }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null);
@@ -206,300 +211,145 @@ const Services: React.FC = () => {
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [isModalOpen, selectedServiceIndex, isTransitioning]);
 
-  const services = [
-    {
-      icon: <Users className="h-8 w-8" />,
-      title: 'Leadership Development & Training',
-      description: 'Comprehensive programs that nurture adaptive and emotionally intelligent leaders through strategic vision development and experiential learning.',
-      features: [
-        'Strategic Vision Development',
-        'Emotional Intelligence Training',
-        'Decision-Making Enhancement',
-        'Conflict Resolution Skills',
-        'Experiential Learning & Case Studies'
-      ],
-      color: 'blue',
-      heroImage: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800',
-      sections: [
+  // Persona-specific services data
+  const getServicesData = () => {
+    if (selectedPersona === 'personal') {
+      return [
         {
-          title: 'Our Philosophy',
-          image: 'https://images.pexels.com/photos/3184394/pexels-photo-3184394.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'At Imela Ventures, we believe that effective leadership is the cornerstone of organizational success. As the corporate world evolves in complexity and dynamism, the need for strategic, adaptive, and emotionally intelligent leaders has never been greater. Leadership is not merely about authority—it is about influence, vision, and the ability to inspire teams toward shared goals.'
-        },
-        {
-          title: 'The Evolution of Leadership Development',
-          image: 'https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Leadership has undergone significant transformation, with various theories shaping how we understand and develop leaders today. Imela Ventures integrates key insights from four major leadership eras:',
-          list: [
-            { title: 'Trait-Based Leadership', description: 'While certain traits contribute to effective leadership, research has shown that leadership skills can be cultivated through training and experience.' },
-            { title: 'Behavioral Leadership', description: 'Emphasizes that leadership is not just about personality but also about learned behaviors. Our programs focus on developing essential leadership competencies.' },
-            { title: 'Situational Leadership', description: 'We equip leaders with the ability to adapt their style based on the demands of the situation and the needs of their teams.' },
-            { title: 'New Leadership Theories', description: 'Modern leadership extends beyond individual leaders to include transformational, collaborative, and inclusive leadership models.' }
-          ]
-        },
-        {
-          title: 'Program Outcomes',
-          image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Through our structured training programs, we help leaders achieve transformational results:',
-          outcomes: [
-            'Develop a strategic vision and align teams with organizational goals',
-            'Enhance emotional intelligence to build strong, trust-based relationships',
-            'Master adaptive leadership skills to navigate complexity and change',
-            'Lead with ethics and integrity while fostering inclusivity',
-            'Empower others by creating collaborative and high-performance teams'
+          icon: <Heart className="h-8 w-8" />,
+          title: 'Individual Therapy Sessions',
+          description: 'Personalized one-on-one counseling sessions to help you navigate life challenges, manage stress, and achieve personal growth.',
+          features: [
+            'Stress & Anxiety Management',
+            'Depression Support',
+            'Personal Growth & Self-Discovery',
+            'Trauma Recovery',
+            'Life Transitions Support'
           ],
-          conclusion: 'At Imela Ventures, we don\'t just train leaders—we build catalysts for change, equipping professionals with the skills to influence, innovate, and inspire.'
-        }
-      ]
-    },
-    {
-      icon: <TrendingUp className="h-8 w-8" />,
-      title: 'Corporate Culture Transformation',
-      description: 'Comprehensive culture audits and transformation programs to create positive environments that enhance employee engagement and satisfaction.',
-      features: [
-        'Culture Audits & Assessments',
-        'Stakeholder Meetings',
-        'Personality Assessments',
-        'Empathy & Resilience Building',
-        'Innovation & Growth Culture'
-      ],
-      color: 'green',
-      heroImage: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=800',
-      sections: [
-        {
-          title: 'Why Culture Transformation Matters',
-          image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'At Imela Ventures, we understand that an organization\'s culture plays a pivotal role in shaping its success, productivity, and employee well-being. Culture serves as the invisible fabric that guides employee behavior, engagement, and decision-making. A positive culture fosters teamwork, innovation, and employee satisfaction, contributing to overall organizational success.'
-        },
-        {
-          title: 'Our Comprehensive Methodology',
-          image: 'https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Our approach to enhancing corporate well-being begins with a meticulous three-step process:',
-          process: [
+          color: 'red',
+          heroImage: 'https://images.pexels.com/photos/5428836/pexels-photo-5428836.jpeg?auto=compress&cs=tinysrgb&w=800',
+          sections: [
             {
-              step: '1. Culture Audit',
-              description: 'We conduct comprehensive culture audits through one-on-one meetings with stakeholders, personality assessments, and evaluation of alignment between current culture and organizational goals.',
-              details: ['Stakeholder interviews with employees, managers, and executives', 'Personality tests and individual trait assessments', 'Cultural alignment evaluation']
-            },
-            {
-              step: '2. Tailor-Made Training Programs',
-              description: 'Based on audit findings, we design customized training programs that address specific cultural challenges and opportunities.',
-              details: ['Leadership development programs', 'Staff training initiatives', 'Skills and insights development', 'Cultural navigation training']
-            },
-            {
-              step: '3. Culture Transformation',
-              description: 'We implement sustainable changes that create a harmonious and resilient work environment.',
-              details: ['Psychological well-being initiatives', 'Innovation culture development', 'Leadership excellence programs', 'Continuous improvement systems']
+              title: 'Our Personal Approach',
+              image: 'https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=600',
+              content: 'Every individual is unique, and our therapy sessions are tailored to meet your specific needs. We provide a safe, confidential, and non-judgmental space where you can explore your thoughts, feelings, and experiences.'
             }
           ]
         },
         {
-          title: 'Core Values Integration',
-          image: 'https://images.pexels.com/photos/3184298/pexels-photo-3184298.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Through our interventions, we foster a culture that encourages five fundamental values:',
-          values: [
-            { name: 'Empathy', description: 'Understanding and valuing unique experiences and challenges of every individual' },
-            { name: 'Resilience', description: 'Building strength to overcome obstacles and adapt to change with determination' },
-            { name: 'Growth', description: 'Promoting continuous learning and professional development for all team members' },
-            { name: 'Integrity', description: 'Upholding highest ethical standards, transparency, and honesty in all interactions' },
-            { name: 'Innovation', description: 'Encouraging creativity and novel solutions to organizational challenges' }
-          ]
-        },
-        {
-          title: 'Measuring Success',
-          image: 'https://images.pexels.com/photos/3184317/pexels-photo-3184317.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'We track cultural transformation progress through both qualitative and quantitative metrics, ensuring sustainable and measurable change.',
-          metrics: [
-            'Employee satisfaction surveys and feedback analysis',
-            'Engagement level assessments and tracking',
-            'Behavioral alignment with desired culture values',
-            'Performance indicators and productivity metrics',
-            'Retention rates and workplace atmosphere evaluation'
-          ]
-        }
-      ]
-    },
-    {
-      icon: <Heart className="h-8 w-8" />,
-      title: 'Personalized Counseling Services',
-      description: 'Tailored counseling sessions to help employees manage stress and personal challenges, improving overall well-being and productivity.',
-      features: [
-        'Stress Management',
-        'Work-Life Balance',
-        'Personal Growth Support',
-        'Confidential Sessions',
-        'Individual Productivity Enhancement'
-      ],
-      color: 'red',
-      heroImage: 'https://images.pexels.com/photos/5428836/pexels-photo-5428836.jpeg?auto=compress&cs=tinysrgb&w=800',
-      sections: [
-        {
-          title: 'Our Personalized Approach',
-          image: 'https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Imela Ventures specializes in offering personalized counseling sessions tailored to individual employees. By providing a safe and confidential space for employees to explore their thoughts and emotions, we help individuals enhance their overall well-being and productivity. Our personalized approach ensures that each session meets the unique needs and circumstances of every client.'
-        },
-        {
-          title: 'Areas We Address',
-          image: 'https://images.pexels.com/photos/5428832/pexels-photo-5428832.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Our comprehensive counseling services cover a wide range of personal and professional challenges:',
-          areas: [
-            { 
-              title: 'Stress Management', 
-              description: 'Practical techniques and strategies to manage workplace and personal stress effectively',
-              icon: '🧘‍♀️'
-            },
-            { 
-              title: 'Emotional Challenges', 
-              description: 'Support for dealing with anxiety, depression, grief, and other emotional difficulties',
-              icon: '💙'
-            },
-            { 
-              title: 'Work-Life Balance', 
-              description: 'Strategies to maintain healthy boundaries between professional and personal life',
-              icon: '⚖️'
-            },
-            { 
-              title: 'Personal Growth', 
-              description: 'Guidance for self-improvement, goal setting, and personal development',
-              icon: '🌱'
-            },
-            { 
-              title: 'Relationship Issues', 
-              description: 'Support for improving interpersonal relationships both at work and home',
-              icon: '🤝'
-            }
-          ]
-        },
-        {
-          title: 'Key Service Benefits',
-          image: 'https://images.pexels.com/photos/5428834/pexels-photo-5428834.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Our counseling services are designed with employee well-being and organizational success in mind:',
-          benefits: [
-            'Complete confidentiality in all counseling sessions',
-            'Individualized approach tailored to specific employee needs',
-            'Professional expertise with deep understanding of workplace dynamics',
-            'Flexible scheduling to accommodate employee availability',
-            'Regular assessment of progress and well-being improvements'
-          ]
-        },
-        {
-          title: 'Organizational Impact',
-          image: 'https://images.pexels.com/photos/5428838/pexels-photo-5428838.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Investing in employee well-being through personalized counseling creates positive ripple effects throughout your organization:',
-          impacts: [
-            { metric: 'Reduced Absenteeism', description: 'Lower sick days and improved attendance rates' },
-            { metric: 'Enhanced Productivity', description: 'Better focus and performance from emotionally healthy employees' },
-            { metric: 'Improved Retention', description: 'Reduced turnover and increased employee loyalty' },
-            { metric: 'Better Team Dynamics', description: 'Improved workplace morale and collaboration' },
-            { metric: 'Stronger Culture', description: 'Organizational culture focused on well-being and support' }
+          icon: <Users className="h-8 w-8" />,
+          title: 'Couples Counseling',
+          description: 'Strengthen your relationship through guided communication, conflict resolution, and deeper understanding of each other.',
+          features: [
+            'Communication Skills',
+            'Conflict Resolution',
+            'Intimacy Building',
+            'Trust Restoration',
+            'Relationship Goals Setting'
           ],
-          conclusion: 'At Imela Ventures, we believe that investing in individual well-being creates a ripple effect that transforms entire organizations.'
-        }
-      ]
-    },
-    {
-      icon: <MessageSquare className="h-8 w-8" />,
-      title: 'Conflict Resolution Support',
-      description: 'Expert guidance on workplace conflict resolution with respectful and constructive approaches that contribute to positive work environments.',
-      features: [
-        'Fair Resolution Mechanisms',
-        'Growth-Oriented Approaches',
-        'Harmonious Workplace Culture',
-        'Effective Dispute Management',
-        'Employee Growth Support'
-      ],
-      color: 'purple',
-      heroImage: 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=800',
-      sections: [
-        {
-          title: 'Our Philosophy & Approach',
-          image: 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Imela Ventures recognizes the importance of a fair and supportive conflict resolution mechanism in maintaining a healthy workplace environment. We believe that conflicts, when handled properly, can become opportunities for growth, improved understanding, and stronger relationships. Our approach focuses on transforming challenging situations into learning experiences that contribute to employee growth and organizational development.'
-        },
-        {
-          title: 'Key Service Components',
-          image: 'https://images.pexels.com/photos/3183201/pexels-photo-3183201.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Our comprehensive conflict resolution approach includes three fundamental components:',
-          components: [
+          color: 'blue',
+          heroImage: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800',
+          sections: [
             {
-              title: 'Fair Resolution Mechanisms',
-              icon: '⚖️',
-              items: [
-                'Establishing transparent and unbiased processes for conflict resolution',
-                'Ensuring all parties have equal opportunity to present their perspectives',
-                'Creating structured frameworks for addressing disputes at various levels'
-              ]
-            },
-            {
-              title: 'Growth-Oriented Approaches',
-              icon: '🌱',
-              items: [
-                'Focus on learning and development rather than punishment',
-                'Identifying underlying issues that contribute to conflicts',
-                'Developing skills to prevent future conflicts',
-                'Building stronger communication and relationship skills'
-              ]
-            },
-            {
-              title: 'Mediation & Facilitation',
-              icon: '🤝',
-              items: [
-                'Professional mediation services for complex disputes',
-                'Facilitated discussions between conflicting parties',
-                'Neutral third-party perspective to ensure fairness',
-                'Structured problem-solving approaches'
-              ]
+              title: 'Building Stronger Relationships',
+              image: 'https://images.pexels.com/photos/3184394/pexels-photo-3184394.jpeg?auto=compress&cs=tinysrgb&w=600',
+              content: 'Our couples counseling sessions help partners develop better communication skills, resolve conflicts constructively, and strengthen their emotional connection.'
             }
           ]
         },
         {
-          title: 'The Resolution Process',
-          image: 'https://images.pexels.com/photos/3183153/pexels-photo-3183153.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Our systematic approach ensures effective and lasting conflict resolution:',
-          process: [
-            { step: 1, title: 'Assessment', description: 'Understanding the nature and scope of the conflict' },
-            { step: 2, title: 'Planning', description: 'Developing a tailored resolution strategy' },
-            { step: 3, title: 'Implementation', description: 'Facilitating discussions and mediation sessions' },
-            { step: 4, title: 'Follow-up', description: 'Monitoring progress and ensuring lasting resolution' },
-            { step: 5, title: 'Prevention', description: 'Training and education to prevent future conflicts' }
-          ]
-        },
-        {
-          title: 'Organizational Benefits',
-          image: 'https://images.pexels.com/photos/3183195/pexels-photo-3183195.jpeg?auto=compress&cs=tinysrgb&w=600',
-          content: 'Effective conflict resolution delivers measurable benefits to your organization:',
-          benefits: [
-            { 
-              title: 'Reduced Legal Risks', 
-              description: 'Proactive conflict resolution reduces the likelihood of legal disputes',
-              impact: 'Cost savings and reputation protection'
-            },
-            { 
-              title: 'Improved Employee Retention', 
-              description: 'Fair conflict resolution increases employee satisfaction and loyalty',
-              impact: 'Lower turnover and recruitment costs'
-            },
-            { 
-              title: 'Enhanced Team Dynamics', 
-              description: 'Better communication and understanding between team members',
-              impact: 'Increased collaboration and productivity'
-            },
-            { 
-              title: 'Positive Work Environment', 
-              description: 'Creates a culture where issues are addressed constructively',
-              impact: 'Higher employee engagement and morale'
-            },
-            { 
-              title: 'Increased Productivity', 
-              description: 'Less time spent on unresolved conflicts means more focus on work',
-              impact: 'Improved performance and results'
-            }
+          icon: <Shield className="h-8 w-8" />,
+          title: 'Teen & Family Support',
+          description: 'Specialized support for teenagers and families navigating the challenges of adolescence and family dynamics.',
+          features: [
+            'Teen Counseling',
+            'Family Therapy',
+            'Parent Guidance',
+            'School-Related Issues',
+            'Behavioral Support'
           ],
-          conclusion: 'This support promotes a harmonious workplace culture and contributes to employee growth even in challenging situations, ultimately strengthening the organization\'s resilience and cohesion.'
+          color: 'purple',
+          heroImage: 'https://images.pexels.com/photos/5428834/pexels-photo-5428834.jpeg?auto=compress&cs=tinysrgb&w=800',
+          sections: [
+            {
+              title: 'Supporting Families',
+              image: 'https://images.pexels.com/photos/5428832/pexels-photo-5428832.jpeg?auto=compress&cs=tinysrgb&w=600',
+              content: 'We understand the unique challenges facing teenagers and families today. Our specialized approach helps improve family communication and supports healthy adolescent development.'
+            }
+          ]
         }
-      ]
+      ];
     }
-  ];
+    
+    // Corporate services
+    return [
+      {
+        icon: <Users className="h-8 w-8" />,
+        title: 'Leadership Development & Training',
+        description: 'Comprehensive programs that nurture adaptive and emotionally intelligent leaders through strategic vision development and experiential learning.',
+        features: [
+          'Strategic Vision Development',
+          'Emotional Intelligence Training',
+          'Decision-Making Enhancement',
+          'Conflict Resolution Skills',
+          'Experiential Learning & Case Studies'
+        ],
+        color: 'blue',
+        heroImage: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800',
+        sections: [
+          {
+            title: 'Our Philosophy',
+            image: 'https://images.pexels.com/photos/3184394/pexels-photo-3184394.jpeg?auto=compress&cs=tinysrgb&w=600',
+            content: 'At Imela Ventures, we believe that effective leadership is the cornerstone of organizational success. As the corporate world evolves in complexity and dynamism, the need for strategic, adaptive, and emotionally intelligent leaders has never been greater.'
+          }
+        ]
+      },
+      {
+        icon: <TrendingUp className="h-8 w-8" />,
+        title: 'Corporate Culture Transformation',
+        description: 'Comprehensive culture audits and transformation programs to create positive environments that enhance employee engagement and satisfaction.',
+        features: [
+          'Culture Audits & Assessments',
+          'Stakeholder Meetings',
+          'Personality Assessments',
+          'Empathy & Resilience Building',
+          'Innovation & Growth Culture'
+        ],
+        color: 'green',
+        heroImage: 'https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=800',
+        sections: [
+          {
+            title: 'Why Culture Transformation Matters',
+            image: 'https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=600',
+            content: 'At Imela Ventures, we understand that an organization\'s culture plays a pivotal role in shaping its success, productivity, and employee well-being.'
+          }
+        ]
+      },
+      {
+        icon: <Building2 className="h-8 w-8" />,
+        title: 'Employee Wellbeing Programs',
+        description: 'Tailored counseling sessions to help employees manage stress and personal challenges, improving overall well-being and productivity.',
+        features: [
+          'Stress Management',
+          'Work-Life Balance',
+          'Personal Growth Support',
+          'Confidential Sessions',
+          'Individual Productivity Enhancement'
+        ],
+        color: 'red',
+        heroImage: 'https://images.pexels.com/photos/5428836/pexels-photo-5428836.jpeg?auto=compress&cs=tinysrgb&w=800',
+        sections: [
+          {
+            title: 'Our Personalized Approach',
+            image: 'https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=600',
+            content: 'Imela Ventures specializes in offering personalized counseling sessions tailored to individual employees. By providing a safe and confidential space for employees to explore their thoughts and emotions, we help individuals enhance their overall well-being and productivity.'
+          }
+        ]
+      }
+    ];
+  };
+
+  const services = getServicesData();
 
   const values = [
     {
@@ -639,11 +489,13 @@ const Services: React.FC = () => {
         {/* Header */}
         <div ref={headerRef} className={`text-center mb-10 ${isHeaderVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
           <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Comprehensive Corporate Solutions
+            {selectedPersona === 'personal' ? 'Our Personal Services' : 'Comprehensive Corporate Solutions'}
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Empowering organizations through psychological counseling and corporate training 
-            to enhance employee well-being, resilience, and leadership skills.
+            {selectedPersona === 'personal' 
+              ? 'Professional counseling and therapy services tailored to your individual needs, helping you navigate life challenges and achieve personal growth.'
+              : 'Empowering organizations through psychological counseling and corporate training to enhance employee well-being, resilience, and leadership skills.'
+            }
           </p>
         </div>
 
@@ -690,7 +542,7 @@ const Services: React.FC = () => {
               
                       <button 
                         onClick={() => openModal(service, index)}
-                        className="w-full text-white py-2.5 rounded-lg font-semibold transition-colors duration-200 text-sm" 
+                        className="w-full cta-secondary text-white py-2.5 rounded-lg font-semibold transition-colors duration-200 text-sm" 
                         style={{ backgroundColor: '#3AAFA9' }}
                         onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
                         onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
@@ -746,12 +598,17 @@ const Services: React.FC = () => {
         {/* CTA Section */}
         <div ref={ctaRef} className={`text-center mt-10 ${isCtaVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
           <div className="rounded-xl p-6 text-white" style={{ backgroundColor: '#3AAFA9' }}>
-            <h3 className="text-2xl font-bold mb-3">Ready to Transform Your Organization?</h3>
+            <h3 className="text-2xl font-bold mb-3">
+              {selectedPersona === 'personal' ? 'Ready to Start Your Journey?' : 'Ready to Transform Your Organization?'}
+            </h3>
             <p className="text-lg mb-4 opacity-90">
-              Invest in mental health and well-being to create a fulfilling and productive future for your organization.
+              {selectedPersona === 'personal' 
+                ? 'Take the first step towards better mental health and personal growth. Book a consultation today.'
+                : 'Invest in mental health and well-being to create a fulfilling and productive future for your organization.'
+              }
             </p>
             <button 
-              className="px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-110 hover:shadow-lg active:scale-95"
+              className="cta-primary px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-110 hover:shadow-lg active:scale-95"
               style={{ backgroundColor: 'white', color: '#3AAFA9' }}
               onClick={handleScheduleConsultation}
               onMouseEnter={(e) => {
@@ -763,7 +620,7 @@ const Services: React.FC = () => {
                 e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              Schedule a Consultation
+              {selectedPersona === 'personal' ? 'Schedule Consultation' : 'Schedule a Consultation'}
             </button>
           </div>
         </div>

@@ -8,9 +8,14 @@ import Contact from './components/Contact';
 import Booking from './components/Booking';
 import Articles from './components/Articles';
 import Footer from './components/Footer';
+import Team from './components/Team';
+
+// Define persona types
+export type PersonaType = 'personal' | 'corporate' | null;
 
 function App() {
   const [activeSection, setActiveSection] = useState('home');
+  const [selectedPersona, setSelectedPersona] = useState<PersonaType>(null);
 
   useEffect(() => {
     const handleNavigate = (e: CustomEvent) => {
@@ -23,34 +28,48 @@ function App() {
       });
     };
 
+    const handlePersonaChange = (e: CustomEvent) => {
+      setSelectedPersona(e.detail);
+      // Reset to home when persona changes
+      setActiveSection('home');
+    };
+
     window.addEventListener('navigate', handleNavigate as EventListener);
+    window.addEventListener('personaChange', handlePersonaChange as EventListener);
     
     return () => {
       window.removeEventListener('navigate', handleNavigate as EventListener);
+      window.removeEventListener('personaChange', handlePersonaChange as EventListener);
     };
   }, []);
 
   const renderActiveSection = () => {
     switch (activeSection) {
       case 'services':
-        return <Services />;
+        return <Services selectedPersona={selectedPersona} />;
       case 'client-groups':
-        return <ClientGroups />;
+        return <ClientGroups selectedPersona={selectedPersona} />;
       case 'about':
         return <About />;
       case 'contact':
         return <Contact />;
       case 'booking':
-        return <Booking />;
+        return <Booking selectedPersona={selectedPersona} />;
       case 'articles':
-        return <Articles />;
+        return <Articles selectedPersona={selectedPersona} />;
+      case 'meet-team':
+        return <Team />;
       default:
         return (
           <>
-            <Hero />
-            <Services />
-            <ClientGroups />
-            <About />
+            <Hero selectedPersona={selectedPersona} setSelectedPersona={setSelectedPersona} />
+            {selectedPersona && (
+              <>
+                <Services selectedPersona={selectedPersona} />
+                <ClientGroups selectedPersona={selectedPersona} />
+                <About />
+              </>
+            )}
           </>
         );
     }
@@ -58,11 +77,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
+      <Navigation 
+        activeSection={activeSection} 
+        setActiveSection={setActiveSection}
+        selectedPersona={selectedPersona}
+        setSelectedPersona={setSelectedPersona}
+      />
       <main>
         {renderActiveSection()}
       </main>
-      <Footer setActiveSection={setActiveSection} />
+      <Footer setActiveSection={setActiveSection} selectedPersona={selectedPersona} />
     </div>
   );
 }

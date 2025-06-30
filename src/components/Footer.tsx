@@ -1,12 +1,14 @@
 import React from 'react';
 import { Target, Phone, Mail, MapPin, Linkedin, Twitter, Facebook } from 'lucide-react';
 import logo from '../images/logo.png';
+import { PersonaType } from '../App';
 
 interface FooterProps {
   setActiveSection: (section: string) => void;
+  selectedPersona: PersonaType;
 }
 
-const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
+const Footer: React.FC<FooterProps> = ({ setActiveSection, selectedPersona }) => {
   const quickLinks = [
     { id: 'home', label: 'Home' },
     { id: 'services', label: 'Services' },
@@ -110,8 +112,31 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection }) => {
           </div>
         </div>
 
+        {/* Footer CTA Section */}
+        {selectedPersona && (
+          <div className="border-t border-gray-700 mt-12 pt-8 pb-6">
+            <div className="text-center">
+              <h3 className="text-xl font-semibold mb-3">
+                {selectedPersona === 'personal' ? 'Ready to Take the Next Step?' : 'Transform Your Organization Today'}
+              </h3>
+              <p className="text-gray-300 mb-4 max-w-2xl mx-auto">
+                {selectedPersona === 'personal' 
+                  ? 'Schedule a consultation and start your journey towards better mental health and personal growth.'
+                  : 'Let us help you build a thriving workplace culture that supports your team\'s well-being and success.'
+                }
+              </p>
+              <button
+                onClick={() => setActiveSection('booking')}
+                className="cta-primary bg-[#3AAFA9] text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 hover:bg-[#339B95]"
+              >
+                {selectedPersona === 'personal' ? 'Schedule Consultation' : 'Book Workshop'}
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Bottom Bar */}
-        <div className="border-t border-gray-700 mt-12 pt-8">
+        <div className="border-t border-gray-700 mt-6 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
               © 2025 Imela Ventures. All rights reserved.

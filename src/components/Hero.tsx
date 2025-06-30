@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ArrowRight, Phone, Mail, Users, TrendingUp, Shield } from 'lucide-react';
+import { ArrowRight, Phone, Mail, Users, TrendingUp, Shield, Building2, Heart, Target } from 'lucide-react';
+import { PersonaType } from '../App';
 
 // Custom hook for intersection observer
 const useIntersectionObserver = (options = {}) => {
@@ -23,6 +24,11 @@ const useIntersectionObserver = (options = {}) => {
 
   return [ref, isVisible] as const;
 };
+
+interface HeroProps {
+  selectedPersona: PersonaType;
+  setSelectedPersona: (persona: PersonaType) => void;
+}
 
 // CSS animations
 const animationStyles = `
@@ -68,6 +74,17 @@ const animationStyles = `
     }
   }
 
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
   .animate-fade-in-up {
     animation: fadeInUp 0.8s ease-out forwards;
   }
@@ -82,6 +99,10 @@ const animationStyles = `
 
   .animate-fade-in {
     animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.6s ease-out forwards;
   }
 
   .animate-delay-200 {
@@ -105,9 +126,8 @@ const animationStyles = `
   }
 `;
 
-const Hero: React.FC = () => {
+const Hero: React.FC<HeroProps> = ({ selectedPersona, setSelectedPersona }) => {
   const [contentRef, isContentVisible] = useIntersectionObserver();
-  const [imageRef, isImageVisible] = useIntersectionObserver();
 
   // Inject CSS animations
   useEffect(() => {
@@ -122,6 +142,123 @@ const Hero: React.FC = () => {
     };
   }, []);
 
+  const handlePersonaSelect = (persona: PersonaType) => {
+    setSelectedPersona(persona);
+    const personaEvent = new CustomEvent('personaChange', {
+      detail: persona
+    });
+    window.dispatchEvent(personaEvent);
+  };
+
+  const navigateToSection = (section: string) => {
+    const navigateEvent = new CustomEvent('navigate', {
+      detail: section
+    });
+    window.dispatchEvent(navigateEvent);
+  };
+
+  // Persona selection view (when no persona is selected)
+  if (!selectedPersona) {
+    return (
+      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-16 lg:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div ref={contentRef} className="text-center">
+            {/* Main Header */}
+            <div className={`space-y-6 mb-12 ${isContentVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
+              <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                Empowering You
+                <span className="text-[#3AAFA9] block">Personally</span>
+              </h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                Professional therapy and counseling for individuals, couples, and families.
+              </p>
+            </div>
+
+            {/* Persona Selection Cards */}
+            <div className={`grid md:grid-cols-2 gap-8 max-w-4xl mx-auto ${isContentVisible ? 'opacity-0 animate-fade-in-up animate-delay-400' : 'opacity-0'}`}>
+              {/* Personal Services Card */}
+              <div 
+                onClick={() => handlePersonaSelect('personal')}
+                className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-[#3AAFA9] transform hover:scale-105"
+              >
+                <div className="text-center">
+                  <div className="bg-[#3AAFA9] bg-opacity-10 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:bg-opacity-20 transition-all duration-300">
+                    <Users className="h-10 w-10 text-[#3AAFA9]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Personal Services</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Individual therapy, couples counseling, and family support sessions tailored to your personal needs.
+                  </p>
+                  <div className="space-y-2 text-sm text-gray-500 mb-6">
+                    <div className="flex items-center justify-center">
+                      <Heart className="h-4 w-4 mr-2 text-[#3AAFA9]" />
+                      Individual & Couples Therapy
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <Shield className="h-4 w-4 mr-2 text-[#3AAFA9]" />
+                      Teen & Family Support
+                    </div>
+                  </div>
+                  <div className="bg-[#3AAFA9] text-white px-6 py-3 rounded-lg font-semibold group-hover:bg-[#339B95] transition-colors duration-200 inline-flex items-center">
+                    Get Personal Support
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Corporate Services Card */}
+              <div 
+                onClick={() => handlePersonaSelect('corporate')}
+                className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-[#3AAFA9] transform hover:scale-105"
+              >
+                <div className="text-center">
+                  <div className="bg-[#3AAFA9] bg-opacity-10 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:bg-opacity-20 transition-all duration-300">
+                    <Building2 className="h-10 w-10 text-[#3AAFA9]" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Corporate Services</h3>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    Employee wellbeing programs, leadership training, and organizational development workshops.
+                  </p>
+                  <div className="space-y-2 text-sm text-gray-500 mb-6">
+                    <div className="flex items-center justify-center">
+                      <Target className="h-4 w-4 mr-2 text-[#3AAFA9]" />
+                      Leadership Development
+                    </div>
+                    <div className="flex items-center justify-center">
+                      <TrendingUp className="h-4 w-4 mr-2 text-[#3AAFA9]" />
+                      Employee Wellbeing
+                    </div>
+                  </div>
+                  <div className="bg-[#3AAFA9] text-white px-6 py-3 rounded-lg font-semibold group-hover:bg-[#339B95] transition-colors duration-200 inline-flex items-center">
+                    Enhance Your Team
+                    <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className={`pt-12 ${isContentVisible ? 'opacity-0 animate-fade-in-up animate-delay-800' : 'opacity-0'}`}>
+              <p className="text-sm text-gray-500 mb-4">Based in Nairobi, Kenya</p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
+                  <span className="text-sm font-medium text-gray-700">Expert Leadership Training</span>
+                </div>
+                <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
+                  <span className="text-sm font-medium text-gray-700">Confidential Counseling</span>
+                </div>
+                <div className="bg-white px-4 py-2 rounded-lg shadow-sm">
+                  <span className="text-sm font-medium text-gray-700">Professional Excellence</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Persona-specific hero content (when persona is selected)
   return (
     <section className="relative bg-gradient-to-br from-blue-50 to-indigo-100 py-12 lg:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -130,50 +267,78 @@ const Hero: React.FC = () => {
           <div ref={contentRef} className="space-y-6">
             <div className={`space-y-3 ${isContentVisible ? 'opacity-0 animate-fade-in-left' : 'opacity-0'}`}>
               <h1 className="text-3xl lg:text-5xl font-bold text-gray-900 leading-tight">
-                Professional Therapy
-                <span className="text-[#3AAFA9] block">& Counseling Services</span>
-                for Individuals & Organizations
+                {selectedPersona === 'personal' ? (
+                  <>
+                    Professional Therapy
+                    <span className="text-[#3AAFA9] block">& Counseling Services</span>
+                    for Individuals & Families
+                  </>
+                ) : (
+                  <>
+                    Corporate Training
+                    <span className="text-[#3AAFA9] block">& Employee Wellbeing</span>
+                    for Organizations
+                  </>
+                )}
               </h1>
               <p className="text-lg text-gray-600 leading-relaxed">
-                Expert psychological counseling for adults, teens, and couples, plus comprehensive 
-                corporate training programs to enhance well-being, resilience, and leadership excellence.
+                {selectedPersona === 'personal' 
+                  ? 'Expert psychological counseling for adults, teens, and couples. Providing a safe and confidential space to explore thoughts, emotions, and personal growth.'
+                  : 'Comprehensive corporate training programs to enhance employee well-being, resilience, and leadership excellence. Transform your organizational culture.'
+                }
               </p>
             </div>
 
             {/* Value Props */}
             <div className={`grid grid-cols-3 gap-4 py-4 ${isContentVisible ? 'opacity-0 animate-fade-in-up animate-delay-200' : 'opacity-0'}`}>
-              <div className="text-center">
-                <Users className="h-6 w-6 mx-auto mb-1.5" style={{ color: '#3AAFA9' }} />
-                <div className="text-xs text-gray-600">Individual Therapy</div>
-              </div>
-              <div className="text-center">
-                <TrendingUp className="h-6 w-6 text-green-600 mx-auto mb-1.5" />
-                <div className="text-xs text-gray-600">Couples Counseling</div>
-              </div>
-              <div className="text-center">
-                <Shield className="h-6 w-6 text-purple-600 mx-auto mb-1.5" />
-                <div className="text-xs text-gray-600">Teen Support</div>
-              </div>
+              {selectedPersona === 'personal' ? (
+                <>
+                  <div className="text-center">
+                    <Users className="h-6 w-6 mx-auto mb-1.5" style={{ color: '#3AAFA9' }} />
+                    <div className="text-xs text-gray-600">Individual Therapy</div>
+                  </div>
+                  <div className="text-center">
+                    <Heart className="h-6 w-6 text-red-500 mx-auto mb-1.5" />
+                    <div className="text-xs text-gray-600">Couples Counseling</div>
+                  </div>
+                  <div className="text-center">
+                    <Shield className="h-6 w-6 text-purple-600 mx-auto mb-1.5" />
+                    <div className="text-xs text-gray-600">Teen Support</div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="text-center">
+                    <Target className="h-6 w-6 mx-auto mb-1.5" style={{ color: '#3AAFA9' }} />
+                    <div className="text-xs text-gray-600">Leadership Training</div>
+                  </div>
+                  <div className="text-center">
+                    <TrendingUp className="h-6 w-6 text-green-600 mx-auto mb-1.5" />
+                    <div className="text-xs text-gray-600">Team Building</div>
+                  </div>
+                  <div className="text-center">
+                    <Building2 className="h-6 w-6 text-blue-600 mx-auto mb-1.5" />
+                    <div className="text-xs text-gray-600">Corporate Wellness</div>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* CTA Buttons */}
             <div className={`flex flex-col sm:flex-row gap-3 ${isContentVisible ? 'opacity-0 animate-fade-in-up animate-delay-400' : 'opacity-0'}`}>
               <button 
-                onClick={() => window.scrollTo({ top: document.getElementById('client-groups')?.offsetTop || 0, behavior: 'smooth' })}
-                className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center group"
+                onClick={() => navigateToSection('services')}
+                className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center group cta-primary"
                 style={{ backgroundColor: '#3AAFA9' }}
                 onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
                 onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
               >
-                Explore Our Services
+                {selectedPersona === 'personal' ? 'Explore Our Services' : 'View Corporate Programs'}
                 <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
               </button>
               <button 
-                onClick={() => {
-                  const event = new CustomEvent('navigate', { detail: 'booking' });
-                  window.dispatchEvent(event);
-                }}
-                className="border-2 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center"
+                onClick={() => navigateToSection('booking')}
+                className="border-2 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center cta-secondary"
                 style={{ borderColor: '#d1d5db' }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.borderColor = '#3AAFA9';
@@ -185,7 +350,7 @@ const Hero: React.FC = () => {
                 }}
               >
                 <Phone className="h-4 w-4 mr-2" />
-                Book Session
+                {selectedPersona === 'personal' ? 'Schedule Consultation' : 'Book Workshop'}
               </button>
             </div>
 
@@ -194,35 +359,39 @@ const Hero: React.FC = () => {
               <p className="text-xs text-gray-500 mb-2">Based in Nairobi, Kenya</p>
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                 <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm">
-                  <span className="text-xs font-medium text-gray-700">Expert Leadership Training</span>
+                  <span className="text-xs font-medium text-gray-700">
+                    {selectedPersona === 'personal' ? 'Licensed Therapists' : 'Expert Training'}
+                  </span>
                 </div>
                 <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm">
-                  <span className="text-xs font-medium text-gray-700">Confidential Counseling</span>
+                  <span className="text-xs font-medium text-gray-700">Confidential Sessions</span>
                 </div>
                 <div className="bg-white px-3 py-1.5 rounded-lg shadow-sm">
-                  <span className="text-xs font-medium text-gray-700">Culture Transformation</span>
+                  <span className="text-xs font-medium text-gray-700">Professional Excellence</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Image */}
-          <div ref={imageRef} className="relative">
-            <div className={`aspect-[4/3] rounded-xl overflow-hidden shadow-xl ${isImageVisible ? 'opacity-0 animate-fade-in-right' : 'opacity-0'}`}>
-              <img
-                src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=800"
-                alt="Professional corporate training environment"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* Floating elements */}
-            <div className={`absolute -top-2 -right-2 bg-white p-3 rounded-lg shadow-lg ${isImageVisible ? 'opacity-0 animate-fade-in animate-delay-400' : 'opacity-0'}`}>
-              <div className="text-lg font-bold" style={{ color: '#3AAFA9' }}>100%</div>
-              <div className="text-xs text-gray-600">Confidential</div>
-            </div>
-            <div className={`absolute -bottom-2 -left-2 bg-white p-3 rounded-lg shadow-lg ${isImageVisible ? 'opacity-0 animate-fade-in animate-delay-600' : 'opacity-0'}`}>
-              <div className="text-lg font-bold text-green-600">Expert</div>
-              <div className="text-xs text-gray-600">Training</div>
+          {/* Image/Visual (placeholder for now) */}
+          <div className={`${isContentVisible ? 'opacity-0 animate-fade-in-right animate-delay-200' : 'opacity-0'}`}>
+            <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
+              <div className="bg-[#3AAFA9] bg-opacity-10 rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6">
+                {selectedPersona === 'personal' ? (
+                  <Heart className="h-16 w-16 text-[#3AAFA9]" />
+                ) : (
+                  <Building2 className="h-16 w-16 text-[#3AAFA9]" />
+                )}
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">
+                {selectedPersona === 'personal' ? 'Personalized Care' : 'Transform Your Organization'}
+              </h3>
+              <p className="text-gray-600">
+                {selectedPersona === 'personal' 
+                  ? 'Every session is tailored to your unique needs and goals.'
+                  : 'Evidence-based programs that drive measurable results.'
+                }
+              </p>
             </div>
           </div>
         </div>

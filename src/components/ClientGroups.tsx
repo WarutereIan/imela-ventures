@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Users, Heart, MessageCircle, Calendar, Shield, CheckCircle, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { PersonaType } from '../App';
 
 // Custom hook for intersection observer
 const useIntersectionObserver = (options = {}) => {
@@ -84,7 +85,11 @@ const animationStyles = `
   }
 `;
 
-const ClientGroups: React.FC = () => {
+interface ClientGroupsProps {
+  selectedPersona: PersonaType;
+}
+
+const ClientGroups: React.FC<ClientGroupsProps> = ({ selectedPersona }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState<any>(null);

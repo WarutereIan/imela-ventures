@@ -1,31 +1,66 @@
 import React, { useState } from 'react';
-import { Menu, X, Target } from 'lucide-react';
+import { Menu, X, Target, Users, Building2 } from 'lucide-react';
 import logo from '../images/logo.png';
+import { PersonaType } from '../App';
 
 interface NavigationProps {
   activeSection: string;
   setActiveSection: (section: string) => void;
+  selectedPersona: PersonaType;
+  setSelectedPersona: (persona: PersonaType) => void;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection }) => {
+const Navigation: React.FC<NavigationProps> = ({ 
+  activeSection, 
+  setActiveSection, 
+  selectedPersona, 
+  setSelectedPersona 
+}) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'services', label: 'Services' },
-    { id: 'client-groups', label: 'Client Groups' },
-    { id: 'about', label: 'About' },
-    { id: 'articles', label: 'Articles & Resources' },
-    { id: 'booking', label: 'Book Session' },
-    { id: 'contact', label: 'Contact' },
-  ];
+  // Persona-specific navigation items
+  const getNavItems = () => {
+    if (!selectedPersona) {
+      return [
+        { id: 'home', label: 'Home' },
+        { id: 'about', label: 'About Us' },
+        { id: 'contact', label: 'Contact' },
+      ];
+    }
+
+    const commonItems = [
+      { id: 'home', label: 'Home' },
+      { id: 'services', label: selectedPersona === 'personal' ? 'Personal Therapy' : 'Corporate Services' },
+      { id: 'about', label: 'About Us' },
+      { id: 'meet-team', label: 'Meet the Team' },
+      { id: 'articles', label: 'Resources' },
+      { id: 'contact', label: 'Contact' },
+    ];
+
+    if (selectedPersona === 'personal') {
+      commonItems.splice(-1, 0, { id: 'booking', label: 'Book Session' });
+    } else {
+      commonItems.splice(-1, 0, { id: 'booking', label: 'Schedule Workshop' });
+    }
+
+    return commonItems;
+  };
+
+  const navItems = getNavItems();
 
   const handleNavClick = (sectionId: string) => {
-    // Use the custom navigation event system
     const navigateEvent = new CustomEvent('navigate', {
       detail: sectionId
     });
     window.dispatchEvent(navigateEvent);
+    setIsMenuOpen(false);
+  };
+
+  const handlePersonaChange = (persona: PersonaType) => {
+    const personaEvent = new CustomEvent('personaChange', {
+      detail: persona
+    });
+    window.dispatchEvent(personaEvent);
     setIsMenuOpen(false);
   };
 
@@ -40,6 +75,36 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
           >
             <img src={logo} alt="Imela Logo" className="h-12 w-auto" />
           </div>
+
+          {/* Persona Switch - Only show when persona is selected */}
+          {selectedPersona && (
+            <div className="hidden md:flex ml-6">
+              <div className="flex bg-gray-100 rounded-lg p-1">
+                <button
+                  onClick={() => handlePersonaChange('personal')}
+                  className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                    selectedPersona === 'personal'
+                      ? 'bg-white shadow-sm text-[#3AAFA9]'
+                      : 'text-gray-600 hover:text-[#3AAFA9]'
+                  }`}
+                >
+                  <Users className="h-4 w-4 mr-1.5" />
+                  Personal
+                </button>
+                <button
+                  onClick={() => handlePersonaChange('corporate')}
+                  className={`flex items-center px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
+                    selectedPersona === 'corporate'
+                      ? 'bg-white shadow-sm text-[#3AAFA9]'
+                      : 'text-gray-600 hover:text-[#3AAFA9]'
+                  }`}
+                >
+                  <Building2 className="h-4 w-4 mr-1.5" />
+                  Corporate
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Desktop Navigation - Centered and Spread Out */}
           <div className="hidden md:flex flex-1 justify-center">
@@ -66,6 +131,18 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
             </div>
           </div>
 
+          {/* Primary CTA Button */}
+          {selectedPersona && (
+            <div className="hidden md:block ml-4">
+              <button
+                onClick={() => handleNavClick('booking')}
+                className="bg-[#3AAFA9] text-white px-4 py-2 rounded-lg font-medium text-sm transition-colors duration-200 hover:bg-[#339B95]"
+              >
+                {selectedPersona === 'personal' ? 'Schedule Consultation' : 'Book Workshop'}
+              </button>
+            </div>
+          )}
+
           {/* Mobile menu button */}
           <div className="md:hidden ml-auto">
             <button
@@ -83,6 +160,37 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-white border-t">
+              {/* Mobile Persona Switcher */}
+              {selectedPersona && (
+                <div className="mb-4 px-3">
+                  <p className="text-xs text-gray-500 mb-2">Switch Mode:</p>
+                  <div className="flex bg-gray-100 rounded-lg p-1">
+                    <button
+                      onClick={() => handlePersonaChange('personal')}
+                      className={`flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                        selectedPersona === 'personal'
+                          ? 'bg-white shadow-sm text-[#3AAFA9]'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      <Users className="h-4 w-4 mr-1.5" />
+                      Personal
+                    </button>
+                    <button
+                      onClick={() => handlePersonaChange('corporate')}
+                      className={`flex-1 flex items-center justify-center px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                        selectedPersona === 'corporate'
+                          ? 'bg-white shadow-sm text-[#3AAFA9]'
+                          : 'text-gray-600'
+                      }`}
+                    >
+                      <Building2 className="h-4 w-4 mr-1.5" />
+                      Corporate
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {navItems.map((item) => (
                 <button
                   key={item.id}
@@ -102,6 +210,18 @@ const Navigation: React.FC<NavigationProps> = ({ activeSection, setActiveSection
                   {item.label}
                 </button>
               ))}
+
+              {/* Mobile CTA */}
+              {selectedPersona && (
+                <div className="mt-4 px-3">
+                  <button
+                    onClick={() => handleNavClick('booking')}
+                    className="w-full bg-[#3AAFA9] text-white px-4 py-3 rounded-lg font-medium text-sm transition-colors duration-200 hover:bg-[#339B95]"
+                  >
+                    {selectedPersona === 'personal' ? 'Schedule Consultation' : 'Book Workshop'}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Search, Filter, BookOpen, Video, Newspaper, Download, Play, Calendar, Clock, User, Eye, Star, X } from 'lucide-react';
+import { PersonaType } from '../App';
 
 // CSS animations for hover effects
 const hoverAnimationStyles = `
@@ -135,7 +136,11 @@ const hoverAnimationStyles = `
   }
 `;
 
-const Articles: React.FC = () => {
+interface ArticlesProps {
+  selectedPersona: PersonaType;
+}
+
+const Articles: React.FC<ArticlesProps> = ({ selectedPersona }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');

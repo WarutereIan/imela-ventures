@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
+import { PersonaType } from '../App';
 
 // Add CSS for consultation highlight effect
 const consultationHighlightStyles = `
@@ -23,7 +24,11 @@ const consultationHighlightStyles = `
   }
 `;
 
-const Booking: React.FC = () => {
+interface BookingProps {
+  selectedPersona: PersonaType;
+}
+
+const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
   const [step, setStep] = useState(1);
   const [selectedService, setSelectedService] = useState('');
   const [selectedDate, setSelectedDate] = useState('');

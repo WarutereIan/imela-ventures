@@ -33,44 +33,11 @@ const Team: React.FC = () => {
       id: 1,
       name: 'Dr. Karen Mwangi',
       title: 'Founder & Lead Psychologist',
-      image: 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=600',
+      image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600',
       bio: 'Dr. Karen brings over 15 years of experience in clinical psychology and organizational development. She specializes in leadership development and corporate culture transformation.',
       credentials: ['PhD in Clinical Psychology', 'Certified Leadership Coach', 'Corporate Training Specialist'],
       specializations: ['Leadership Development', 'Corporate Culture', 'Executive Coaching'],
       email: 'karen@imelaventures.com',
-      linkedin: '#'
-    },
-    {
-      id: 2,
-      name: 'Dr. James Kiprotich',
-      title: 'Senior Psychologist',
-      image: 'https://images.pexels.com/photos/5327656/pexels-photo-5327656.jpeg?auto=compress&cs=tinysrgb&w=600',
-      bio: 'Dr. James specializes in trauma therapy and stress management. With 12 years of experience, he has helped hundreds of individuals and families navigate life challenges.',
-      credentials: ['PhD in Psychology', 'Trauma Therapy Specialist', 'Family Counselor'],
-      specializations: ['Trauma Recovery', 'Stress Management', 'Family Therapy'],
-      email: 'james@imelaventures.com',
-      linkedin: '#'
-    },
-    {
-      id: 3,
-      name: 'Sarah Wanjiku',
-      title: 'Corporate Training Specialist',
-      image: 'https://images.pexels.com/photos/5327664/pexels-photo-5327664.jpeg?auto=compress&cs=tinysrgb&w=600',
-      bio: 'Sarah is a certified corporate trainer with expertise in employee wellbeing programs and organizational psychology. She designs customized training solutions for various industries.',
-      credentials: ['MA in Organizational Psychology', 'Certified Corporate Trainer', 'Wellbeing Consultant'],
-      specializations: ['Employee Wellbeing', 'Team Building', 'Conflict Resolution'],
-      email: 'sarah@imelaventures.com',
-      linkedin: '#'
-    },
-    {
-      id: 4,
-      name: 'Michael Ochieng',
-      title: 'Youth & Family Counselor',
-      image: 'https://images.pexels.com/photos/5327647/pexels-photo-5327647.jpeg?auto=compress&cs=tinysrgb&w=600',
-      bio: 'Michael focuses on adolescent psychology and family dynamics. His compassionate approach has helped numerous teens and families build stronger relationships.',
-      credentials: ['MA in Counseling Psychology', 'Youth Specialist Certification', 'Family Mediation Training'],
-      specializations: ['Teen Counseling', 'Family Mediation', 'Behavioral Support'],
-      email: 'michael@imelaventures.com',
       linkedin: '#'
     }
   ];
@@ -108,15 +75,15 @@ const Team: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div ref={headerRef} className={`text-center mb-16 ${isHeaderVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Expert Team</h2>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Meet Our Expert</h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our team of licensed professionals brings decades of combined experience in psychology, 
+            Our licensed professional brings decades of experience in psychology, 
             counseling, and organizational development to support your journey.
           </p>
         </div>
 
         {/* Team Grid */}
-        <div ref={teamRef} className={`grid lg:grid-cols-2 gap-8 ${isTeamVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
+        <div ref={teamRef} className={`max-w-4xl mx-auto ${isTeamVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
           {teamMembers.map((member, index) => (
             <div 
               key={member.id} 
@@ -204,9 +171,9 @@ const Team: React.FC = () => {
         {/* CTA Section */}
         <div className={`text-center mt-16 ${isTeamVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
           <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Work With Our Team?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Work With Dr. Karen?</h3>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-              Schedule a consultation with one of our expert professionals and take the first step 
+              Schedule a consultation with our expert professional and take the first step 
               towards achieving your personal or organizational goals.
             </p>
             <button 

@@ -4,6 +4,8 @@ import Hero from './components/Hero';
 import Services from './components/Services';
 import ClientGroups from './components/ClientGroups';
 import About from './components/About';
+import Countries from './components/Countries';
+import Clients from './components/Clients';
 import Contact from './components/Contact';
 import Booking from './components/Booking';
 import Articles from './components/Articles';
@@ -68,6 +70,8 @@ function App() {
                 <Services selectedPersona={selectedPersona} />
                 <ClientGroups selectedPersona={selectedPersona} />
                 <About />
+                <Countries />
+                <Clients />
               </>
             )}
           </>

@@ -324,34 +324,52 @@ const Hero: React.FC<HeroProps> = ({ selectedPersona, setSelectedPersona }) => {
               )}
             </div>
 
-            {/* CTA Buttons */}
-            <div className={`flex flex-col sm:flex-row gap-3 ${isContentVisible ? 'opacity-0 animate-fade-in-up animate-delay-400' : 'opacity-0'}`}>
-              <button 
-                onClick={() => navigateToSection('services')}
-                className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center group cta-primary"
-                style={{ backgroundColor: '#3AAFA9' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
-              >
-                {selectedPersona === 'personal' ? 'Explore Our Services' : 'View Corporate Programs'}
-                <ArrowRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform duration-200" />
-              </button>
-              <button 
-                onClick={() => navigateToSection('booking')}
-                className="border-2 text-gray-700 px-6 py-3 rounded-lg font-semibold transition-colors duration-200 flex items-center justify-center cta-secondary"
-                style={{ borderColor: '#d1d5db' }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#3AAFA9';
-                  e.currentTarget.style.color = '#3AAFA9';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#d1d5db';
-                  e.currentTarget.style.color = '#374151';
-                }}
-              >
-                <Phone className="h-4 w-4 mr-2" />
-                {selectedPersona === 'personal' ? 'Schedule Consultation' : 'Book Workshop'}
-              </button>
+            {/* Enhanced CTA Buttons */}
+            <div className={`space-y-4 ${isContentVisible ? 'opacity-0 animate-fade-in-up animate-delay-400' : 'opacity-0'}`}>
+              {/* Primary CTA */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button 
+                  onClick={() => navigateToSection('booking')}
+                  className="bg-gradient-to-r from-[#3AAFA9] to-[#339B95] text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-[#339B95] hover:to-[#2A8B87] transition-all duration-300 flex items-center justify-center group shadow-2xl hover:shadow-3xl transform hover:scale-105 hover:-translate-y-1"
+                >
+                  🚀 {selectedPersona === 'personal' ? 'Book FREE Consultation Now' : 'Get FREE Discovery Call'}
+                  <ArrowRight className="h-5 w-5 ml-3 group-hover:translate-x-1 transition-transform duration-200" />
+                </button>
+                <button 
+                  onClick={() => navigateToSection('services')}
+                  className="border-2 text-[#3AAFA9] px-8 py-4 rounded-xl font-bold text-lg hover:bg-[#3AAFA9] hover:text-white transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105"
+                  style={{ borderColor: '#3AAFA9' }}
+                >
+                  📋 View Our Services
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </button>
+              </div>
+
+              {/* Urgency & Trust Elements */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center text-sm text-gray-600">
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                  <span className="font-semibold">FREE Initial Consultation</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                  <span className="font-semibold">24-Hour Response</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                  <span className="font-semibold">No Commitment</span>
+                </div>
+              </div>
+
+              {/* Secondary CTA */}
+              <div className="text-center">
+                <button 
+                  onClick={() => navigateToSection('contact')}
+                  className="text-[#3AAFA9] hover:text-[#339B95] font-semibold underline transition-colors duration-200"
+                >
+                  📞 Or call us directly: +254 721 803 569
+                </button>
+              </div>
             </div>
 
             {/* Trust Indicators */}
@@ -373,25 +391,77 @@ const Hero: React.FC<HeroProps> = ({ selectedPersona, setSelectedPersona }) => {
             </div>
           </div>
 
-          {/* Image/Visual (placeholder for now) */}
+          {/* Enhanced Visual Content */}
           <div className={`${isContentVisible ? 'opacity-0 animate-fade-in-right animate-delay-200' : 'opacity-0'}`}>
-            <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-              <div className="bg-[#3AAFA9] bg-opacity-10 rounded-full w-32 h-32 flex items-center justify-center mx-auto mb-6">
-                {selectedPersona === 'personal' ? (
-                  <Heart className="h-16 w-16 text-[#3AAFA9]" />
-                ) : (
-                  <Building2 className="h-16 w-16 text-[#3AAFA9]" />
-                )}
+            <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl p-8 text-center border border-gray-100">
+              {/* Hero Image */}
+              <div className="relative mb-6">
+                <img
+                  src={selectedPersona === 'personal' 
+                    ? 'https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=600'
+                    : 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=600'
+                  }
+                  alt={selectedPersona === 'personal' ? 'Professional counseling session' : 'Corporate training workshop'}
+                  className="w-full h-48 object-cover rounded-xl shadow-lg"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3">
+                    <div className="flex items-center justify-center space-x-2 text-sm font-semibold text-gray-800">
+                      {selectedPersona === 'personal' ? (
+                        <>
+                          <Heart className="h-4 w-4 text-red-500" />
+                          <span>Licensed Therapists</span>
+                        </>
+                      ) : (
+                        <>
+                          <Building2 className="h-4 w-4 text-[#3AAFA9]" />
+                          <span>Expert Training</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
+
+              {/* Visual Stats */}
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-[#3AAFA9]/10 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-[#3AAFA9] mb-1">
+                    {selectedPersona === 'personal' ? '500+' : '200+'}
+                  </div>
+                  <div className="text-sm text-gray-600">
+                    {selectedPersona === 'personal' ? 'Lives Transformed' : 'Organizations Helped'}
+                  </div>
+                </div>
+                <div className="bg-green-100 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-green-600 mb-1">15+</div>
+                  <div className="text-sm text-gray-600">Years Experience</div>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
                 {selectedPersona === 'personal' ? 'Personalized Care' : 'Transform Your Organization'}
               </h3>
-              <p className="text-gray-600">
+              <p className="text-gray-600 mb-4">
                 {selectedPersona === 'personal' 
                   ? 'Every session is tailored to your unique needs and goals.'
                   : 'Evidence-based programs that drive measurable results.'
                 }
               </p>
+
+              {/* Trust Indicators */}
+              <div className="flex flex-wrap justify-center gap-2">
+                <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-semibold">
+                  ✓ Licensed
+                </span>
+                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-semibold">
+                  ✓ Confidential
+                </span>
+                <span className="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-xs font-semibold">
+                  ✓ Proven Results
+                </span>
+              </div>
             </div>
           </div>
         </div>

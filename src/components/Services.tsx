@@ -211,6 +211,151 @@ const Services: React.FC<ServicesProps> = ({ selectedPersona }) => {
     return () => document.removeEventListener('keydown', handleKeyPress);
   }, [isModalOpen, selectedServiceIndex, isTransitioning]);
 
+  // Service packages with clear pricing and deliverables
+  const getServicePackages = () => {
+    if (selectedPersona === 'personal') {
+      return [
+        {
+          name: 'Individual Therapy',
+          packages: [
+            {
+              title: 'Single Session',
+              price: 'KSh 3,000',
+              duration: '50 minutes',
+              features: ['One-on-one counseling', 'Personalized approach', 'Confidential session'],
+              description: 'Perfect for trying our services or addressing immediate concerns.'
+            },
+            {
+              title: '4-Session Package',
+              price: 'KSh 10,000',
+              duration: '4 weeks',
+              features: ['4 individual sessions', 'Progress tracking', 'Personalized plan', 'Between-session support'],
+              description: 'Ideal for addressing specific challenges with structured support.',
+              popular: true
+            },
+            {
+              title: '8-Session Package',
+              price: 'KSh 18,000',
+              duration: '8 weeks',
+              features: ['8 individual sessions', 'Comprehensive assessment', 'Personalized treatment plan', 'Ongoing support'],
+              description: 'Comprehensive support for deeper personal growth and transformation.'
+            }
+          ]
+        },
+        {
+          name: 'Couples Counseling',
+          packages: [
+            {
+              title: 'Single Session',
+              price: 'KSh 4,000',
+              duration: '60 minutes',
+              features: ['Couple assessment', 'Communication guidance', 'Conflict resolution tools'],
+              description: 'Initial consultation to understand relationship dynamics.'
+            },
+            {
+              title: '6-Session Package',
+              price: 'KSh 20,000',
+              duration: '6 weeks',
+              features: ['6 couples sessions', 'Relationship assessment', 'Communication skills training', 'Conflict resolution strategies'],
+              description: 'Structured program to strengthen your relationship.',
+              popular: true
+            }
+          ]
+        },
+        {
+          name: 'Family Support',
+          packages: [
+            {
+              title: 'Family Session',
+              price: 'KSh 5,000',
+              duration: '90 minutes',
+              features: ['Family assessment', 'Communication improvement', 'Conflict resolution'],
+              description: 'Comprehensive family support session.'
+            },
+            {
+              title: '4-Session Family Package',
+              price: 'KSh 16,000',
+              duration: '4 weeks',
+              features: ['4 family sessions', 'Individual teen sessions', 'Parent guidance', 'Family communication plan'],
+              description: 'Complete family transformation program.'
+            }
+          ]
+        }
+      ];
+    }
+    
+    // Corporate service packages
+    return [
+      {
+        name: 'Leadership Development',
+        packages: [
+          {
+            title: 'Executive Coaching',
+            price: 'KSh 15,000',
+            duration: 'per session',
+            features: ['One-on-one executive coaching', 'Leadership assessment', 'Personalized development plan'],
+            description: 'Individual coaching for senior leaders and executives.'
+          },
+          {
+            title: 'Leadership Workshop',
+            price: 'KSh 25,000',
+            duration: 'per day',
+            features: ['Full-day workshop', 'Up to 20 participants', 'Materials included', 'Follow-up support'],
+            description: 'Comprehensive leadership development for teams.',
+            popular: true
+          },
+          {
+            title: 'Leadership Program',
+            price: 'KSh 150,000',
+            duration: '3 months',
+            features: ['12 sessions', 'Group coaching', 'Individual assessments', 'Certification'],
+            description: 'Complete leadership transformation program.'
+          }
+        ]
+      },
+      {
+        name: 'Culture Transformation',
+        packages: [
+          {
+            title: 'Culture Assessment',
+            price: 'KSh 50,000',
+            duration: '2 weeks',
+            features: ['Organizational assessment', 'Stakeholder interviews', 'Detailed report', 'Recommendations'],
+            description: 'Comprehensive culture audit and analysis.'
+          },
+          {
+            title: 'Culture Transformation',
+            price: 'KSh 200,000',
+            duration: '6 months',
+            features: ['Full culture transformation', 'Team workshops', 'Ongoing support', 'Progress tracking'],
+            description: 'Complete organizational culture transformation.',
+            popular: true
+          }
+        ]
+      },
+      {
+        name: 'Employee Wellbeing',
+        packages: [
+          {
+            title: 'Wellness Workshop',
+            price: 'KSh 20,000',
+            duration: 'half day',
+            features: ['Stress management training', 'Mental health awareness', 'Wellness strategies'],
+            description: 'Team wellness and mental health workshop.'
+          },
+          {
+            title: 'Employee Support Program',
+            price: 'KSh 100,000',
+            duration: '6 months',
+            features: ['Individual counseling sessions', 'Group workshops', 'Manager training', 'Wellness initiatives'],
+            description: 'Comprehensive employee wellbeing program.',
+            popular: true
+          }
+        ]
+      }
+    ];
+  };
+
   // Persona-specific services data
   const getServicesData = () => {
     if (selectedPersona === 'personal') {
@@ -484,19 +629,42 @@ const Services: React.FC<ServicesProps> = ({ selectedPersona }) => {
   };
 
   return (
-    <section id="services" className="py-12 bg-white">
+    <section id="services" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div ref={headerRef} className={`text-center mb-10 ${isHeaderVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+        {/* Enhanced Header */}
+        <div ref={headerRef} className={`text-center mb-16 ${isHeaderVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`}>
+          <div className="inline-block bg-gradient-to-r from-[#3AAFA9] to-[#339B95] text-white px-6 py-2 rounded-full text-sm font-semibold mb-6">
+            {selectedPersona === 'personal' ? '🎯 Personal Development' : '🏢 Corporate Excellence'}
+          </div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-6">
             {selectedPersona === 'personal' ? 'Our Personal Services' : 'Comprehensive Corporate Solutions'}
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
             {selectedPersona === 'personal' 
               ? 'Professional counseling and therapy services tailored to your individual needs, helping you navigate life challenges and achieve personal growth.'
               : 'Empowering organizations through psychological counseling and corporate training to enhance employee well-being, resilience, and leadership skills.'
             }
           </p>
+          
+          {/* Service Stats */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="text-3xl font-bold text-[#3AAFA9] mb-2">
+                {selectedPersona === 'personal' ? '500+' : '200+'}
+              </div>
+              <div className="text-gray-600 font-semibold">
+                {selectedPersona === 'personal' ? 'Lives Transformed' : 'Organizations Helped'}
+              </div>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="text-3xl font-bold text-green-600 mb-2">95%</div>
+              <div className="text-gray-600 font-semibold">Success Rate</div>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+              <div className="text-3xl font-bold text-blue-600 mb-2">15+</div>
+              <div className="text-gray-600 font-semibold">Years Experience</div>
+            </div>
+          </div>
         </div>
 
         {/* Services Carousel */}
@@ -573,8 +741,85 @@ const Services: React.FC<ServicesProps> = ({ selectedPersona }) => {
           </div>
         </div>
 
+        {/* Service Packages & Pricing */}
+        <div ref={valuesRef} className={`mb-12 ${isValuesVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Service Packages & Pricing</h3>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Choose from our comprehensive service packages designed to meet your specific needs. 
+              All packages include detailed deliverables and clear timelines.
+            </p>
+          </div>
+
+          <div className="space-y-12">
+            {getServicePackages().map((serviceCategory, categoryIndex) => (
+              <div key={categoryIndex} className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                <div className="bg-gradient-to-r from-[#3AAFA9] to-[#339B95] p-6 text-white">
+                  <h4 className="text-2xl font-bold">{serviceCategory.name}</h4>
+                  <p className="text-lg opacity-90 mt-2">
+                    {selectedPersona === 'personal' 
+                      ? 'Personalized counseling and therapy services'
+                      : 'Professional corporate development solutions'
+                    }
+                  </p>
+                </div>
+                
+                <div className="p-6">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {serviceCategory.packages.map((pkg, pkgIndex) => (
+                      <div 
+                        key={pkgIndex} 
+                        className={`relative bg-white rounded-xl border-2 p-6 hover:shadow-xl transition-all duration-300 ${
+                          pkg.popular 
+                            ? 'border-[#3AAFA9] shadow-lg scale-105' 
+                            : 'border-gray-200 hover:border-[#3AAFA9]'
+                        }`}
+                      >
+                        {pkg.popular && (
+                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                            <span className="bg-[#3AAFA9] text-white px-4 py-1 rounded-full text-sm font-semibold">
+                              Most Popular
+                            </span>
+                          </div>
+                        )}
+                        
+                        <div className="text-center mb-4">
+                          <h5 className="text-xl font-bold text-gray-900 mb-2">{pkg.title}</h5>
+                          <div className="text-sm text-gray-600">{pkg.duration}</div>
+                        </div>
+                        
+                        <p className="text-gray-700 text-sm mb-4 text-center">{pkg.description}</p>
+                        
+                        <div className="space-y-2 mb-6">
+                          {pkg.features.map((feature, featureIndex) => (
+                            <div key={featureIndex} className="flex items-center text-sm text-gray-700">
+                              <div className="w-2 h-2 bg-[#3AAFA9] rounded-full mr-3 flex-shrink-0"></div>
+                              <span>{feature}</span>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <button 
+                          className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
+                            pkg.popular
+                              ? 'bg-[#3AAFA9] text-white hover:bg-[#339B95] hover:scale-105'
+                              : 'bg-gray-100 text-gray-700 hover:bg-[#3AAFA9] hover:text-white'
+                          }`}
+                          onClick={handleScheduleConsultation}
+                        >
+                          Get Started
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Core Values */}
-        <div ref={valuesRef} className={`bg-gray-50 rounded-xl p-6 ${isValuesVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
+        <div className={`bg-gray-50 rounded-xl p-6 mb-12 ${isValuesVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
           <div className="text-center mb-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Core Values</h3>
             <p className="text-base text-gray-600">
@@ -1090,6 +1335,55 @@ const Services: React.FC<ServicesProps> = ({ selectedPersona }) => {
             </div>
           </div>
         )}
+
+        {/* Visual Footer Section */}
+        <div className="mt-20 bg-gradient-to-r from-[#3AAFA9] to-[#339B95] rounded-2xl p-12 text-white">
+          <div className="text-center mb-8">
+            <h3 className="text-3xl font-bold mb-4">Ready to Get Started?</h3>
+            <p className="text-xl opacity-90 max-w-3xl mx-auto">
+              {selectedPersona === 'personal' 
+                ? 'Take the first step towards personal growth and transformation with our expert counseling services.'
+                : 'Transform your organization with our proven corporate training and development programs.'
+              }
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-8">
+            <div className="text-center">
+              <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <MessageSquare className="h-8 w-8" />
+              </div>
+              <h4 className="text-lg font-bold mb-2">Free Consultation</h4>
+              <p className="text-sm opacity-90">Get personalized advice from our experts</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Shield className="h-8 w-8" />
+              </div>
+              <h4 className="text-lg font-bold mb-2">Confidential</h4>
+              <p className="text-sm opacity-90">Your privacy and security are our priority</p>
+            </div>
+            <div className="text-center">
+              <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <Target className="h-8 w-8" />
+              </div>
+              <h4 className="text-lg font-bold mb-2">Proven Results</h4>
+              <p className="text-sm opacity-90">Evidence-based methods that deliver outcomes</p>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <button
+              onClick={() => {
+                const navigateEvent = new CustomEvent('navigate', { detail: 'booking' });
+                window.dispatchEvent(navigateEvent);
+              }}
+              className="bg-white text-[#3AAFA9] px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-100 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105"
+            >
+              🚀 Book Your FREE Consultation Now
+            </button>
+          </div>
+        </div>
       </div>
     </section>
   );

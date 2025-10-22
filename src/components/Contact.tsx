@@ -62,15 +62,31 @@ const Contact: React.FC = () => {
   return (
     <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-gray-900 mb-3">
-            Get in Touch
+        {/* Enhanced Header with Urgency */}
+        <div className="text-center mb-16">
+          <div className="inline-block bg-gradient-to-r from-[#3AAFA9] to-[#339B95] text-white px-8 py-3 rounded-full text-lg font-bold mb-6 shadow-lg">
+            🎯 FREE Initial Consultation - Limited Time
+          </div>
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Ready to Transform Your Organization?
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Ready to transform your organization? Contact us to learn more about our 
-            counseling and corporate training services.
+          <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-6">
+            Book your <strong className="text-[#3AAFA9]">FREE consultation</strong> today and discover how our expert team can help you achieve your goals.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center text-sm text-gray-600">
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+              <span className="font-semibold">No Commitment Required</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+              <span className="font-semibold">24-Hour Response Guarantee</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+              <span className="font-semibold">Expert Guidance</span>
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -179,17 +195,14 @@ const Contact: React.FC = () => {
 
               <button
                 type="submit"
-                className="text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
-                style={{ backgroundColor: '#3AAFA9' }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
+                className="w-full bg-gradient-to-r from-[#3AAFA9] to-[#339B95] text-white py-4 rounded-xl font-bold text-lg hover:from-[#339B95] hover:to-[#2A8B87] transition-all duration-300 flex items-center justify-center shadow-xl hover:shadow-2xl transform hover:scale-105 hover:-translate-y-1"
               >
-                <Send className="h-4 w-4 mr-2" />
-                Send Message
+                <Send className="h-6 w-6 mr-3" />
+                🚀 Get My FREE Consultation Now
               </button>
-
-              <p className="text-sm text-gray-500 text-center">
-                * Required fields. We'll respond within 24 hours.
+              
+              <p className="text-center text-sm text-gray-500 mt-3">
+                ⚡ We'll respond within 24 hours with your personalized consultation details
               </p>
             </form>
           </div>

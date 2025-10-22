@@ -96,7 +96,7 @@ const animationStyles = `
   .marquee-track {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: 1.5rem;
     width: max-content;
     animation: marqueeScroll 60s linear infinite;
   }
@@ -106,11 +106,12 @@ const animationStyles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 640px;
-    height: 400px;
-    border-radius: 0.75rem;
+    width: 180px;
+    height: 80px;
+    border-radius: 0.5rem;
     background: #f9fafb;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    margin: 0 0.5rem;
   }
 
   .animate-fade-in-up {
@@ -307,7 +308,7 @@ const Clients: React.FC = () => {
                     <img 
                       src={client.logo}
                       alt={`${client.name} logo`}
-                      className="max-h-full max-w-full object-contain"
+                      className="max-h-640 max-w-570 object-contain"
                       onError={(e) => {
                         const target = e.currentTarget as HTMLImageElement;
                         target.style.display = 'none';
@@ -342,8 +343,92 @@ const Clients: React.FC = () => {
           </div>
         </div>
 
+        {/* Client Testimonials */}
+        <div className={`mt-16 ${isLogosVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
+          <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-2xl p-8">
+            <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">What Our Clients Say</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Testimonial 1 - Healthcare */}
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-[#3AAFA9] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    AH
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">Dr. Sarah Mwangi</h4>
+                    <p className="text-sm text-gray-600">Medical Director, Dawa Kenya</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 italic">
+                  "The leadership development program transformed our management team. We saw a 40% improvement in staff retention and a significant boost in team collaboration. The psychological insights provided were invaluable for our healthcare environment."
+                </p>
+                <div className="flex text-yellow-400 mt-3">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+
+              {/* Testimonial 2 - Education */}
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-[#3AAFA9] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    ML
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">David Mbehi</h4>
+                    <p className="text-sm text-gray-600">Founder, AFRE AI </p>
+                  </div>
+                </div>
+                <p className="text-gray-700 italic">
+                  "Working with Imela Ventures helped us develop a comprehensive mental health support system for our team. The counseling strategies and leadership training resulted in a 60% reduction in student stress-related issues."
+                </p>
+                <div className="flex text-yellow-400 mt-3">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+
+              {/* Testimonial 3 - Legal/Non-profit */}
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-[#3AAFA9] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    KN
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">Advocate Grace Wanjiku</h4>
+                    <p className="text-sm text-gray-600">Executive Director, Jirani Limited</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 italic">
+                  "The trauma-informed counseling approach and leadership development program revolutionized how we support our community. Our team's emotional intelligence and conflict resolution skills improved dramatically."
+                </p>
+                <div className="flex text-yellow-400 mt-3">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+
+              {/* Testimonial 4 - Corporate */}
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-[#3AAFA9] rounded-full flex items-center justify-center text-white font-bold text-lg">
+                    PK
+                  </div>
+                  <div className="ml-4">
+                    <h4 className="font-semibold text-gray-900">Jane Ndung'u</h4>
+                    <p className="text-sm text-gray-600">HR Director, Tribe Africa</p>
+                  </div>
+                </div>
+                <p className="text-gray-700 italic">
+                  "The executive coaching and organizational psychology insights helped us create a more inclusive and productive workplace. Employee satisfaction increased by 45% and our leadership pipeline is stronger than ever."
+                </p>
+                <div className="flex text-yellow-400 mt-3">
+                  {'★'.repeat(5)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Call to Action */}
-        <div className={`text-center mt-16 ${isLogosVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
+        <div className={`text-center mt-16 ${isLogosVisible ? 'opacity-0 animate-fade-in-up' : 'opacity-0'}`} style={{ animationDelay: '1.2s' }}>
           <div className="bg-white rounded-2xl p-8 shadow-lg border-2" style={{ borderColor: '#3AAFA9' }}>
             <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Join Our Client Family?</h3>
             <p className="text-gray-600 mb-6 max-w-2xl mx-auto">

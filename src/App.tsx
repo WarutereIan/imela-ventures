@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Phone, MessageCircle } from 'lucide-react';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -91,6 +92,34 @@ function App() {
         {renderActiveSection()}
       </main>
       <Footer setActiveSection={setActiveSection} selectedPersona={selectedPersona} />
+      
+      {/* Floating CTA Buttons */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        {/* Phone CTA */}
+        <button
+          onClick={() => {
+            const navigateEvent = new CustomEvent('navigate', { detail: 'contact' });
+            window.dispatchEvent(navigateEvent);
+          }}
+          className="bg-green-600 hover:bg-green-700 text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 animate-pulse"
+          title="Call us now"
+        >
+          <Phone className="h-6 w-6" />
+        </button>
+        
+        {/* WhatsApp/Message CTA */}
+        <button
+          onClick={() => {
+            const navigateEvent = new CustomEvent('navigate', { detail: 'booking' });
+            window.dispatchEvent(navigateEvent);
+          }}
+          className="bg-[#3AAFA9] hover:bg-[#339B95] text-white p-4 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110"
+          title="Get FREE consultation"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </button>
+      </div>
+      
     </div>
   );
 }

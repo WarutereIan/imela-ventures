@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, User, Phone, Mail, CheckCircle, ArrowLeft, ArrowRight, X } from 'lucide-react';
 import { PersonaType } from '../App';
+import { supabase } from '../supabaseClient';
 
 // Add CSS for consultation highlight effect
 const consultationHighlightStyles = `
@@ -47,6 +48,9 @@ const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
     title: string;
     description: string;
   } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [notificationWarning, setNotificationWarning] = useState('');
 
   // Listen for service pre-selection event
   useEffect(() => {
@@ -350,6 +354,21 @@ const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validate required fields
+    if (!selectedService || !selectedDate || !selectedTime) {
+      setSubmitError('Please select a service, date, and time.');
+      return;
+    }
+    
+    if (!formData.name || !formData.email || !formData.phone) {
+      setSubmitError('Please fill in all required fields (name, email, phone).');
+      return;
+    }
+
+    setSubmitError('');
+    setNotificationWarning('');
+    setIsSubmitting(true);
+    
     const bookingData = {
       service: selectedService,
       date: selectedDate,
@@ -357,18 +376,83 @@ const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
       client: formData
     };
 
-    console.log('Booking submitted:', bookingData);
-    
-    // Create calendar event
-    const calendarResult = await createCalendarEvent(bookingData);
-    
-    if (calendarResult?.success) {
-      console.log('Calendar event created successfully');
+    try {
+      // Insert booking into Supabase
+      const { data: insertedData, error: insertError } = await supabase
+        .from('sessions')
+        .insert({
+          customer_name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          service: selectedService,
+          message: formData.additionalInfo || null,
+          date: selectedDate,
+          time: selectedTime,
+          status: 'pending',
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to save booking to Supabase', insertError);
+        setSubmitError(`Could not save your booking: ${insertError.message || 'Please try again.'}`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Success - booking saved
+      // eslint-disable-next-line no-console
+      console.log('Booking saved successfully:', insertedData);
+
+      // Create calendar event (non-blocking)
+      try {
+        const calendarResult = await createCalendarEvent(bookingData);
+        if (!calendarResult?.success) {
+          // eslint-disable-next-line no-console
+          console.warn('Calendar event creation failed; continuing without calendar entry');
+        }
+      } catch (calendarErr) {
+        // eslint-disable-next-line no-console
+        console.warn('Calendar event creation error:', calendarErr);
+      }
+
+      // Fire-and-forget email notification to admin (non-blocking)
+      try {
+        const { error: notifyError } = await supabase.functions.invoke(
+          'send-booking-notification',
+          {
+            body: {
+              bookingId: insertedData.id,
+              customerName: formData.name,
+              email: formData.email,
+              phone: formData.phone,
+              service: selectedService,
+              message: formData.additionalInfo,
+              date: selectedDate,
+              time: selectedTime,
+            },
+          }
+        );
+        if (notifyError) {
+          // eslint-disable-next-line no-console
+          console.warn('Admin notification email failed', notifyError);
+          // Don't show warning to user - admin will see it in dashboard
+        }
+      } catch (notifyErr) {
+        // eslint-disable-next-line no-console
+        console.warn('Admin notification email error:', notifyErr);
+        // Silent fail - admin will see booking in dashboard
+      }
+
+      // Show success state
       setIsBooked(true);
-    } else {
-      console.error('Failed to create calendar event');
-      // For now, still proceed with booking even if calendar creation fails
-      setIsBooked(true);
+    } catch (err: any) {
+      // Catch any unexpected errors
+      // eslint-disable-next-line no-console
+      console.error('Unexpected error during booking submission:', err);
+      setSubmitError(`An unexpected error occurred: ${err.message || 'Please try again.'}`);
+      setIsSubmitting(false);
     }
   };
 
@@ -377,9 +461,9 @@ const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
       <section className="py-20 bg-white min-h-screen flex items-center justify-center">
         <div className="max-w-md mx-auto text-center px-4">
           <CheckCircle className="h-16 w-16 text-green-600 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Booking Confirmed!</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Booking Submitted Successfully!</h2>
           <p className="text-gray-600 mb-6">
-            Your appointment has been successfully scheduled. You'll receive a confirmation email shortly with all the details.
+            Your booking has been submitted successfully. Once confirmed, check your email for the details.
           </p>
           <div className="bg-gray-50 p-4 rounded-lg mb-6">
             <div className="text-sm text-gray-600 mb-2">Your Appointment:</div>
@@ -395,6 +479,11 @@ const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
             )}
             <div className="text-gray-600">{selectedDate} at {selectedTime}</div>
           </div>
+          {notificationWarning && (
+            <p className="text-sm text-amber-600 mb-4">
+              {notificationWarning}
+            </p>
+          )}
           <button 
             onClick={() => {
               setIsBooked(false);
@@ -819,14 +908,18 @@ const Booking: React.FC<BookingProps> = ({ selectedPersona }) => {
                   </div>
                 </div>
 
+                {submitError && (
+                  <p className="text-sm text-red-500">{submitError}</p>
+                )}
                 <button
                   type="submit"
-                  className="w-full text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200"
+                  disabled={isSubmitting}
+                  className="w-full text-white py-4 rounded-lg font-semibold text-lg transition-colors duration-200 disabled:opacity-60"
                   style={{ backgroundColor: '#3AAFA9' }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#339B95'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#3AAFA9'}
                 >
-                  Confirm Booking
+                  {isSubmitting ? 'Submitting...' : 'Confirm Booking'}
                 </button>
               </form>
             </div>

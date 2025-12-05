@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Filter, BookOpen, Video, Newspaper, Download, Play, Calendar, Clock, User, Eye, Star, X } from 'lucide-react';
 import { PersonaType } from '../App';
+import { supabase } from '../supabaseClient';
 
 // CSS animations for hover effects
 const hoverAnimationStyles = `
@@ -140,12 +141,29 @@ interface ArticlesProps {
   selectedPersona: PersonaType;
 }
 
+interface BlogPost {
+  id: string;
+  title: string;
+  category: string;
+  status: 'draft' | 'published';
+  created_at: string;
+  updated_at: string;
+  views: number;
+  content?: string;
+  excerpt?: string;
+  image_url?: string;
+  author?: string;
+}
+
 const Articles: React.FC<ArticlesProps> = ({ selectedPersona }) => {
   const [activeTab, setActiveTab] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [selectedContent, setSelectedContent] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Inject hover animation styles
   useEffect(() => {
@@ -160,191 +178,133 @@ const Articles: React.FC<ArticlesProps> = ({ selectedPersona }) => {
     };
   }, []);
 
-  const content = {
-    articles: [
-      {
-        id: 1,
-        type: 'article',
-        title: 'Understanding Anxiety: Signs, Symptoms, and Management',
-        category: 'mental-health',
-        author: 'Dr. Sarah Kimani',
-        date: '2024-01-15',
-        readTime: '8 min',
-        excerpt: 'Anxiety is a common mental health condition that affects millions of people worldwide. Learn about the signs, symptoms, and effective management strategies.',
-        image: 'https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['anxiety', 'mental health', 'coping strategies'],
-        views: 1245,
-        rating: 4.8,
-        fullContent: `
-          <h2>Understanding Anxiety: A Comprehensive Guide</h2>
-          
-          <p>Anxiety is one of the most common mental health conditions affecting millions of people worldwide. While it's normal to feel anxious occasionally, persistent anxiety can significantly impact your daily life, relationships, and overall well-being.</p>
-          
-          <h3>What is Anxiety?</h3>
-          <p>Anxiety is your body's natural response to stress or danger. It's characterized by feelings of worry, nervousness, or fear about future events or situations. When these feelings become overwhelming or interfere with daily activities, it may indicate an anxiety disorder.</p>
-          
-          <h3>Common Signs and Symptoms</h3>
-          <ul>
-            <li><strong>Physical symptoms:</strong> Rapid heartbeat, sweating, trembling, shortness of breath</li>
-            <li><strong>Emotional symptoms:</strong> Excessive worry, restlessness, irritability, feeling on edge</li>
-            <li><strong>Behavioral symptoms:</strong> Avoidance of certain situations, difficulty concentrating, sleep disturbances</li>
-            <li><strong>Cognitive symptoms:</strong> Racing thoughts, catastrophic thinking, difficulty making decisions</li>
-          </ul>
-          
-          <h3>Effective Management Strategies</h3>
-          
-          <h4>1. Deep Breathing Exercises</h4>
-          <p>Practice slow, deep breathing to activate your body's relaxation response. Try the 4-7-8 technique: inhale for 4 counts, hold for 7, exhale for 8.</p>
-          
-          <h4>2. Progressive Muscle Relaxation</h4>
-          <p>Systematically tense and release different muscle groups to reduce physical tension and promote relaxation.</p>
-          
-          <h4>3. Mindfulness and Meditation</h4>
-          <p>Regular mindfulness practice can help you stay grounded in the present moment and reduce anxious thoughts about the future.</p>
-          
-          <h4>4. Regular Exercise</h4>
-          <p>Physical activity releases endorphins and can significantly reduce anxiety levels. Aim for at least 30 minutes of moderate exercise daily.</p>
-          
-          <h4>5. Healthy Sleep Habits</h4>
-          <p>Maintain a consistent sleep schedule and create a relaxing bedtime routine to improve sleep quality.</p>
-          
-          <h3>When to Seek Professional Help</h3>
-          <p>Consider seeking professional support if:</p>
-          <ul>
-            <li>Anxiety interferes with daily activities</li>
-            <li>You experience panic attacks</li>
-            <li>Physical symptoms are concerning</li>
-            <li>Self-help strategies aren't enough</li>
-          </ul>
-          
-          <p>Remember, seeking help is a sign of strength, not weakness. With proper support and treatment, anxiety can be effectively managed.</p>
-        `
-      },
-      {
-        id: 2,
-        type: 'article',
-        title: 'Building Resilience in Children: A Parent\'s Guide',
-        category: 'parenting',
-        author: 'Dr. Michael Wanjiku',
-        date: '2024-01-10',
-        readTime: '12 min',
-        excerpt: 'Discover practical strategies to help your children develop emotional resilience and cope with life\'s challenges effectively.',
-        image: 'https://images.pexels.com/photos/1620653/pexels-photo-1620653.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['parenting', 'children', 'resilience'],
-        views: 987,
-        rating: 4.9
-      },
-      {
-        id: 3,
-        type: 'article',
-        title: 'The Impact of Social Media on Teen Mental Health',
-        category: 'teenagers',
-        author: 'Dr. Grace Muthoni',
-        date: '2024-01-08',
-        readTime: '10 min',
-        excerpt: 'Exploring the complex relationship between social media usage and teenage mental health, with tips for healthy digital habits.',
-        image: 'https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['teenagers', 'social media', 'digital wellness'],
-        views: 1456,
-        rating: 4.7
-      }
-    ],
-    videos: [
-      {
-        id: 4,
-        type: 'video',
-        title: 'Mindfulness Meditation for Stress Relief',
-        category: 'wellness',
-        author: 'Dr. James Muturi',
-        date: '2024-01-12',
-        duration: '15 min',
-        excerpt: 'A guided mindfulness meditation session to help reduce stress and promote inner peace.',
-        image: 'https://images.pexels.com/photos/3822622/pexels-photo-3822622.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['mindfulness', 'meditation', 'stress relief'],
-        views: 2341,
-        rating: 4.9,
-        videoUrl: 'https://www.youtube.com/embed/inpok4MKVLM'
-      },
-      {
-        id: 5,
-        type: 'video',
-        title: 'Effective Communication in Relationships',
-        category: 'relationships',
-        author: 'Dr. Mary Njoroge',
-        date: '2024-01-05',
-        duration: '25 min',
-        excerpt: 'Learn essential communication skills to strengthen your relationships and resolve conflicts peacefully.',
-        image: 'https://images.pexels.com/photos/6146990/pexels-photo-6146990.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['relationships', 'communication', 'conflict resolution'],
-        views: 1876,
-        rating: 4.8,
-        videoUrl: 'https://www.youtube.com/embed/8-JXOnFOXQk'
-      },
-      {
-        id: 6,
-        type: 'video',
-        title: 'Coping with Grief and Loss',
-        category: 'mental-health',
-        author: 'Dr. Peter Kamau',
-        date: '2024-01-03',
-        duration: '30 min',
-        excerpt: 'Understanding the grief process and developing healthy coping mechanisms for dealing with loss.',
-        image: 'https://images.pexels.com/photos/5473956/pexels-photo-5473956.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['grief', 'loss', 'healing'],
-        views: 1654,
-        rating: 4.8,
-        videoUrl: 'https://www.youtube.com/embed/gsYL4PC0hyk'
-      }
-    ],
-    news: [
-      {
-        id: 7,
-        type: 'news',
-        title: 'New Mental Health Initiative Launched in Kenya',
-        category: 'news',
-        author: 'Imela Team',
-        date: '2024-01-20',
-        readTime: '5 min',
-        excerpt: 'The Kenyan government announces a new nationwide mental health initiative to improve access to counselling services.',
-        image: 'https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['mental health policy', 'Kenya', 'healthcare'],
-        views: 2103,
-        rating: 4.6
-      },
-      {
-        id: 8,
-        type: 'news',
-        title: 'World Mental Health Day 2024: Breaking the Stigma',
-        category: 'news',
-        author: 'Imela Team',
-        date: '2024-01-18',
-        readTime: '6 min',
-        excerpt: 'Reflecting on World Mental Health Day and the ongoing efforts to reduce stigma around mental health treatment.',
-        image: 'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=600',
-        tags: ['mental health awareness', 'stigma', 'advocacy'],
-        views: 1789,
-        rating: 4.7
-      }
-    ]
-  };
+  // Fetch blog posts from Supabase
+  useEffect(() => {
+    const loadBlogPosts = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
 
-  const allContent = [...content.articles, ...content.videos, ...content.news];
+        const { data, error: fetchError } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('status', 'published')
+          .order('created_at', { ascending: false });
+
+        if (fetchError) {
+          throw fetchError;
+        }
+
+        setBlogPosts(data || []);
+      } catch (err: any) {
+        // eslint-disable-next-line no-console
+        console.error('Error loading blog posts:', err);
+        setError('Failed to load blog posts. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadBlogPosts();
+
+    // Set up real-time subscription for new blog posts
+    const channel = supabase
+      .channel('public:blog_posts')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'blog_posts',
+          filter: 'status=eq.published',
+        },
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            const newPost: BlogPost = payload.new as BlogPost;
+            setBlogPosts((prev) => {
+              // Avoid duplicates
+              if (prev.some((p) => p.id === newPost.id)) return prev;
+              return [newPost, ...prev];
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            const updatedPost: BlogPost = payload.new as BlogPost;
+            if (updatedPost.status === 'published') {
+              setBlogPosts((prev) =>
+                prev.map((p) => (p.id === updatedPost.id ? updatedPost : p))
+              );
+            } else {
+              // Remove if status changed to draft
+              setBlogPosts((prev) => prev.filter((p) => p.id !== updatedPost.id));
+            }
+          } else if (payload.eventType === 'DELETE') {
+            const deletedPost: BlogPost = payload.old as BlogPost;
+            setBlogPosts((prev) => prev.filter((p) => p.id !== deletedPost.id));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  // Map blog posts from Supabase to the component's expected format
+  const mappedArticles = blogPosts.map((post) => {
+    // Calculate read time (rough estimate: 200 words per minute)
+    const wordCount = post.content?.split(/\s+/).length || 0;
+    const readTime = Math.max(1, Math.ceil(wordCount / 200));
+
+    // Map category to lowercase with hyphens for consistency
+    const categoryMap: { [key: string]: string } = {
+      'Mental Health': 'mental-health',
+      'Corporate': 'corporate',
+      'Leadership': 'leadership',
+      'Family': 'family',
+      'Wellbeing': 'wellness',
+    };
+    const mappedCategory = categoryMap[post.category] || post.category.toLowerCase().replace(/\s+/g, '-');
+
+    return {
+      id: post.id,
+      type: 'article',
+      title: post.title,
+      category: mappedCategory,
+      author: post.author || 'Imela Team',
+      date: post.created_at,
+      readTime: `${readTime} min`,
+      excerpt: post.excerpt || post.content?.substring(0, 150) + '...' || 'No excerpt available.',
+      image: post.image_url || 'https://images.pexels.com/photos/4101143/pexels-photo-4101143.jpeg?auto=compress&cs=tinysrgb&w=600',
+      tags: [post.category.toLowerCase()],
+      views: post.views || 0,
+      rating: 4.8, // Default rating, can be added to Supabase schema later
+      fullContent: post.content || post.excerpt || 'Content not available.',
+    };
+  });
+
+  const allContent = [...mappedArticles];
+
+  // Extract unique categories from blog posts
+  const uniqueCategories = Array.from(new Set(blogPosts.map((post) => post.category)));
+  const categoryMap: { [key: string]: string } = {
+    'Mental Health': 'mental-health',
+    'Corporate': 'corporate',
+    'Leadership': 'leadership',
+    'Family': 'family',
+    'Wellbeing': 'wellness',
+  };
 
   const categories = [
     { id: 'all', label: 'All Categories' },
-    { id: 'mental-health', label: 'Mental Health' },
-    { id: 'parenting', label: 'Parenting' },
-    { id: 'teenagers', label: 'Teenagers' },
-    { id: 'relationships', label: 'Relationships' },
-    { id: 'wellness', label: 'Wellness' },
-    { id: 'news', label: 'News' }
+    ...uniqueCategories.map((cat) => ({
+      id: categoryMap[cat] || cat.toLowerCase().replace(/\s+/g, '-'),
+      label: cat,
+    })),
   ];
 
   const tabs = [
     { id: 'all', label: 'All', icon: BookOpen },
     { id: 'article', label: 'Articles', icon: BookOpen },
-    { id: 'video', label: 'Videos', icon: Video },
-    { id: 'news', label: 'News', icon: Newspaper }
   ];
 
   const filteredContent = allContent.filter(item => {
@@ -356,9 +316,30 @@ const Articles: React.FC<ArticlesProps> = ({ selectedPersona }) => {
     return matchesSearch && matchesCategory && matchesTab;
   });
 
-  const handleContentClick = (item: any) => {
+  const handleContentClick = async (item: any) => {
     setSelectedContent(item);
     setIsModalOpen(true);
+
+    // Increment view count in Supabase
+    try {
+      const { error: updateError } = await supabase
+        .from('blog_posts')
+        .update({ views: (item.views || 0) + 1 })
+        .eq('id', item.id);
+
+      if (!updateError) {
+        // Update local state optimistically
+        setBlogPosts((prev) =>
+          prev.map((p) =>
+            p.id === item.id ? { ...p, views: (p.views || 0) + 1 } : p
+          )
+        );
+      }
+    } catch (err) {
+      // Silently fail - view count update is not critical
+      // eslint-disable-next-line no-console
+      console.error('Failed to update view count:', err);
+    }
   };
 
   const closeModal = () => {
@@ -532,22 +513,43 @@ const Articles: React.FC<ArticlesProps> = ({ selectedPersona }) => {
           })}
         </div>
 
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {filteredContent.map(item => (
-            <ContentCard key={item.id} item={item} />
-          ))}
-        </div>
-
-        {/* No Results */}
-        {filteredContent.length === 0 && (
+        {/* Loading State */}
+        {isLoading && (
           <div className="text-center py-12">
-            <BookOpen className="h-16 w-16 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No content found</h3>
-            <p className="text-gray-600">
-              Try adjusting your search terms or filters to find what you're looking for.
-            </p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-[#3AAFA9] mb-4"></div>
+            <p className="text-gray-600">Loading blog posts...</p>
           </div>
+        )}
+
+        {/* Error State */}
+        {error && !isLoading && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+            <p className="text-red-700 text-sm">{error}</p>
+          </div>
+        )}
+
+        {/* Content Grid */}
+        {!isLoading && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+              {filteredContent.map(item => (
+                <ContentCard key={item.id} item={item} />
+              ))}
+            </div>
+
+            {/* No Results */}
+            {filteredContent.length === 0 && !error && (
+              <div className="text-center py-12">
+                <BookOpen className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">No blog posts found</h3>
+                <p className="text-gray-600">
+                  {blogPosts.length === 0
+                    ? 'No published blog posts yet. Check back soon!'
+                    : 'Try adjusting your search terms or filters to find what you\'re looking for.'}
+                </p>
+              </div>
+            )}
+          </>
         )}
 
         {/* Newsletter Signup */}

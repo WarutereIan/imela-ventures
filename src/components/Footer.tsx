@@ -137,20 +137,29 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection, selectedPersona }) =>
 
         {/* Bottom Bar */}
         <div className="border-t border-gray-700 mt-6 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
               © 2025 Imela Ventures. All rights reserved.
             </p>
-            <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-200">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-sm">
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
+              >
                 Privacy Policy
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-200">
+              </button>
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
+              >
                 Terms of Service
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white text-sm transition-colors duration-200">
+              </button>
+              <button
+                type="button"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
+              >
                 Professional Ethics
-              </a>
+              </button>
             </div>
           </div>
         </div>

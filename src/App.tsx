@@ -16,13 +16,16 @@ import Team from './components/Team';
 // Define persona types
 export type PersonaType = 'personal' | 'corporate' | null;
 
+type SectionType = 'home' | 'services' | 'client-groups' | 'about' | 'contact' | 'booking' | 'articles' | 'meet-team';
+
 function App() {
-  const [activeSection, setActiveSection] = useState('home');
+  const [activeSection, setActiveSection] = useState<SectionType>('home');
   const [selectedPersona, setSelectedPersona] = useState<PersonaType>(null);
 
   useEffect(() => {
     const handleNavigate = (e: CustomEvent) => {
-      setActiveSection(e.detail);
+      const target = e.detail as SectionType;
+      setActiveSection(target);
       
       // Scroll to top of page smoothly when navigating between sections
       window.scrollTo({

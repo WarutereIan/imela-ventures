@@ -25,6 +25,10 @@ interface BlogPost {
   createdAt: string;
   updatedAt: string;
   views: number;
+  content?: string;
+  excerpt?: string;
+  imageUrl?: string | null;
+  author?: string | null;
 }
 
 interface SessionBooking {
@@ -111,6 +115,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             createdAt: row.created_at,
             updatedAt: row.updated_at,
             views: row.views ?? 0,
+            content: row.content ?? '',
+            excerpt: row.excerpt ?? '',
+            imageUrl: row.image_url ?? null,
+            author: row.author ?? null,
           })) ?? [];
 
         const mappedSessions: SessionBooking[] =
@@ -151,6 +159,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
 
     loadData();
   }, []);
+
+  // Sync featured image preview with the currently editing post
+  useEffect(() => {
+    if (editingPost?.imageUrl) {
+      setBlogImage(editingPost.imageUrl);
+    } else {
+      setBlogImage(null);
+    }
+  }, [editingPost]);
 
   // Real-time updates for bookings / sessions
   useEffect(() => {
@@ -271,6 +288,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       createdAt: now,
       updatedAt: now,
       views: 0,
+      content: '',
+      excerpt: '',
+      imageUrl: null,
+      author: 'Imela Team',
     };
 
     const { data, error: insertError } = await supabase
@@ -282,6 +303,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
         created_at: draft.createdAt,
         updated_at: draft.updatedAt,
         views: draft.views,
+        content: draft.content,
+        excerpt: draft.excerpt,
+        image_url: draft.imageUrl,
+        author: draft.author,
       })
       .select('*')
       .single();
@@ -301,6 +326,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       createdAt: data.created_at,
       updatedAt: data.updated_at,
       views: data.views ?? 0,
+      content: data.content ?? '',
+      excerpt: data.excerpt ?? '',
+      imageUrl: data.image_url ?? null,
+      author: data.author ?? null,
     };
 
     setBlogPosts(prev => [newPost, ...prev]);
@@ -327,6 +356,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
         status: next.status,
         updated_at: next.updatedAt,
         views: next.views,
+        content: next.content,
+        excerpt: next.excerpt,
+        image_url: next.imageUrl,
+        author: next.author,
       })
       .eq('id', next.id);
 
@@ -376,6 +409,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     const reader = new FileReader();
     reader.onloadend = () => {
       setBlogImage(reader.result as string);
+      if (editingPost) {
+        updatePost({ imageUrl: reader.result as string });
+      }
     };
     reader.readAsDataURL(file);
   };
@@ -441,42 +477,45 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       setSessions(prev =>
         prev.map(s => (s.id === session.id ? { ...s, status: 'confirmed' } : s))
       );
-
-      // Send confirmation email to customer
+      // Open admin email client with prefilled confirmation email
       try {
-        const { error: emailError } = await supabase.functions.invoke(
-          'send-booking-confirmation',
-          {
-            body: {
-              bookingId: session.id,
-              customerName: session.customerName,
-              email: session.email,
-              phone: session.phone,
-              service: session.service,
-              date: session.date,
-              time: session.time,
-              message: session.message,
-            },
-          }
-        );
+        const subject = encodeURIComponent(`Booking Confirmed: ${session.service}`);
 
-        if (emailError) {
-          // eslint-disable-next-line no-console
-          console.error('Email sending failed:', emailError);
-          // Still show success for status update, but note email issue
-          setError('Booking confirmed, but confirmation email failed to send. Please contact the customer manually.');
-          setTimeout(() => setError(null), 8000);
-          setIsConfirmingBooking(null);
-          return;
-        }
+        const formattedDate = new Date(session.date).toLocaleDateString('en-US', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
 
-        // Success - show success message
-        setSuccessMessage('Booking confirmed and checkout email sent successfully.');
+        const bodyLines = [
+          `Dear ${session.customerName},`,
+          '',
+          'Your booking has been confirmed. Here are the details:',
+          '',
+          `Service: ${session.service}`,
+          `Date: ${formattedDate}`,
+          `Time: ${session.time}`,
+          `Phone: ${session.phone}`,
+          session.message ? '' : null,
+          session.message ? `Your message: ${session.message}` : null,
+          '',
+          'If you need to reschedule or cancel, please contact us at least 24 hours in advance.',
+          '',
+          'Best regards,',
+          'Imela Ventures',
+        ].filter(Boolean);
+
+        const body = encodeURIComponent(bodyLines.join('\n'));
+
+        window.location.href = `mailto:${session.email}?subject=${subject}&body=${body}`;
+
+        setSuccessMessage('Booking confirmed. A confirmation email draft has been opened in your mail app.');
         setTimeout(() => setSuccessMessage(null), 5000);
-      } catch (emailErr: any) {
+      } catch (emailClientError: any) {
         // eslint-disable-next-line no-console
-        console.error('Exception sending confirmation email:', emailErr);
-        setError('Booking confirmed, but confirmation email failed. Please contact the customer manually.');
+        console.error('Error opening email client:', emailClientError);
+        setError('Booking confirmed, but could not open your email client. Please email the customer manually.');
         setTimeout(() => setError(null), 8000);
       }
     } catch (err: any) {
@@ -865,6 +904,13 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                       </label>
                       <textarea
                         placeholder="Write or paste your article content here..."
+                        value={editingPost.content || ''}
+                        onChange={e => {
+                          const value = e.target.value;
+                          const plain = value.replace(/<[^>]+>/g, '');
+                          const excerpt = plain.trim().slice(0, 200);
+                          updatePost({ content: value, excerpt });
+                        }}
                         className="w-full rounded-lg border border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500 h-28 resize-none bg-slate-50 focus:outline-none focus:ring-1 focus:ring-[#3AAFA9]"
                       />
                       <p className="text-[10px] text-slate-400">
@@ -1318,31 +1364,27 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                   try {
                     setIsSendingReply(true);
                     setError(null);
-
-                    const { error: fnError } = await supabase.functions.invoke(
-                      'send-booking-response',
-                      {
-                        body: {
-                          bookingId: reviewSession.id,
-                          to: reviewSession.email,
-                          from: 'info@imelaventures.com',
-                          message: reviewMessage.trim(),
-                          customerName: reviewSession.customerName,
-                          service: reviewSession.service,
-                          date: reviewSession.date,
-                          time: reviewSession.time,
-                        },
-                      }
+                    const subject = encodeURIComponent(
+                      `Response to your booking: ${reviewSession.service}`
                     );
+                    const body = encodeURIComponent(reviewMessage.trim());
 
-                    if (fnError) {
-                      // eslint-disable-next-line no-console
-                      console.error('Error sending booking response', fnError);
-                      setError('Could not send email response. Please try again.');
-                    } else {
-                      await handleSessionStatusChange(reviewSession.id, 'responded');
+                    try {
+                      window.location.href = `mailto:${reviewSession.email}?subject=${subject}&body=${body}`;
+                      setSessions(prev =>
+                        prev.map(s =>
+                          s.id === reviewSession.id ? { ...s, status: 'responded' } : s
+                        )
+                      );
                       setReviewSession(null);
                       setReviewMessage('');
+                      setSuccessMessage('Reply draft opened in your mail app and session marked as Responded.');
+                      setTimeout(() => setSuccessMessage(null), 5000);
+                    } catch (emailClientError: any) {
+                      // eslint-disable-next-line no-console
+                      console.error('Error opening email client for response:', emailClientError);
+                      setError('Could not open your email client. Please email the customer manually.');
+                      setTimeout(() => setError(null), 8000);
                     }
                   } finally {
                     setIsSendingReply(false);

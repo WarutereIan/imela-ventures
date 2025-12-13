@@ -160,15 +160,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
     loadData();
   }, []);
 
-  // Sync featured image preview with the currently editing post
-  useEffect(() => {
-    if (editingPost?.imageUrl) {
-      setBlogImage(editingPost.imageUrl);
-    } else {
-      setBlogImage(null);
-    }
-  }, [editingPost]);
-
   // Real-time updates for bookings / sessions
   useEffect(() => {
     const channel = supabase
@@ -904,13 +895,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                       </label>
                       <textarea
                         placeholder="Write or paste your article content here..."
-                        value={editingPost.content || ''}
-                        onChange={e => {
-                          const value = e.target.value;
-                          const plain = value.replace(/<[^>]+>/g, '');
-                          const excerpt = plain.trim().slice(0, 200);
-                          updatePost({ content: value, excerpt });
-                        }}
                         className="w-full rounded-lg border border-dashed border-slate-200 px-3 py-2 text-xs text-slate-500 h-28 resize-none bg-slate-50 focus:outline-none focus:ring-1 focus:ring-[#3AAFA9]"
                       />
                       <p className="text-[10px] text-slate-400">

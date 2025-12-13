@@ -223,7 +223,7 @@ const Contact: React.FC = () => {
                 <div className="flex items-center">
                   <Mail className="h-5 w-5 mr-3" style={{ color: '#3AAFA9' }} />
                   <div>
-                    <p className="font-medium text-gray-900 text-sm">info@imelaventures.com</p>
+                    <p className="font-medium text-gray-900 text-sm">mwangikaren77@gmail.com</p>
                     <p className="text-xs text-gray-600">Email for inquiries and consultations</p>
                   </div>
                 </div>

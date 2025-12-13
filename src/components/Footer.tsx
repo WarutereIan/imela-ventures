@@ -102,7 +102,7 @@ const Footer: React.FC<FooterProps> = ({ setActiveSection, selectedPersona }) =>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail className="h-5 w-5 flex-shrink-0" style={{ color: '#3AAFA9' }} />
-                <p className="text-gray-300">info@imelaventures.com</p>
+                <p className="text-gray-300">mwangikaren77@gmail.com</p>
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 flex-shrink-0" style={{ color: '#3AAFA9' }} />

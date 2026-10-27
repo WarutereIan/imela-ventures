@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import { UrgentHelpContext, UrgentHelpDialog } from './UrgentHelp';
 import { PageLoader } from './PageStates';
+import { TabBar, TabBarSpacer } from './TabBar';
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -18,6 +19,7 @@ function ScrollToTop() {
 }
 
 const SiteLayout: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
+  const { pathname } = useLocation();
   const [urgentOpen, setUrgentOpen] = useState(false);
   const openUrgent = useCallback(() => setUrgentOpen(true), []);
 
@@ -34,11 +36,16 @@ const SiteLayout: React.FC<{ bare?: boolean }> = ({ bare = false }) => {
         <Header />
         <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
           <Suspense fallback={<PageLoader />}>
-            <Outlet />
+            {/* Keyed by path so each page gently fades in as you move around. */}
+            <div key={pathname} className="page-enter">
+              <Outlet />
+            </div>
           </Suspense>
         </main>
         {!bare && <Footer />}
+        <TabBarSpacer tone={bare ? 'light' : 'dark'} />
       </div>
+      <TabBar onUrgentHelp={openUrgent} />
       <UrgentHelpDialog open={urgentOpen} onClose={() => setUrgentOpen(false)} />
     </UrgentHelpContext.Provider>
   );

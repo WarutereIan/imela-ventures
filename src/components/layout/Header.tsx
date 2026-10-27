@@ -1,10 +1,9 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { LifeBuoy, Menu } from 'lucide-react';
+import { LifeBuoy } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { buttonClasses } from '../ui/Button';
 import { UrgentHelpContext } from './UrgentHelp';
-import { MobileMenu } from './MobileMenu';
 
 export const PRIMARY_NAV = [
   { to: '/', label: 'Home', end: true },
@@ -23,14 +22,9 @@ export function Logo({ className }: { className?: string }) {
 }
 
 const Header: React.FC = () => {
-  const [open, setOpen] = useState(false);
   const location = useLocation();
   const openUrgentHelp = useContext(UrgentHelpContext);
   const isOrg = location.pathname.startsWith('/organisations');
-
-  useEffect(() => setOpen(false), [location.pathname]);
-
-  const close = useCallback(() => setOpen(false), []);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -99,20 +93,11 @@ const Header: React.FC = () => {
           >
             <LifeBuoy className="h-4 w-4" aria-hidden />
           </button>
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            className={buttonClasses('outline', 'sm', 'lg:hidden')}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-          >
-            <Menu className="h-4 w-4" aria-hidden /> Menu
-          </button>
+
         </div>
       </div>
 
     </header>
-      <MobileMenu open={open} onClose={close} onUrgentHelp={openUrgentHelp} />
     </>
   );
 };

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, ArrowUpRight, Clock } from 'lucide-react';
 import { useResources } from '../../domain/resources';
 import { Chip } from '../ui/primitives';
+import { Carousel } from '../ui/Carousel';
 
 const CATEGORY_LABEL: Record<string, string> = {
   grief: 'Grief & loss',
@@ -24,10 +25,10 @@ export function RelatedResources({ categories }: { categories: string[] }) {
   return (
     <div className="space-y-6">
       {articles.length > 0 && (
-        <ul className="grid gap-4 md:grid-cols-3">
+        <Carousel label="Related resources" gridFrom="md" gridClassName="md:grid-cols-3 md:gap-4" slideClassName="w-[80%] sm:w-[55%]">
           {articles.map((r) => (
-            <li key={r.slug}>
               <Link
+                key={r.slug}
                 to={`/resources/${r.slug}`}
                 className="group flex h-full flex-col rounded-card border border-line/10 bg-paper p-5 shadow-soft transition-transform duration-quick hover:-translate-y-1"
               >
@@ -41,18 +42,17 @@ export function RelatedResources({ categories }: { categories: string[] }) {
                   <Clock className="h-3.5 w-3.5" aria-hidden /> {r.readMinutes} min read
                 </span>
               </Link>
-            </li>
           ))}
-        </ul>
+        </Carousel>
       )}
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid gap-2 sm:grid-cols-2 sm:gap-3">
         {categories.map((id) => (
           <li key={id}>
             <Link
               to={`/resources?category=${encodeURIComponent(id)}`}
-              className="group flex items-center gap-4 rounded-card border border-line/10 bg-paper px-5 py-4 shadow-soft transition-transform duration-quick hover:-translate-y-0.5"
+              className="group flex items-center gap-3 rounded-card border border-line/10 bg-paper px-4 py-3 shadow-soft transition-transform duration-quick hover:-translate-y-0.5 sm:gap-4 sm:px-5 sm:py-4"
             >
-              <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-butter/70 text-butter-ink">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-2xl bg-butter/70 text-butter-ink sm:h-11 sm:w-11">
                 <BookOpen className="h-5 w-5" aria-hidden />
               </span>
               <span className="flex-1">

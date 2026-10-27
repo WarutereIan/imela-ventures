@@ -1,12 +1,63 @@
 import { Check } from 'lucide-react';
 import { cn } from '../../lib/cn';
+import { Carousel } from '../ui/Carousel';
 import type { FeelsStyle, HelpsStyle } from './groupStyles';
 
 const STICKER_TONES = ['bg-lime', 'bg-lavender', 'bg-butter', 'bg-[#F29BA8]', 'bg-sky'];
 const TILTS = [-3, 2.5, -1.5, 3, -2];
 
+/**
+ * Phones: one quote per slide, keeping the area's own treatment (sticker,
+ * note or speech bubble). The quotes are short, so a swipe row saves a lot of
+ * vertical space without hiding anything important.
+ */
+function FeelsLikeCarousel({ items, style }: { items: string[]; style: FeelsStyle }) {
+  return (
+    <Carousel label="How it can feel" slideClassName="w-[78%]">
+      {items.map((q, i) =>
+        style === 'stickers' ? (
+          <p
+            key={q}
+            className={cn(
+              'flex items-center rounded-[1.4rem] border-[2.5px] border-ink-strong px-5 py-4 text-base font-semibold text-ink-strong shadow-sticker',
+              STICKER_TONES[i % STICKER_TONES.length]
+            )}
+          >
+            “{q}”
+          </p>
+        ) : style === 'notes' ? (
+          <p
+            key={q}
+            className="relative rounded-card border border-line/10 bg-paper px-5 pb-4 pt-5 font-hand text-[1.6rem] leading-[30px] text-ink-strong shadow-soft"
+            style={{ backgroundImage: 'repeating-linear-gradient(transparent 0 29px, rgb(64 60 56 / 0.08) 29px 30px)' }}
+          >
+            {q}
+          </p>
+        ) : (
+          <p key={q} className="rounded-[1.6rem] rounded-bl-md border border-line/10 bg-paper px-5 py-4 text-lg text-ink-strong shadow-soft">
+            {q}
+          </p>
+        )
+      )}
+    </Carousel>
+  );
+}
+
 /** "It can feel like…" quotes in one of three tailored treatments. */
 export function FeelsLike({ items, style }: { items: string[]; style: FeelsStyle }) {
+  return (
+    <>
+      <div className="min-w-0 md:hidden">
+        <FeelsLikeCarousel items={items} style={style} />
+      </div>
+      <div className="hidden min-w-0 md:block">
+        <FeelsLikeDesktop items={items} style={style} />
+      </div>
+    </>
+  );
+}
+
+function FeelsLikeDesktop({ items, style }: { items: string[]; style: FeelsStyle }) {
   if (style === 'stickers') {
     return (
       <ul className="flex flex-wrap gap-x-4 gap-y-5 py-2">
@@ -69,20 +120,40 @@ export function FeelsLike({ items, style }: { items: string[]; style: FeelsStyle
 export function HowSupportHelps({ items, style }: { items: string[]; style: HelpsStyle }) {
   if (style === 'steps') {
     return (
-      <ol className="grid gap-4 md:grid-cols-3">
+      <Carousel label="How talking with someone may help" gridFrom="md" gridClassName="md:grid-cols-3 md:gap-4" slideClassName="w-[78%] sm:w-[60%]">
         {items.map((h, i) => (
-          <li key={h} className="rounded-card border border-line/10 bg-paper p-5 shadow-soft">
+          <div key={h} className="rounded-card border border-line/10 bg-paper p-5 shadow-soft">
             <span className="grid h-10 w-10 place-items-center rounded-full bg-ink-strong font-display text-lg text-ivory">{i + 1}</span>
             <p className="mt-3 leading-relaxed text-ink">{h}</p>
-          </li>
+          </div>
         ))}
-      </ol>
+      </Carousel>
     );
   }
   return (
-    <ul className="space-y-3">
+    <>
+      <div className="min-w-0 md:hidden">
+        <Carousel label="How talking with someone may help" slideClassName="w-[78%]">
+          {items.map((h) => (
+            <p key={h} className="flex gap-3 rounded-card bg-paper/80 p-4 text-base leading-relaxed text-ink">
+              <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-sage-ink text-white">
+                <Check className="h-3.5 w-3.5" aria-hidden />
+              </span>
+              {h}
+            </p>
+          ))}
+        </Carousel>
+      </div>
+      <HelpsChecklist items={items} />
+    </>
+  );
+}
+
+function HelpsChecklist({ items }: { items: string[] }) {
+  return (
+    <ul className="hidden space-y-3 md:block">
       {items.map((h) => (
-        <li key={h} className="flex gap-3 text-lg leading-relaxed text-ink">
+        <li key={h} className="flex gap-3 text-base leading-relaxed text-ink md:text-lg">
           <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-sage-ink text-white">
             <Check className="h-3.5 w-3.5" aria-hidden />
           </span>

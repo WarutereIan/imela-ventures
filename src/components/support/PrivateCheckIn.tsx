@@ -25,7 +25,10 @@ export function PrivateCheckIn({
   accent: string;
   startCollapsed?: boolean;
 }) {
-  const [open, setOpen] = useState(!startCollapsed);
+  // Collapsed on phones (and where the area prefers it) so the page stays short; one tap opens it.
+  const [open, setOpen] = useState(
+    () => !startCollapsed && !(typeof window !== 'undefined' && window.matchMedia?.('(max-width: 767px)').matches)
+  );
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<string[]>(() => reflections.map(() => ''));
   const [done, setDone] = useState(false);
@@ -42,7 +45,7 @@ export function PrivateCheckIn({
 
   return (
     <div className={cn('overflow-hidden rounded-blob border border-line/10', accent)}>
-      <div className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+      <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div className="flex items-center gap-4">
           <Companion variant={character.variant} mood="calm" pose="hold" hold="lantern" tone={character.tone} size={72} />
           <div>

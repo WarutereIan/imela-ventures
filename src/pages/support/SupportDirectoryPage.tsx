@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, Search, Sparkles, X } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ChevronDown, Search, Sparkles, X } from 'lucide-react';
 import { CONCERN_GROUPS, concernsInGroup, getGroup } from '../../data/concerns';
 import Companion from '../../components/characters/Companion';
 import { Sticker } from '../../components/ui/Sticker';
@@ -9,6 +9,7 @@ import { GROUP_STYLE } from '../../components/support/groupStyles';
 import { searchConcerns } from '../../components/support/search';
 import { useDocumentTitle } from '../../lib/useDocumentTitle';
 import { cn } from '../../lib/cn';
+import { Carousel } from '../../components/ui/Carousel';
 
 export default function SupportDirectoryPage() {
   useDocumentTitle('What we help with');
@@ -26,15 +27,15 @@ export default function SupportDirectoryPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden pb-10 pt-12 sm:pt-16">
+      <section className="relative overflow-hidden pb-6 pt-8 sm:pb-10 sm:pt-16">
         <div className="shell grid items-end gap-10 lg:grid-cols-[1.4fr_1fr]">
           <div>
             <p className="eyebrow">Start wherever feels right</p>
             <h1 className="mt-1 font-display text-display-xl">What would you like support with?</h1>
-            <p className="mt-6 max-w-2xl text-xl leading-relaxed text-ink">
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink sm:mt-6 sm:text-xl">
               Browse the areas people most often bring to us, or search in your own words. Each page explains what it can feel like, how talking may help, and which support is available today.
             </p>
-            <form role="search" className="mt-8 max-w-xl" onSubmit={(e) => e.preventDefault()}>
+            <form role="search" className="mt-6 max-w-xl sm:mt-8" onSubmit={(e) => e.preventDefault()}>
               <label htmlFor="concern-search" className="sr-only">
                 Search what we help with
               </label>
@@ -116,8 +117,8 @@ export default function SupportDirectoryPage() {
         </section>
       )}
 
-      <section aria-labelledby="areas-title" className="shell py-10">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <section aria-labelledby="areas-title" className="shell py-6 md:py-10">
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3 md:mb-8 md:gap-4">
           <div>
             <p className="eyebrow">Nine areas</p>
             <h2 id="areas-title" className="font-display text-display-md">
@@ -126,7 +127,49 @@ export default function SupportDirectoryPage() {
           </div>
           <p className="max-w-md text-sm text-ink-soft">These are discovery categories, not diagnoses. Each page shows honestly which support is available today and what we're still confirming.</p>
         </div>
-        <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+        {/*
+          Phones: a compact, expandable list so all nine areas are visible at a
+          glance (a carousel would hide eight of them). Tablet and up: the bento.
+        */}
+        <ul className="space-y-2 md:hidden">
+          {CONCERN_GROUPS.map((g) => {
+            const s = GROUP_STYLE[g.id];
+            const items = concernsInGroup(g.id).filter((c) => c.group === g.id);
+            return (
+              <li key={g.id}>
+                <details className={cn('group overflow-hidden rounded-[1.4rem]', s.tile)}>
+                  <summary className="flex cursor-pointer list-none items-center gap-3 p-3 pr-4 [&::-webkit-details-marker]:hidden">
+                    <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-paper/40" aria-hidden>
+                      <Companion variant={g.character.variant} mood={g.character.mood} tone={g.character.tone} animate="none" className="h-auto w-10" />
+                    </span>
+                    <span className="flex-1">
+                      <span className="block font-display text-[1.2rem] leading-tight">{g.title}</span>
+                      <span className={cn('block text-xs', s.tileSoft)}>{items.length} topics</span>
+                    </span>
+                    <ChevronDown className="h-5 w-5 shrink-0 transition-transform group-open:rotate-180" aria-hidden />
+                  </summary>
+                  <div className="px-4 pb-4">
+                    <p className={cn('text-sm leading-relaxed', s.tileSoft)}>{g.blurb}</p>
+                    <ul className="mt-3 flex flex-wrap gap-1.5">
+                      {items.map((c) => (
+                        <li key={c.slug}>
+                          <Link to={`/support/${c.slug}`} className={cn('inline-flex rounded-pill px-3 py-1.5 text-xs font-semibold', s.tileChip)}>
+                            {c.title}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link to={`/support/area/${g.id}`} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold underline underline-offset-4">
+                      Explore {g.title.toLowerCase()} <ArrowUpRight className="h-4 w-4" aria-hidden />
+                    </Link>
+                  </div>
+                </details>
+              </li>
+            );
+          })}
+        </ul>
+
+        <ul className="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-6">
           {CONCERN_GROUPS.map((g) => {
             const s = GROUP_STYLE[g.id];
             const items = concernsInGroup(g.id).filter((c) => c.group === g.id);
@@ -169,9 +212,9 @@ export default function SupportDirectoryPage() {
         </ul>
       </section>
 
-      <section aria-label="Other ways to begin" className="shell py-10">
-        <div className="grid gap-4 md:grid-cols-2">
-          <Link to="/persona" className="group relative overflow-hidden rounded-blob bg-lavender-ink p-8 text-white">
+      <section aria-label="Other ways to begin" className="shell py-6 md:py-10">
+        <Carousel label="Other ways to begin" gridFrom="md" gridClassName="md:grid-cols-2 md:gap-4" slideClassName="w-[86%] sm:w-[70%]">
+          <Link to="/persona" className="group relative block overflow-hidden rounded-blob bg-lavender-ink p-6 text-white md:p-8">
             <Sparkles className="h-6 w-6" aria-hidden />
             <p className="mt-4 font-display text-display-sm text-white">Not sure? Talk it through with Imela Persona.</p>
             <p className="mt-2 max-w-sm text-white/80">Begin in your own words, without telling us who you are.</p>
@@ -182,7 +225,7 @@ export default function SupportDirectoryPage() {
               <Companion variant="drift" mood="curious" pose="wave" tone="lavender" size={120} animate="none" />
             </div>
           </Link>
-          <Link to="/find-support" className="group relative overflow-hidden rounded-blob border-[2.5px] border-ink-strong bg-butter p-8 text-ink-strong">
+          <Link to="/find-support" className="group relative block overflow-hidden rounded-blob border-[2.5px] border-ink-strong bg-butter p-6 text-ink-strong md:p-8">
             <Search className="h-6 w-6" aria-hidden />
             <p className="mt-4 font-display text-display-sm">Describe what you need, see what fits.</p>
             <p className="mt-2 max-w-sm text-ink">The service finder matches what you write to the support Imela offers today.</p>
@@ -193,7 +236,7 @@ export default function SupportDirectoryPage() {
               <Companion variant="bloom" mood="hopeful" pose="hold" tone="butter" size={110} animate="none" />
             </div>
           </Link>
-        </div>
+        </Carousel>
       </section>
     </>
   );

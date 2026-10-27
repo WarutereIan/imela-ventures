@@ -11,9 +11,10 @@ describe('Carousel', () => {
         <p>Three</p>
       </Carousel>
     );
-    const region = screen.getByRole('region', { name: 'Areas we help with' });
-    expect(region).toHaveAttribute('aria-roledescription', 'carousel');
-    expect(screen.getAllByRole('group').map((g) => g.getAttribute('aria-label'))).toEqual(['1 of 3', '2 of 3', '3 of 3']);
+    const carousel = screen.getByRole('group', { name: 'Areas we help with' });
+    expect(carousel).toHaveAttribute('aria-roledescription', 'carousel');
+    const slides = screen.getAllByRole('group').filter((g) => g.getAttribute('aria-roledescription') === 'slide');
+    expect(slides.map((g) => g.getAttribute('aria-label'))).toEqual(['1 of 3', '2 of 3', '3 of 3']);
     expect(screen.getByRole('button', { name: 'Previous' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
     expect(screen.getByText('1 / 3')).toBeInTheDocument();
@@ -46,7 +47,7 @@ describe('Carousel', () => {
         <p>Small</p>
       </Carousel>
     );
-    const [first, second] = screen.getAllByRole('group');
+    const [first, second] = screen.getAllByRole('group').filter((g) => g.getAttribute('aria-roledescription') === 'slide');
     expect(first.className).toContain('lg:col-span-2');
     expect(second.className).not.toContain('lg:col-span-2');
   });

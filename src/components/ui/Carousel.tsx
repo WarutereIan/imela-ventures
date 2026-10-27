@@ -125,7 +125,7 @@ export function Carousel({
   );
 
   return (
-    <div role="region" aria-roledescription="carousel" aria-label={label} className={cn('relative min-w-0 max-w-full', className)}>
+    <div role="group" aria-roledescription="carousel" aria-label={label} className={cn('relative min-w-0 max-w-full', className)}>
       <div
         ref={trackRef}
         id={id}

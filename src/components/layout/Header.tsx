@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { LifeBuoy, Menu, X } from 'lucide-react';
+import { LifeBuoy, Menu } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { buttonClasses } from '../ui/Button';
 import { UrgentHelpContext } from './UrgentHelp';
-import Companion from '../characters/Companion';
+import { MobileMenu } from './MobileMenu';
 
 export const PRIMARY_NAV = [
   { to: '/', label: 'Home', end: true },
@@ -30,12 +30,7 @@ const Header: React.FC = () => {
 
   useEffect(() => setOpen(false), [location.pathname]);
 
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [open]);
+  const close = useCallback(() => setOpen(false), []);
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -44,9 +39,9 @@ const Header: React.FC = () => {
     );
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/10 bg-ivory/90 backdrop-blur-md">
-      {/* Audience pathways + urgent help */}
-      <div className="border-b border-line/10 bg-ivory-deep/60">
+    <>
+      {/* Audience pathways + urgent help. Scrolls away so the sticky bar stays slim on phones. */}
+      <div className="border-b border-line/10 bg-ivory-deep">
         <div className="shell flex h-9 items-center justify-between gap-3 text-xs">
           <nav aria-label="Audience" className="flex items-center gap-1">
             <Link
@@ -74,7 +69,8 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      <div className="shell flex h-[4.25rem] items-center justify-between gap-4">
+    <header className="sticky top-0 z-40 border-b border-line/10 bg-ivory/90 backdrop-blur-md">
+      <div className="shell flex h-16 items-center justify-between gap-3 lg:h-[4.25rem]">
         <Logo />
 
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
@@ -97,6 +93,14 @@ const Header: React.FC = () => {
           </Link>
           <button
             type="button"
+            onClick={openUrgentHelp}
+            className="grid h-9 w-9 place-items-center rounded-full bg-rose-soft text-rose-ink lg:hidden"
+            aria-label="Need urgent help?"
+          >
+            <LifeBuoy className="h-4 w-4" aria-hidden />
+          </button>
+          <button
+            type="button"
             onClick={() => setOpen(true)}
             className={buttonClasses('outline', 'sm', 'lg:hidden')}
             aria-expanded={open}
@@ -107,40 +111,9 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu sheet */}
-      {open && (
-        <div id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu" className="fixed inset-0 z-50 flex flex-col bg-lavender lg:hidden">
-          <div className="shell flex h-[4.25rem] items-center justify-between">
-            <Logo />
-            <button onClick={() => setOpen(false)} className={buttonClasses('primary', 'sm')} autoFocus>
-              <X className="h-4 w-4" aria-hidden /> Close
-            </button>
-          </div>
-          <nav aria-label="Mobile" className="shell flex flex-1 flex-col gap-1 overflow-y-auto pb-8 pt-4">
-            {[...PRIMARY_NAV, { to: '/persona', label: 'Imela Persona' }, { to: '/support', label: 'Find support' }, { to: '/organisations', label: 'For organisations' }].map(
-              (item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  end={'end' in item ? item.end : undefined}
-                  className={({ isActive }) =>
-                    cn('rounded-2xl px-4 py-3 font-display text-3xl text-ink-strong', isActive ? 'bg-paper/70' : 'hover:bg-paper/40')
-                  }
-                >
-                  {item.label}
-                </NavLink>
-              )
-            )}
-            <Link to="/book" className={buttonClasses('primary', 'lg', 'mt-6')}>
-              Schedule Consultation
-            </Link>
-            <div className="mt-auto flex justify-end pt-8">
-              <Companion variant="sprout" mood="joyful" pose="wave" tone="butter" size={110} />
-            </div>
-          </nav>
-        </div>
-      )}
     </header>
+      <MobileMenu open={open} onClose={close} onUrgentHelp={openUrgentHelp} />
+    </>
   );
 };
 

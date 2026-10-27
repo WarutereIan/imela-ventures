@@ -41,7 +41,7 @@ export function HomeHero() {
         </div>
 
         {/* Immersive companion scene */}
-        <div className="relative mx-auto aspect-[5/6] w-full max-w-[34rem]" aria-hidden>
+        <div className="relative mx-auto aspect-[5/6] w-full max-w-[21rem] sm:max-w-[34rem]" aria-hidden>
           <div className="absolute inset-x-[6%] inset-y-0 rounded-[46%_54%_52%_48%/42%_44%_56%_58%] bg-lavender" />
           <svg viewBox="0 0 400 480" className="absolute inset-0 h-full w-full" preserveAspectRatio="none">
             <g stroke="#fff" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.8">

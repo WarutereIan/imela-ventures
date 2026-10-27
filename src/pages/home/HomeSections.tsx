@@ -11,6 +11,7 @@ import { ORG } from '../../data/organisation';
 import ResourceCard from '../../components/resources/ResourceCard';
 import { useResources } from '../../domain/resources';
 import { cn } from '../../lib/cn';
+import { Carousel } from '../../components/ui/Carousel';
 
 /* ---------- Individual & organisational pathways ---------- */
 export function Pathways() {
@@ -21,8 +22,8 @@ export function Pathways() {
       <h2 id="pathways-title" className="sr-only">
         Support for individuals and organisations
       </h2>
-      <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
-        <article className="relative overflow-hidden rounded-blob bg-sage p-7 sm:p-10">
+      <Carousel label="Support for individuals and organisations" gridFrom="lg" gridClassName="lg:grid-cols-[1.25fr_1fr] lg:gap-5" slideClassName="w-[88%] sm:w-[72%]">
+        <article className="relative overflow-hidden rounded-blob bg-sage p-6 sm:p-10">
           <p className="eyebrow text-sage-ink">For you & the people close to you</p>
           <h3 className="mt-2 max-w-md font-display text-display-md">Personal counselling, at a pace that feels safe.</h3>
           <p className="mt-4 max-w-lg text-ink">
@@ -49,7 +50,7 @@ export function Pathways() {
           </div>
         </article>
 
-        <article className="relative overflow-hidden rounded-blob bg-ink-strong p-7 text-ivory sm:p-10">
+        <article className="relative overflow-hidden rounded-blob bg-ink-strong p-6 text-ivory sm:p-10">
           <p className="eyebrow text-lime">For organisations</p>
           <h3 className="mt-2 font-display text-display-md text-ivory">Healthier people. More thoughtful workplaces.</h3>
           <p className="mt-4 text-ivory/80">
@@ -67,7 +68,7 @@ export function Pathways() {
             Workplace wellness <ArrowUpRight className="h-4 w-4" aria-hidden />
           </Link>
         </article>
-      </div>
+      </Carousel>
     </section>
   );
 }
@@ -83,8 +84,8 @@ export function PersonaFeature() {
   return (
     <section aria-labelledby="persona-feature-title" className="shell section">
       <div className="grid overflow-hidden rounded-blob bg-paper shadow-lift lg:grid-cols-[1fr_1.05fr]">
-        <Scene environment="dusk" className="min-h-[22rem]">
-          <div className="flex h-full min-h-[22rem] flex-col justify-end p-6 sm:p-8">
+        <Scene environment="dusk" className="min-h-[15rem] sm:min-h-[22rem]">
+          <div className="flex h-full min-h-[15rem] flex-col justify-end p-5 sm:min-h-[22rem] sm:p-8">
             {/* An illustrative, clearly-labelled example exchange */}
             <div className="space-y-2" aria-label="Example conversation (illustration)" role="img">
               <p className="ml-auto w-fit max-w-[85%] rounded-3xl rounded-br-md bg-lavender-ink px-4 py-2.5 text-sm text-white">I'm not sure how to explain it. Everything just feels heavy.</p>
@@ -94,7 +95,7 @@ export function PersonaFeature() {
               <p className="pt-1 text-xs text-white/80">Example only</p>
             </div>
           </div>
-          <div className="absolute right-6 top-6 w-28 sm:w-32" aria-hidden>
+          <div className="absolute right-4 top-4 w-20 sm:right-6 sm:top-6 sm:w-32" aria-hidden>
             <Companion variant="drift" mood="calm" pose="wave" tone="sage" className="w-full" />
           </div>
         </Scene>
@@ -133,15 +134,15 @@ export function PersonaFeature() {
 
 /* ---------- Areas bento ---------- */
 const BENTO: Record<string, string> = {
-  'emotional-wellbeing': 'sm:col-span-2 lg:col-span-2 lg:row-span-2',
+  'emotional-wellbeing': 'lg:col-span-2 lg:row-span-2',
   'relationships-family': 'lg:col-span-2',
   'grief-loss': '',
   'trauma-history': '',
   'addiction-patterns': 'lg:col-span-2',
   'identity-growth': '',
   'young-people-families': '',
-  workplace: 'sm:col-span-2 lg:col-span-2',
-  specialist: 'sm:col-span-2 lg:col-span-2',
+  workplace: 'lg:col-span-2',
+  specialist: 'lg:col-span-2',
 };
 
 export function AreasBento() {
@@ -158,32 +159,39 @@ export function AreasBento() {
           See every area
         </Link>
       </div>
-      <ul className="mt-10 grid auto-rows-[minmax(11rem,auto)] gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Phones and tablets: a swipe row of area cards. Desktop: the bento grid. */}
+      <Carousel
+        label="Areas we help with"
+        className="mt-8 lg:mt-10"
+        gridFrom="lg"
+        gridClassName="lg:grid-cols-4 lg:auto-rows-[minmax(11rem,auto)] lg:gap-3"
+        slideClassName="w-[72%] sm:w-[44%]"
+        slideClassNames={CONCERN_GROUPS.map((g) => BENTO[g.id])}
+      >
         {CONCERN_GROUPS.map((g, i) => {
           const big = i === 0;
           const dark = g.id === 'workplace';
           return (
-            <li key={g.id} className={BENTO[g.id]}>
-              <Link
-                to={`/support/area/${g.id}`}
-                className={cn(
-                  'group relative flex h-full flex-col justify-between overflow-hidden rounded-card p-5 transition-transform duration-calm ease-gentle hover:-translate-y-1',
-                  dark ? 'bg-ink-strong text-ivory' : g.surface
-                )}
-              >
-                <span className={cn('relative z-10 block max-w-[70%] font-display', big ? 'text-display-md' : 'text-display-sm')}>{g.title}</span>
-                {big && <span className="relative z-10 mt-3 block max-w-sm text-ink">{g.blurb}</span>}
-                <span className="relative z-10 mt-4 inline-flex items-center gap-1 text-sm font-semibold">
-                  Explore <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
-                </span>
-                <span className={cn('absolute bottom-2 right-2', big ? 'w-44 sm:w-52' : 'w-24')} aria-hidden>
-                  <Companion {...g.character} animate={big ? 'ambient' : 'none'} className="w-full" />
-                </span>
-              </Link>
-            </li>
+            <Link
+              key={g.id}
+              to={`/support/area/${g.id}`}
+              className={cn(
+                'group relative flex h-full min-h-[14rem] flex-col justify-between overflow-hidden rounded-card p-5 transition-transform duration-calm ease-gentle hover:-translate-y-1 lg:min-h-0',
+                dark ? 'bg-ink-strong text-ivory' : g.surface
+              )}
+            >
+              <span className={cn('relative z-10 block max-w-[75%] font-display text-display-sm', big && 'lg:text-display-md')}>{g.title}</span>
+              {big && <span className="relative z-10 mt-3 hidden max-w-sm text-ink lg:block">{g.blurb}</span>}
+              <span className="relative z-10 mt-4 inline-flex items-center gap-1 text-sm font-semibold">
+                Explore <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+              </span>
+              <span className={cn('absolute bottom-2 right-2 w-24', big && 'lg:w-52')} aria-hidden>
+                <Companion {...g.character} animate={big ? 'ambient' : 'none'} className="w-full" />
+              </span>
+            </Link>
           );
         })}
-      </ul>
+      </Carousel>
       <p className="mt-4 text-sm text-ink-soft">These are areas people often bring to counselling — not diagnoses. Each page shows honestly which services are available today.</p>
     </section>
   );
@@ -199,30 +207,30 @@ export function HowItWorks() {
   ];
   return (
     <section aria-labelledby="how-title" className="bg-ivory-deep">
-      <div className="shell section grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="shell section grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
         <div>
           <p className="eyebrow">How Imela works</p>
           <h2 id="how-title" className="mt-2 font-display text-display-lg">
             Simple, human, and at your pace.
           </h2>
-          <div className="mt-8 flex items-end gap-4" aria-hidden>
+          <div className="mt-8 hidden items-end gap-4 lg:flex" aria-hidden>
             <Companion variant="bloom" mood="hopeful" pose="hold" hold="lantern" tone="butter" size={140} />
             <Sticker tone="paper" tilt={-4} className="mb-10">
               Fees confirmed upfront
             </Sticker>
           </div>
         </div>
-        <ol className="space-y-4">
+        <Carousel label="How Imela works, step by step" gridFrom="lg" gridClassName="lg:grid-cols-1 lg:gap-4" slideClassName="w-[80%] sm:w-[48%]">
           {steps.map((s, i) => (
-            <li key={s.title} className="flex gap-5 rounded-card bg-paper p-5 shadow-soft">
+            <div key={s.title} className="flex flex-col gap-4 rounded-card bg-paper p-5 shadow-soft lg:flex-row lg:gap-5">
               <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-ink-strong font-display text-xl text-ivory">{i + 1}</span>
               <div>
                 <h3 className="text-lg font-semibold">{s.title}</h3>
                 <p className="mt-1 text-ink-soft">{s.text}</p>
               </div>
-            </li>
+            </div>
           ))}
-        </ol>
+        </Carousel>
       </div>
     </section>
   );
@@ -234,11 +242,11 @@ export function TeamTeaser() {
   if (!lead) return null;
   return (
     <section aria-labelledby="team-title" className="shell section">
-      <div className="grid items-center gap-10 rounded-blob bg-butter/60 p-7 sm:p-10 lg:grid-cols-[auto_1fr]">
+      <div className="grid items-center gap-6 rounded-blob bg-butter/60 p-6 sm:gap-10 sm:p-10 lg:grid-cols-[auto_1fr]">
         <figure className="mx-auto">
-          <Scene environment={lead.character.environment} framed className="h-60 w-60">
-            <div className="flex h-60 items-end justify-center pb-2">
-              <Companion {...lead.character} size={150} />
+          <Scene environment={lead.character.environment} framed className="h-40 w-40 sm:h-60 sm:w-60">
+            <div className="flex h-40 items-end justify-center pb-2 sm:h-60">
+              <Companion {...lead.character} className="h-auto w-24 sm:w-[150px]" />
             </div>
           </Scene>
           <figcaption className="mt-2 text-center text-xs text-ink-soft">Illustration — not a photo of {lead.name.split(' ')[0]}</figcaption>
@@ -282,13 +290,11 @@ export function ResourcesTeaser() {
           All resources
         </Link>
       </div>
-      <ul className="mt-8 grid gap-4 md:grid-cols-3">
+      <Carousel label="Featured resources" className="mt-8" gridFrom="md" gridClassName="md:grid-cols-3 md:gap-4" slideClassName="w-[80%] sm:w-[55%]">
         {picks.map((r) => (
-          <li key={r.slug} className="[&>*]:h-full">
-            <ResourceCard resource={r} />
-          </li>
+          <ResourceCard key={r.slug} resource={r} />
         ))}
-      </ul>
+      </Carousel>
     </section>
   );
 }

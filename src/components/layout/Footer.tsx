@@ -37,7 +37,7 @@ const columns = [
 
 const Footer: React.FC = () => (
   <footer className="relative mt-32 bg-ink-strong text-ivory">
-    <div className="shell relative grid gap-12 py-16 lg:grid-cols-[1.3fr_2fr]">
+    <div className="shell relative grid gap-10 py-12 sm:gap-12 sm:py-16 lg:grid-cols-[1.3fr_2fr]">
       <div>
         <p className="font-display text-display-md text-ivory">You can take the next step at your own pace.</p>
         <div className="mt-6 flex flex-wrap gap-3">
@@ -67,7 +67,7 @@ const Footer: React.FC = () => (
           </li>
         </ul>
       </div>
-      <div className="grid gap-10 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-10">
         {columns.map((col) => (
           <nav key={col.title} aria-label={col.title}>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ivory/60">{col.title}</p>

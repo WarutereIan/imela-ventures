@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Companion, { type CompanionMood, type CompanionPose } from '../../components/characters/Companion';
 import { cn } from '../../lib/cn';
+import { Carousel } from '../../components/ui/Carousel';
 
 const STAGES: { title: string; text: string; mood: CompanionMood; pose: CompanionPose }[] = [
   { title: 'Arrive', text: 'Come as you are. Nothing to prove, nothing to explain yet.', mood: 'uncertain', pose: 'idle' },
@@ -46,7 +47,7 @@ export function Journey() {
           </p>
         </div>
 
-        <ol className="relative mt-14 grid gap-10 md:grid-cols-5 md:gap-4">
+        <div className="relative mt-10 md:mt-14">
           <svg className="pointer-events-none absolute left-0 right-0 top-[52px] hidden h-16 w-full md:block" viewBox="0 0 1000 60" preserveAspectRatio="none" aria-hidden>
             <path
               d="M40 30 C 160 -10, 220 70, 330 30 S 520 -10, 620 30 S 820 70, 960 30"
@@ -62,24 +63,28 @@ export function Journey() {
               }}
             />
           </svg>
-          {STAGES.map((s, i) => (
-            <li
-              key={s.title}
-              className={cn('relative flex gap-4 md:flex-col md:items-center md:text-center', seen ? 'reveal' : 'opacity-0')}
-              style={{ animationDelay: `${i * 140}ms` }}
-            >
-              <div className="relative grid h-[120px] w-[110px] shrink-0 place-items-center md:mx-auto">
-                <span className="absolute inset-2 rounded-full bg-lavender-soft" aria-hidden />
-                <Companion variant="drift" tone="sage" mood={s.mood} pose={s.pose} size={96} className="relative" />
-              </div>
-              <div>
+          {/* Phones: swipe through the stages one at a time. Tablet and up: the full path. */}
+          <Carousel label="The journey, in five steps" gridFrom="md" gridClassName="md:grid-cols-5 md:gap-4" slideClassName="w-[78%] sm:w-[46%]">
+            {STAGES.map((s, i) => (
+              <div
+                key={s.title}
+                className={cn(
+                  'relative flex flex-col items-center rounded-card bg-paper p-5 text-center shadow-soft md:bg-transparent md:p-0 md:shadow-none',
+                  seen ? 'reveal' : 'md:opacity-0'
+                )}
+                style={{ animationDelay: `${i * 140}ms` }}
+              >
+                <div className="relative grid h-[120px] w-[110px] shrink-0 place-items-center">
+                  <span className="absolute inset-2 rounded-full bg-lavender-soft" aria-hidden />
+                  <Companion variant="drift" tone="sage" mood={s.mood} pose={s.pose} size={96} className="relative" />
+                </div>
                 <p className="font-hand text-2xl text-lavender-ink">0{i + 1}</p>
                 <h3 className="font-display text-display-sm">{s.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-ink-soft md:px-2">{s.text}</p>
               </div>
-            </li>
-          ))}
-        </ol>
+            ))}
+          </Carousel>
+        </div>
       </div>
     </section>
   );

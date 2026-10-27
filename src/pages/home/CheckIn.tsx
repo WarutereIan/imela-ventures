@@ -34,28 +34,28 @@ export function CheckIn() {
           <h2 id="check-in-title" className="mt-2 font-display text-display-lg">
             What feels heaviest right now?
           </h2>
-          <p className="mt-4 text-lg text-ink">You don't need the perfect words. Start with what feels closest.</p>
+          <p className="mt-3 text-base text-ink sm:mt-4 sm:text-lg">You don't need the perfect words. Start with what feels closest.</p>
         </div>
 
-        <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid grid-cols-2 gap-2.5 sm:mt-10 sm:gap-3 lg:grid-cols-3">
           {CHECK_IN_CHOICES.map((c, i) => (
             <li key={c.label}>
               <Link
                 to={c.to}
                 className={cn(
-                  'group relative flex h-full min-h-[8.5rem] items-center gap-4 overflow-hidden rounded-card border-2 border-ink-strong p-4 pr-5 shadow-sticker transition-transform duration-calm ease-gentle hover:-translate-y-1 hover:-rotate-[0.6deg]',
+                  'group relative flex h-full flex-col items-start gap-2 overflow-hidden rounded-[1.25rem] border-2 border-ink-strong p-3 shadow-sticker transition-transform duration-calm ease-gentle hover:-translate-y-1 hover:-rotate-[0.6deg] sm:min-h-[8.5rem] sm:flex-row sm:items-center sm:gap-4 sm:rounded-card sm:p-4 sm:pr-5',
                   c.surface
                 )}
                 style={{ transitionDelay: `${i * 10}ms` }}
               >
-                <span className="grid h-24 w-24 shrink-0 place-items-center rounded-[1.4rem] bg-paper/60">
-                  <Companion {...c.look} size={86} animate="none" />
+                <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-paper/60 sm:h-24 sm:w-24 sm:rounded-[1.4rem]">
+                  <Companion {...c.look} animate="none" className="h-auto w-12 sm:w-[86px]" />
                 </span>
                 <span className="flex-1">
-                  <span className="block text-lg font-semibold leading-snug">{c.label}</span>
-                  <span className="mt-1 block text-sm opacity-75">{c.hint}</span>
+                  <span className="block text-[0.95rem] font-semibold leading-snug sm:text-lg">{c.label}</span>
+                  <span className="mt-1 hidden text-sm opacity-75 sm:block">{c.hint}</span>
                 </span>
-                <ArrowUpRight className="h-5 w-5 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+                <ArrowUpRight className="absolute right-3 top-3 h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 sm:static sm:h-5 sm:w-5" aria-hidden />
               </Link>
             </li>
           ))}

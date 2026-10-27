@@ -7,12 +7,25 @@ import Companion from '../characters/Companion';
 
 const columns = [
   {
+    title: 'Counselling in Nairobi',
+    links: [
+      { to: '/support/anxiety-worry', label: 'Anxiety counselling' },
+      { to: '/support/low-mood', label: 'Depression counselling' },
+      { to: '/support/marriage', label: 'Marriage counselling' },
+      { to: '/support/couples', label: 'Couples counselling' },
+      { to: '/support/bereavement', label: 'Grief counselling' },
+      { to: '/support/adolescent-wellbeing', label: 'Teen counselling' },
+      { to: '/persona', label: 'Anonymous counselling' },
+      { to: '/organisations', label: 'Corporate wellness' },
+    ],
+  },
+  {
     title: 'Find support',
     links: [
       { to: '/support', label: 'What we help with' },
       { to: '/find-support', label: 'Service finder' },
       { to: '/persona', label: 'Imela' },
-      { to: '/book', label: 'Book a session' },
+      { to: '/book', label: 'Book a counselling session' },
     ],
   },
   {
@@ -67,7 +80,7 @@ const Footer: React.FC = () => (
           </li>
         </ul>
       </div>
-      <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-3 sm:gap-10">
+      <div className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 sm:gap-8">
         {columns.map((col) => (
           <nav key={col.title} aria-label={col.title}>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ivory/60">{col.title}</p>

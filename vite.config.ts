@@ -1,10 +1,11 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { seoPlugin } from './scripts/seoPlugin';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   base: '/',
-  plugins: [react()],
+  plugins: [react(), seoPlugin(loadEnv(mode, process.cwd(), 'VITE_'))],
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
@@ -35,4 +36,4 @@ export default defineConfig({
       'Cache-Control': 'public, max-age=31536000, immutable',
     },
   },
-});
+}));

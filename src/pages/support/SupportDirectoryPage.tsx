@@ -7,12 +7,13 @@ import { Sticker } from '../../components/ui/Sticker';
 import { buttonClasses } from '../../components/ui/Button';
 import { GROUP_STYLE } from '../../components/support/groupStyles';
 import { searchConcerns } from '../../components/support/search';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { cn } from '../../lib/cn';
 import { Carousel } from '../../components/ui/Carousel';
 
 export default function SupportDirectoryPage() {
-  useDocumentTitle('What we help with');
+  usePageMeta(STATIC_PAGES['/support']);
   const [params, setParams] = useSearchParams();
   // What someone types is kept in memory only — never written to the URL or browser history.
   // An incoming ?q= link pre-fills the search once, then is removed from the address bar.
@@ -30,10 +31,12 @@ export default function SupportDirectoryPage() {
       <section className="relative overflow-hidden pb-6 pt-8 sm:pb-10 sm:pt-16">
         <div className="shell grid items-end gap-10 lg:grid-cols-[1.4fr_1fr]">
           <div>
-            <p className="eyebrow">Start wherever feels right</p>
-            <h1 className="mt-1 font-display text-display-xl">What would you like support with?</h1>
+            <h1 className="font-display text-display-xl">
+              <span className="eyebrow mb-1 block">Counselling services in Nairobi &amp; online</span>
+              What would you like support with?
+            </h1>
             <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink sm:mt-6 sm:text-xl">
-              Browse the areas people most often bring to us, or search in your own words. Each page explains what it can feel like, how talking may help, and which support is available today.
+              Browse the mental health and wellbeing concerns people most often bring to counselling — from anxiety, depression and stress to marriage, grief, addiction and work — or search in your own words. Each page explains what it can feel like, how talking may help, and which support is available today.
             </p>
             <form role="search" className="mt-6 max-w-xl sm:mt-8" onSubmit={(e) => e.preventDefault()}>
               <label htmlFor="concern-search" className="sr-only">

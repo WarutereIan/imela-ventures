@@ -23,6 +23,19 @@
       "handle": "filesystem"
     },
     {
+      "src": "/(.+?)/?$",
+      "dest": "/$1/index.html",
+      "check": true,
+      "headers": {
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "Referrer-Policy": "no-referrer",
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()"
+      }
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html",
       "headers": {

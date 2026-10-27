@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { ORG } from '../../data/organisation';
 import LegalLayout, { type LegalSection } from './LegalLayout';
 
@@ -185,7 +186,7 @@ const sections: LegalSection[] = [
 ];
 
 export default function PrivacyPage() {
-  useDocumentTitle('Privacy notice');
+  usePageMeta(STATIC_PAGES['/privacy']);
   return (
     <LegalLayout
       eyebrow="Your privacy"

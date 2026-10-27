@@ -7,6 +7,7 @@ import { Sticker } from '../../components/ui/Sticker';
 import { SERVICES, isBookable } from '../../data/services';
 import { CONCERN_GROUPS } from '../../data/concerns';
 import { TEAM } from '../../data/team';
+import { FAQS } from '../../data/faqs';
 import { ORG } from '../../data/organisation';
 import ResourceCard from '../../components/resources/ResourceCard';
 import { useResources } from '../../domain/resources';
@@ -100,8 +101,8 @@ export function PersonaFeature() {
           </div>
         </Scene>
         <div className="p-7 sm:p-10">
-          <p className="eyebrow">Imela</p>
-          <h2 id="persona-feature-title" className="mt-2 font-display text-display-md">
+          <h2 id="persona-feature-title" className="font-display text-display-md">
+            <span className="eyebrow mb-2 block">Anonymous counselling &amp; a private check-in</span>
             A private, judgement-free place to begin.
           </h2>
           <p className="mt-4 text-ink">
@@ -150,8 +151,8 @@ export function AreasBento() {
     <section aria-labelledby="areas-title" className="shell section">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div className="max-w-2xl">
-          <p className="eyebrow">What we help with</p>
-          <h2 id="areas-title" className="mt-2 font-display text-display-lg">
+          <h2 id="areas-title" className="font-display text-display-lg">
+            <span className="eyebrow mb-2 block">Counselling for anxiety, relationships, grief &amp; more</span>
             Whatever you're carrying, it has a place here.
           </h2>
         </div>
@@ -209,8 +210,8 @@ export function HowItWorks() {
     <section aria-labelledby="how-title" className="bg-ivory-deep">
       <div className="shell section grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12">
         <div>
-          <p className="eyebrow">How Imela works</p>
-          <h2 id="how-title" className="mt-2 font-display text-display-lg">
+          <h2 id="how-title" className="font-display text-display-lg">
+            <span className="eyebrow mb-2 block">How counselling with Imela works</span>
             Simple, human, and at your pace.
           </h2>
           <div className="mt-8 hidden items-end gap-4 lg:flex" aria-hidden>
@@ -252,7 +253,7 @@ export function TeamTeaser() {
           <figcaption className="mt-2 text-center text-xs text-ink-soft">Illustration — not a photo of {lead.name.split(' ')[0]}</figcaption>
         </figure>
         <div>
-          <p className="eyebrow text-butter-ink">The team</p>
+          <p className="eyebrow text-butter-ink">Your counsellor in Nairobi</p>
           <h2 id="team-title" className="mt-2 font-display text-display-md">
             Meet {lead.name}
           </h2>
@@ -281,8 +282,8 @@ export function ResourcesTeaser() {
     <section aria-labelledby="resources-title" className="shell section">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="eyebrow">Resources</p>
-          <h2 id="resources-title" className="mt-2 font-display text-display-md">
+          <h2 id="resources-title" className="font-display text-display-md">
+            <span className="eyebrow mb-2 block">Free mental health resources</span>
             Gentle reading for where you are.
           </h2>
         </div>
@@ -305,8 +306,8 @@ export function Confidentiality() {
     <section aria-labelledby="confidential-title" className="shell section">
       <div className="grid gap-8 rounded-blob border-2 border-ink-strong bg-paper p-7 shadow-sticker sm:p-10 lg:grid-cols-[1fr_1.2fr]">
         <div>
-          <p className="eyebrow">Confidentiality</p>
-          <h2 id="confidential-title" className="mt-2 font-display text-display-md">
+          <h2 id="confidential-title" className="font-display text-display-md">
+            <span className="eyebrow mb-2 block">Confidential counselling</span>
             What you share stays between you and your counsellor.
           </h2>
         </div>
@@ -333,34 +334,14 @@ export function Confidentiality() {
 }
 
 /* ---------- FAQs ---------- */
-const FAQS = [
-  {
-    q: "I don't know what kind of help I need. Where do I start?",
-    a: "That's very common. You could talk it through with Imela, try the service finder, or book a short initial consultation — a counsellor will help you work out what fits.",
-  },
-  { q: 'Do I need to create an account?', a: 'No. You can explore, use Persona and request a booking without an account.' },
-  {
-    q: 'Is the Imela private guide a therapist?',
-    a: "No. Persona is an automated guide that helps you put things into words and find relevant support. It doesn't diagnose, and no one is monitoring the conversation.",
-  },
-  {
-    q: 'Are sessions online or in person?',
-    a: 'Individual counselling for adults is offered online and in person. For other services, the format is confirmed when you book.',
-  },
-  { q: 'How much does it cost?', a: "Fees depend on the service and are confirmed with you during your initial consultation, before you commit to anything." },
-  {
-    q: 'What if I need help urgently?',
-    a: "Imela isn't an emergency service. If you're in danger, call 999 or 112 in Kenya, or use “Need urgent help?” at the top of any page.",
-  },
-];
 
 export function Faqs() {
   return (
     <section aria-labelledby="faq-title" className="shell section">
       <div className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
         <div>
-          <p className="eyebrow">Questions</p>
-          <h2 id="faq-title" className="mt-2 font-display text-display-md">
+          <h2 id="faq-title" className="font-display text-display-md">
+            <span className="eyebrow mb-2 block">Counselling FAQs</span>
             Things people often ask
           </h2>
           <p className="mt-4 text-ink-soft">

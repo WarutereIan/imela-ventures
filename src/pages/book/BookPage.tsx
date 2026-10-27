@@ -14,7 +14,8 @@ import { EnquiryForm } from '../../components/booking/EnquiryForm';
 import Companion from '../../components/characters/Companion';
 import { Alert, Chip, StatusBadge, TextArea, TextField } from '../../components/ui/primitives';
 import { Button, buttonClasses } from '../../components/ui/Button';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { cn } from '../../lib/cn';
 
 type Step = 1 | 2 | 3 | 4;
@@ -96,7 +97,7 @@ function ServiceOption({ service, selected, onSelect }: { service: Service; sele
 }
 
 export default function BookPage() {
-  useDocumentTitle('Schedule a consultation');
+  usePageMeta(STATIC_PAGES['/book']);
   const [params] = useSearchParams();
   const initial = getService(params.get('service'));
   const practitioner = getPractitioner(params.get('practitioner') ?? undefined);
@@ -219,7 +220,7 @@ export default function BookPage() {
     <section className="shell py-6 sm:py-10 lg:py-14">
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="min-w-0">
-          <p className="eyebrow">Schedule a consultation</p>
+          <p className="eyebrow">Book counselling in Nairobi or online</p>
           <h1 ref={headingRef} tabIndex={-1} className="mt-1 font-display text-display-md focus:outline-none focus-visible:shadow-none">
             {step === 1 && 'What would you like to book?'}
             {step === 2 && (service.bookingMode === 'slot' ? 'Choose a time that suits you' : `Request ${service.name.toLowerCase()}`)}

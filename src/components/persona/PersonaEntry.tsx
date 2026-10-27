@@ -47,8 +47,10 @@ export function PersonaEntry({ onStart }: { onStart: (path: PersonaPath) => void
         <Link to="/persona" className="inline-flex items-center gap-1.5 text-sm font-semibold text-lavender-ink underline-offset-4 hover:underline">
           <ArrowLeft className="h-4 w-4" aria-hidden /> Imela
         </Link>
-        <p className="eyebrow mt-4">Explore privately first</p>
-        <h1 className="mt-2 font-display text-display-lg">You can begin without telling us who you are.</h1>
+        <h1 className="mt-4 font-display text-display-lg">
+          <span className="eyebrow mb-2 block">Free, private mental health check-in</span>
+          You can begin without telling us who you are.
+        </h1>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
           Put things into words at your own pace, with a guide that stays in this tab. Nothing here reaches a counsellor. When you're ready to talk to
           one,{' '}

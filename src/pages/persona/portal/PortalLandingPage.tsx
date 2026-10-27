@@ -9,7 +9,8 @@ import { CrisisContacts } from '../../../components/layout/UrgentHelp';
 import { Carousel } from '../../../components/ui/Carousel';
 import { PrivacyLimits } from '../../../components/personaPortal/shared';
 import { portalAvailable } from '../../../domain/personaPortal/api';
-import { useDocumentTitle } from '../../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../../seo/site';
+import { usePageMeta } from '../../../seo/usePageMeta';
 
 const STEPS = [
   { icon: KeyRound, title: 'Get a Persona ID', text: 'We create an ID and a private recovery secret for you. No name, email, phone or social account.' },
@@ -19,14 +20,16 @@ const STEPS = [
 ];
 
 export default function PortalLandingPage() {
-  useDocumentTitle('Imela — anonymous counselling');
+  usePageMeta(STATIC_PAGES['/persona']);
 
   return (
     <div className="pb-16">
       <section className="shell grid gap-10 py-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-14 lg:py-16">
         <div>
-          <p className="eyebrow">Imela</p>
-          <h1 className="mt-2 font-display text-display-lg">Talk to a counsellor without telling us who you are.</h1>
+          <h1 className="font-display text-display-lg">
+            <span className="eyebrow mb-2 block">Imela · anonymous online counselling</span>
+            Talk to a counsellor without telling us who you are.
+          </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
             Anonymous counselling by private written messages. You get a Persona ID and a recovery secret instead of an account — so you can seek support, hear
             back from a counsellor and return whenever you need to.

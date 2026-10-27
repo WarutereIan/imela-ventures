@@ -19,12 +19,13 @@ export function HomeHero() {
     <section className="relative overflow-hidden">
       <div className="shell grid items-center gap-12 pb-16 pt-10 lg:grid-cols-[1.1fr_1fr] lg:gap-8 lg:pb-24 lg:pt-16">
         <div className="reveal relative z-10">
-          <p className="eyebrow">Take a breath. You're welcome here.</p>
-          <h1 className="mt-3 font-display text-display-xl">
+          <h1 className="font-display text-display-xl">
+            <span className="eyebrow mb-3 block">Counselling &amp; mental health support in Nairobi</span>
             You don't have to carry it <em className="font-display italic text-lavender-ink">all</em> alone.
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink sm:text-xl">
-            Whatever you're navigating, there's space for you here. Let's take a moment to understand what you need, together.
+            Take a breath — you're welcome here. Whether it's anxiety, stress, low mood, your relationship, grief or pressure at work, there's space for
+            you. Talk to a counsellor in person or online, and let's understand what you need, together.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a href="#check-in" className={buttonClasses('primary', 'lg')}>

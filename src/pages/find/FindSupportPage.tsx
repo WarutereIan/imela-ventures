@@ -5,10 +5,11 @@ import { ServiceTable } from '../../components/find/ServiceTable';
 import Companion from '../../components/characters/Companion';
 import { Sticker } from '../../components/ui/Sticker';
 import { SectionHeading } from '../../components/ui/primitives';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 
 export default function FindSupportPage() {
-  useDocumentTitle('Find support');
+  usePageMeta(STATIC_PAGES['/find-support']);
   const [params] = useSearchParams();
   const { hash } = useLocation();
   const highlight = params.get('service');
@@ -30,10 +31,12 @@ export default function FindSupportPage() {
         <div className="shell relative py-14 lg:py-20">
           <div className="grid gap-8 lg:grid-cols-[1.6fr_1fr]">
             <div>
-              <p className="eyebrow text-ink-strong">Service finder</p>
-              <h1 className="mt-2 font-display text-display-lg">Tell us what you need. We'll help you find your next step.</h1>
+              <h1 className="font-display text-display-lg">
+                <span className="eyebrow mb-2 block text-ink-strong">Find the right counselling service</span>
+                Tell us what you need. We'll help you find your next step.
+              </h1>
               <p className="mt-4 max-w-xl text-lg text-ink">
-                Describe it however it comes to you. We'll show options from Imela's services — and explain why each one might fit.
+                Describe what you're going through however it comes to you. We'll match it to Imela's counselling services — and explain why each one might fit.
               </p>
             </div>
             <div className="relative hidden items-end justify-center lg:flex" aria-hidden>

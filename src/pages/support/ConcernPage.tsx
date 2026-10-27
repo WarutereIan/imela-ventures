@@ -15,7 +15,9 @@ import { PrivateCheckIn } from '../../components/support/PrivateCheckIn';
 import { ServicesByStatus } from '../../components/support/ServicesByStatus';
 import { servicesFromIds } from '../../components/support/search';
 import { RelatedResources } from '../../components/support/RelatedResources';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { concernMeta } from '../../seo/site';
+import { CONCERN_SEO } from '../../seo/concernSeo';
+import { SITE_URL, usePageMeta } from '../../seo/usePageMeta';
 import { cn } from '../../lib/cn';
 
 function Breadcrumb({ group }: { group: ConcernGroup }) {
@@ -78,8 +80,10 @@ function Hero({ concern, group, style }: { concern: Concern; group: ConcernGroup
   const c = concern.character;
   const titleBlock = (
     <>
-      <p className="eyebrow mt-4 md:mt-5">{style.eyebrow}</p>
-      <h1 className="mt-1 font-display text-display-lg">{concern.title}</h1>
+      <h1 className="mt-4 font-display text-display-lg md:mt-5">
+        <span className="eyebrow mb-1 block">{CONCERN_SEO[concern.slug]?.kicker ?? style.eyebrow}</span>
+        {concern.title}
+      </h1>
       <p className="mt-3 max-w-xl text-lg leading-relaxed text-ink md:mt-4 md:text-xl">{concern.tagline}</p>
     </>
   );
@@ -202,7 +206,7 @@ export default function ConcernPage() {
   const { slug } = useParams();
   const concern = getConcern(slug);
   const group = concern ? getGroup(concern.group) : undefined;
-  useDocumentTitle(concern?.title ?? 'Not found');
+  usePageMeta(concern ? concernMeta(concern.slug, SITE_URL) : undefined);
   if (!concern || !group) return <NotFoundPage />;
 
   const style = GROUP_STYLE[group.id];
@@ -225,7 +229,7 @@ export default function ConcernPage() {
       <section key="helps" aria-labelledby="helps-title" className="py-8 md:py-12">
         <div className="shell">
           <div className={cn('rounded-blob p-5 sm:p-10', style.accent)}>
-            <SectionTitle eyebrow="What support can look like" title="How talking with someone may help" id="helps-title" />
+            <SectionTitle eyebrow="What support can look like" title="How counselling may help" id="helps-title" />
             <HowSupportHelps items={concern.howSupportHelps} style={style.helps} />
             <p className="mt-4 text-sm text-ink md:mt-6">Every person is different. A counsellor will work with you on what matters to you — nothing is promised, and nothing is forced.</p>
           </div>

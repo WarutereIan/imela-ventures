@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, Search } from 'lucide-react';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { TEAM } from '../../data/team';
 import { FORMAT_LABEL } from '../../data/services';
 import type { ServiceFormat, TeamMember } from '../../data/types';
@@ -52,7 +53,7 @@ function PractitionerCard({ member }: { member: TeamMember }) {
 }
 
 export default function TeamPage() {
-  useDocumentTitle('Team');
+  usePageMeta(STATIC_PAGES['/team']);
   const [query, setQuery] = useState('');
   const [format, setFormat] = useState<ServiceFormat | null>(null);
 
@@ -70,11 +71,13 @@ export default function TeamPage() {
       <section className="shell pb-6 pt-8 md:pb-10 md:pt-20">
         <div className="grid items-end gap-8 md:grid-cols-[1.4fr_1fr]">
           <div>
-            <p className="eyebrow">The people behind Imela</p>
-            <h1 className="mt-2 font-display text-display-lg">Real people, ready to listen.</h1>
+            <h1 className="font-display text-display-lg">
+              <span className="eyebrow mb-2 block">Our counsellors in Nairobi</span>
+              Real people, ready to listen.
+            </h1>
           </div>
           <p className="text-base leading-relaxed text-ink-soft md:text-lg">
-            Our practitioners bring care, discretion and experience to every conversation. Profiles only list qualifications Imela has verified.
+            Our counsellors bring care, discretion and experience to every conversation — in person in Nairobi and online. Profiles only list qualifications Imela has verified.
           </p>
         </div>
 

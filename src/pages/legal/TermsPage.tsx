@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { ORG } from '../../data/organisation';
 import { CrisisContacts } from '../../components/layout/UrgentHelp';
 import LegalLayout, { type LegalSection } from './LegalLayout';
@@ -96,7 +97,7 @@ const sections: LegalSection[] = [
 ];
 
 export default function TermsPage() {
-  useDocumentTitle('Terms of use');
+  usePageMeta(STATIC_PAGES['/terms']);
   return (
     <LegalLayout
       eyebrow="The small print, in plain words"

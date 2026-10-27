@@ -2,6 +2,7 @@ import { isRouteErrorResponse, Link, useRouteError } from 'react-router-dom';
 import Companion from '../characters/Companion';
 import { buttonClasses } from '../ui/Button';
 import { Spinner } from '../ui/primitives';
+import { useDocumentTitle } from '../../lib/useDocumentTitle';
 
 export function PageLoader() {
   return (
@@ -15,6 +16,7 @@ export function PageLoader() {
 }
 
 export function NotFoundPage() {
+  useDocumentTitle('Page not found');
   return (
     <section className="shell grid min-h-[60vh] place-items-center py-20 text-center">
       <div className="flex flex-col items-center">

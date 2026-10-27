@@ -33,6 +33,7 @@ A design reference for the character system is available at `/dev/companions` in
 | `VITE_ENABLE_CLIENT_PORTAL` | `false` | Optional client accounts. Also requires `VITE_PLATFORM_DB_READY=true`. |
 | `VITE_PERSONA_AI_ENABLED` | `false` | Optional AI reflections in the "explore privately" guide. Requires the `persona-respond` Edge Function and provider secrets. Each person must also opt in. |
 | `VITE_PERSONA_PORTAL_ENABLED` | `false` | Imela anonymous counselling (Persona ID + recovery secret). Requires migration 0007 and the `persona-register` / `persona-account` Edge Functions. Staff pages also need `VITE_PLATFORM_DB_READY=true`. |
+| `VITE_SITE_URL` | `https://www.imelaventures.com` | Public address used for canonical links, social previews, `sitemap.xml` and `robots.txt`. |
 | `VITE_PERSONA_LOGIN_DOMAIN` | `persona.imelaventures.invalid` | Synthetic login domain for Persona IDs. Must equal `PERSONA_LOGIN_DOMAIN` in the Edge Functions. |
 
 Edge Function secrets (`RESEND_API_KEY`, `PERSONA_AI_PROVIDER`, `ANTHROPIC_API_KEY`, `PERSONA_AI_MODEL`) are documented in `supabase/README.md`.
@@ -72,6 +73,13 @@ supabase/
   - Confirm the safeguarding procedure text on the staff crisis panels.
   - Confirm the counsellor response hours stated to users.
   - Schedule the retention job (`purge_closed_persona_cases`).
+
+### Search (SEO)
+
+- `src/seo/site.ts` holds the title, description and structured data (schema.org `ProfessionalService`, `WebSite`, `FAQPage`, `BreadcrumbList`, `Article`) for every public page. `src/seo/concernSeo.ts` holds the search wording for each support page. Only say "counselling" where an available service covers it.
+- At build time, `scripts/seoPlugin.ts` writes a static HTML head for each public page (`dist/<path>/index.html`), plus `sitemap.xml` and `robots.txt`. `vercel.json` serves those files before falling back to the app.
+- Private areas (portals, staff, admin, workspaces) are `noindex` and disallowed in `robots.txt`.
+- After launch, submit `https://<your-domain>/sitemap.xml` in Google Search Console.
 
 ### Key design decisions
 

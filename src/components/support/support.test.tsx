@@ -19,7 +19,7 @@ function renderAt(path: string) {
 describe('ConcernPage', () => {
   it('renders bereavement with its own heading and a safety callout', () => {
     renderAt('/support/bereavement');
-    expect(screen.getByRole('heading', { level: 1, name: 'Bereavement' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: /Bereavement$/ })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /If you're not safe right now/i })).toBeInTheDocument();
     expect(screen.getAllByText('999 or 112').length).toBeGreaterThan(0);
   });

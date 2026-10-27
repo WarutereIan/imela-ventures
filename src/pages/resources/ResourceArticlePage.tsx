@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Clock, LifeBuoy } from 'lucide-react';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { articleMeta } from '../../seo/site';
+import { SITE_URL, usePageMeta } from '../../seo/usePageMeta';
 import { recordView, useResources } from '../../domain/resources';
 import { CATEGORY_BY_ID } from '../../data/resources';
 import RichText from '../../components/content/RichText';
@@ -17,7 +18,7 @@ export default function ResourceArticlePage() {
   const { slug } = useParams();
   const { resources, loading } = useResources();
   const resource = resources.find((r) => r.slug === slug);
-  useDocumentTitle(resource?.title ?? 'Resources');
+  usePageMeta(resource ? articleMeta(resource, SITE_URL) : undefined);
 
   useEffect(() => {
     if (resource) recordView(resource);

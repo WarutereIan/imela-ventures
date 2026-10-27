@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, BadgeCheck, Globe2, MapPin, ShieldQuestion } from 'lucide-react';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { teamMemberMeta } from '../../seo/site';
+import { SITE_URL, usePageMeta } from '../../seo/usePageMeta';
 import { getPractitioner } from '../../data/team';
 import { FORMAT_LABEL, SERVICES, isBookable } from '../../data/services';
 import Companion from '../../components/characters/Companion';
@@ -14,7 +15,7 @@ import { Carousel } from '../../components/ui/Carousel';
 export default function TeamMemberPage() {
   const { slug } = useParams();
   const member = getPractitioner(slug);
-  useDocumentTitle(member?.name ?? 'Team');
+  usePageMeta(member ? teamMemberMeta(member.slug, SITE_URL) : undefined);
   if (!member) return <NotFoundPage />;
 
   const first = member.name.split(' ')[0];

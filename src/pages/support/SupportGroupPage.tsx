@@ -10,13 +10,15 @@ import { NotFoundPage } from '../../components/layout/PageStates';
 import { GROUP_STYLE } from '../../components/support/groupStyles';
 import { ServicesByStatus } from '../../components/support/ServicesByStatus';
 import { servicesFromIds } from '../../components/support/search';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { groupMeta } from '../../seo/site';
+import { GROUP_SEO } from '../../seo/concernSeo';
+import { SITE_URL, usePageMeta } from '../../seo/usePageMeta';
 import { cn } from '../../lib/cn';
 
 export default function SupportGroupPage() {
   const { groupId } = useParams();
   const group = getGroup(groupId);
-  useDocumentTitle(group?.title ?? 'Not found');
+  usePageMeta(group ? groupMeta(group.id, SITE_URL) : undefined);
   if (!group) return <NotFoundPage />;
 
   const style = GROUP_STYLE[group.id];
@@ -42,8 +44,10 @@ export default function SupportGroupPage() {
           </nav>
           <div className="mt-4 grid items-center gap-6 md:mt-6 md:gap-10 lg:grid-cols-[1fr_1.05fr]">
             <div>
-              <p className="eyebrow">Support area</p>
-              <h1 className="mt-1 font-display text-display-lg">{group.title}</h1>
+              <h1 className="font-display text-display-lg">
+                <span className="eyebrow mb-1 block">{GROUP_SEO[group.id]?.kicker ?? 'Support area'}</span>
+                {group.title}
+              </h1>
               <p className="mt-3 max-w-xl text-lg leading-relaxed text-ink md:mt-5 md:text-xl">{group.blurb}</p>
               <div className="mt-6 flex flex-wrap gap-2 md:mt-8 md:gap-3">
                 <a href="#topics" className={buttonClasses('primary', 'lg')}>

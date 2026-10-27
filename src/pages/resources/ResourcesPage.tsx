@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Search, X } from 'lucide-react';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { useResources } from '../../domain/resources';
 import { RESOURCE_CATEGORIES } from '../../data/resources';
 import ResourceCard from '../../components/resources/ResourceCard';
@@ -13,7 +14,7 @@ import { buttonClasses } from '../../components/ui/Button';
 import { cn } from '../../lib/cn';
 
 export default function ResourcesPage() {
-  useDocumentTitle('Resources');
+  usePageMeta(STATIC_PAGES['/resources']);
   const { resources, loading, cmsUnavailable } = useResources();
   const [query, setQuery] = useState('');
   // The category filter lives in the URL so other pages can link to /resources?category=grief
@@ -53,10 +54,12 @@ export default function ResourcesPage() {
     <>
       <section className="shell grid items-center gap-10 pb-12 pt-14 md:grid-cols-[1.25fr_1fr] md:pt-20">
         <div>
-          <p className="eyebrow">Read at your own pace</p>
-          <h1 className="mt-2 font-display text-display-lg">Resources for the things that are hard to put into words.</h1>
+          <h1 className="font-display text-display-lg">
+            <span className="eyebrow mb-2 block">Mental health resources &amp; self-help guides</span>
+            Resources for the things that are hard to put into words.
+          </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
-            Short, practical reading on grief, relationships, worry, work and more. Take what helps and leave the rest.
+            Short, practical mental wellbeing reading on anxiety, stress, burnout, grief, relationships, parenting and work. Read at your own pace — take what helps and leave the rest.
           </p>
           <form role="search" className="mt-8 max-w-xl" onSubmit={(e) => e.preventDefault()}>
             <label htmlFor="resource-search" className="sr-only">

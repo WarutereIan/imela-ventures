@@ -30,7 +30,7 @@ export function CheckIn() {
     <Scene environment="scribble" className="scroll-mt-28" >
       <section id="check-in" aria-labelledby="check-in-title" className="shell section">
         <div className="max-w-2xl">
-          <p className="eyebrow text-ink-strong">A gentle check-in</p>
+          <p className="eyebrow text-ink-strong">A gentle mental health check-in</p>
           <h2 id="check-in-title" className="mt-2 font-display text-display-lg">
             What feels heaviest right now?
           </h2>

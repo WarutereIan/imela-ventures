@@ -5,7 +5,8 @@ import { PersonaConversation } from '../../components/persona/PersonaConversatio
 import { initialPersonaState, personaReducer, showOptionsNow, type PersonaPath, type PersonaState } from '../../domain/persona/machine';
 import { aiReflectionsAvailable, requestAiReflection } from '../../domain/persona/aiClient';
 import { screenForRisk } from '../../domain/safety';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 
 /**
  * In-memory only: lets someone visit a service page and come back to their
@@ -22,7 +23,7 @@ function reducer(state: PersonaState, action: Parameters<typeof personaReducer>[
 const PATHS: PersonaPath[] = ['talk', 'feelings', 'find'];
 
 export default function PersonaPage() {
-  useDocumentTitle('Imela');
+  usePageMeta(STATIC_PAGES['/persona/explore']);
   const [params, setParams] = useSearchParams();
   const [state, dispatch] = useReducer(reducer, memory?.state ?? initialPersonaState);
   const [aiConsent, setAiConsent] = useState(memory?.aiConsent ?? false);

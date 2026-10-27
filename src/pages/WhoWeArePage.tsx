@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Building2, Lock, Mail, Phone, ShieldCheck, User } from 'lucide-react';
-import { useDocumentTitle } from '../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../seo/site';
+import { usePageMeta } from '../seo/usePageMeta';
 import { ORG } from '../data/organisation';
 import { TEAM } from '../data/team';
 import { SERVICES, STATUS_LABEL, durationLabel } from '../data/services';
@@ -40,7 +41,7 @@ const APPROACH = [
 ];
 
 export default function WhoWeArePage() {
-  useDocumentTitle('Who We Are');
+  usePageMeta(STATIC_PAGES['/who-we-are']);
   const founder = TEAM[0];
   const individual = SERVICES.filter((s) => s.audience === 'individual' && s.status === 'available');
   const assessment = SERVICES.find((s) => s.id === 'psychological-assessment');
@@ -50,8 +51,8 @@ export default function WhoWeArePage() {
       {/* Hero */}
       <section className="shell grid items-center gap-8 pb-10 pt-8 sm:gap-10 sm:pb-16 sm:pt-14 lg:grid-cols-[1.15fr_1fr] lg:pt-20">
         <div>
-          <p className="eyebrow">Who we are</p>
-          <h1 className="mt-2 font-display text-display-xl">
+          <h1 className="font-display text-display-xl">
+            <span className="eyebrow mb-2 block">About Imela Ventures · counselling in Nairobi</span>
             Together creating a <em className="font-display italic text-rose-ink">new reality.</em>
           </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft sm:mt-6 sm:text-lg">

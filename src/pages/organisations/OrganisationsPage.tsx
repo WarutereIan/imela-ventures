@@ -8,7 +8,8 @@ import { buttonClasses } from '../../components/ui/Button';
 import { SectionHeading, StatusBadge } from '../../components/ui/primitives';
 import { EnquiryForm } from '../../components/organisations/EnquiryForm';
 import { ClientMarquee } from '../../components/organisations/ClientMarquee';
-import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { STATIC_PAGES } from '../../seo/site';
+import { usePageMeta } from '../../seo/usePageMeta';
 import { Carousel } from '../../components/ui/Carousel';
 
 const ORG_SERVICES = SERVICES.filter((s) => s.audience === 'organisation');
@@ -40,7 +41,7 @@ const METHOD = [
 ];
 
 export default function OrganisationsPage() {
-  useDocumentTitle('Workplace mental wellness');
+  usePageMeta(STATIC_PAGES['/organisations']);
   const [params] = useSearchParams();
 
   return (
@@ -48,10 +49,12 @@ export default function OrganisationsPage() {
       {/* Hero */}
       <section className="shell grid items-center gap-8 pb-10 pt-8 sm:gap-12 sm:pb-16 sm:pt-12 lg:grid-cols-[1.15fr_1fr] lg:pt-20">
         <div>
-          <p className="eyebrow mb-3">For organisations</p>
-          <h1 className="font-display text-display-xl">Healthier people. More thoughtful workplaces.</h1>
+          <h1 className="font-display text-display-xl">
+            <span className="eyebrow mb-3 block">Corporate wellness &amp; workplace mental health in Kenya</span>
+            Healthier people. More thoughtful workplaces.
+          </h1>
           <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft sm:mt-6 sm:text-lg">
-            Practical, human-centred mental wellness support for organisations that want to care for their people.
+            Employee counselling, wellbeing training, leadership development and culture work — practical, human-centred mental wellness support for organisations that want to care for their people.
           </p>
           <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
             <a href="#enquire" className={buttonClasses('primary', 'lg', 'h-auto min-h-14 w-full py-3 text-center sm:w-auto')}>

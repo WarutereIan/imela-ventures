@@ -253,8 +253,8 @@ export default function BookPage() {
             </Alert>
           )}
           {unavailableRequested && !orgRequested && (
-            <Alert tone="warning" className="mt-6" title={`${unavailableRequested.name} isn't bookable yet`}>
-              Imela is still confirming this service. An initial consultation is a good way to talk about it and find the right next step.
+            <Alert tone="warning" className="mt-6" title={`${unavailableRequested.name} can't be booked online`}>
+              This is arranged through a referral. An initial consultation is a good way to talk about it and find the right next step.
             </Alert>
           )}
 

@@ -150,12 +150,15 @@ export default function OrganisationsPage() {
             <article className="flex flex-col rounded-card border-2 border-dashed border-ink/20 bg-paper/70 p-6">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-xl font-semibold">Wellbeing assessments</h3>
-                <StatusBadge status="awaiting_verification" />
+                <StatusBadge status="available" />
               </div>
               <p className="mt-3 text-[0.95rem] leading-relaxed text-ink-soft">
-                Imela is confirming which validated, properly licensed workplace wellbeing assessments it will offer. Until then,
-                assessment forms part of the culture audit conversation.
+                Validated, properly licensed workplace wellbeing assessments that show how your people are really doing, and where support
+                will make the most difference.
               </p>
+              <a href="#enquire" className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold underline-offset-4 hover:underline">
+                Enquire about wellbeing assessments <ArrowRight className="h-4 w-4" aria-hidden />
+              </a>
             </article>
           </Carousel>
         </div>

@@ -73,13 +73,13 @@ describe('BookPage', () => {
     expect(screen.getByRole('heading', { name: /Choose a time/ })).toBeInTheDocument();
   });
 
-  it('offers a consultation instead of booking an unverified service', async () => {
+  it('offers a consultation instead of booking a referral-only service', async () => {
     render(
-      <MemoryRouter initialEntries={['/book?service=trauma-therapy']}>
+      <MemoryRouter initialEntries={['/book?service=psychiatric-referral']}>
         <BookPage />
       </MemoryRouter>
     );
-    expect(await screen.findByText(/isn't bookable yet/)).toBeInTheDocument();
+    expect(await screen.findByText(/can't be booked online/)).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: /Initial Consultation/ })).toBeChecked();
   });
 });

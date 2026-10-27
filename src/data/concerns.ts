@@ -865,7 +865,7 @@ export const CONCERNS: Concern[] = [
     tagline: 'After something happened that still feels too big to hold.',
     intro: [
       'Accidents, violence, abuse or other frightening events can leave lasting effects — on sleep, trust, mood and the sense of being safe in the world.',
-      'Trauma-informed counselling moves at your pace. You stay in control of what you share, and safety comes first. Specialist trauma therapy is being confirmed.',
+      'Trauma-informed counselling moves at your pace. You stay in control of what you share, and safety comes first. Specialist trauma therapy is also available.',
     ],
     feelsLike: [
       "Memories or images come back when I don't want them.",

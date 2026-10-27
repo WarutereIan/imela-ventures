@@ -7,5 +7,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // Full user-journey component tests can exceed 5s on a busy CI runner.
+    testTimeout: 15000,
   },
 });

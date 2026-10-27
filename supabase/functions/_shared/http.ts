@@ -8,11 +8,35 @@ export const corsHeaders: Record<string, string> = {
   Vary: 'Origin',
 };
 
-export function json(body: unknown, status = 200): Response {
+export function json(body: unknown, status = 200, extraHeaders: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json', ...extraHeaders },
   });
+}
+
+/** For responses carrying credentials: never cached by browsers or proxies. */
+export const NO_STORE = { 'Cache-Control': 'no-store, max-age=0', Pragma: 'no-cache' };
+
+/** Best-effort fixed-window limiter. Edge instances are ephemeral and run in
+ * parallel, so treat this as a speed bump, not a guarantee. */
+export function createRateLimiter(max: number, windowMs: number) {
+  const hits = new Map<string, { count: number; start: number }>();
+  return (key: string): boolean => {
+    const now = Date.now();
+    const entry = hits.get(key);
+    if (!entry || now - entry.start > windowMs) {
+      if (hits.size > 10_000) hits.clear();
+      hits.set(key, { count: 1, start: now });
+      return false;
+    }
+    entry.count += 1;
+    return entry.count > max;
+  };
+}
+
+export function clientIp(req: Request): string {
+  return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
 }
 
 export function preflight(req: Request): Response | null {

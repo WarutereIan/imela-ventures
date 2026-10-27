@@ -50,6 +50,7 @@ serious problems:
 | `20261027000004_persona_and_reflections.sql` | Owner-only `client_reflections`; opt-in, auto-expiring `persona_saved_journeys`; `practitioner_notes` (author + assigned practitioner only — admins have no access by default); `audit_events` + `log_audit()`. |
 | `20261027000005_organisations.sql` | `organisations`, `organisation_members`, `corporate_programmes`, `programme_events` (counts only); nullable `sessions.org_id`; `org_utilisation_summary()` with **k = 5 suppression**. Org admins can never read `sessions`. |
 | `20261027000006_enquiries.sql` | `enquiries` table for organisation, individual-by-enquiry and general contact requests. Public may insert `status = 'new'` only; admins read/update. |
+| `20261028000007_persona_portal.sql` | **Imela Persona anonymous counselling portal** — see "Persona portal" below. |
 
 All migrations are **idempotent and non-destructive**: they only create
 objects or add nullable columns, and drop only the four legacy policies named
@@ -130,6 +131,8 @@ select cron.schedule('purge-persona-journeys', '17 3 * * *',
 | --- | --- | --- |
 | `send-booking-notification` | E-mails the admin inbox about a new booking. Accepts the legacy body but **trusts only `bookingId`**; reloads the booking with the service role and sends only for a `pending` booking created in the last 10 minutes. The client's free-text message is **not** e-mailed. Subject: "New booking request received". | Public (website) |
 | `send-booking-confirmation` | E-mails the client that their booking is confirmed. Requires a signed-in **admin** (checked via `has_role`); only `bookingId` is read; booking must be `confirmed`. Subject: "Your Imela appointment". | Admins |
+| `persona-register` | Creates a pseudonymous Persona (ID + recovery secret). See "Persona portal". | Public (no session) |
+| `persona-account` | Rotates a Persona's recovery secret or deletes the Persona. | Signed-in Personas only |
 | `persona-respond` | Optional AI reflection for Imela Persona. Requires `consent: true`; returns `503 ai_not_configured` if no provider is set. Never logs or stores messages. | Public, only after the person consents |
 
 Every function handles CORS preflight, validates input, escapes all HTML, and
@@ -141,6 +144,8 @@ returns an error, never a fake success, when e-mail or AI is not configured.
 supabase functions deploy send-booking-notification --no-verify-jwt
 supabase functions deploy send-booking-confirmation
 supabase functions deploy persona-respond --no-verify-jwt
+supabase functions deploy persona-register --no-verify-jwt   # anonymous callers have no session
+supabase functions deploy persona-account                     # JWT verified by Supabase *and* in the function
 ```
 
 `--no-verify-jwt` is used for the two public functions because anonymous
@@ -157,6 +162,9 @@ supabase secrets set ALLOWED_ORIGIN=https://www.imelaventures.com  # optional; r
 supabase secrets set PERSONA_AI_PROVIDER=anthropic # optional; leave unset to keep Persona fully on-device
 supabase secrets set ANTHROPIC_API_KEY=...         # required if PERSONA_AI_PROVIDER=anthropic
 supabase secrets set PERSONA_AI_MODEL=claude-sonnet-5-5  # optional
+supabase secrets set PERSONA_LOGIN_DOMAIN=persona.imelaventures.invalid  # required for the Persona portal; must equal VITE_PERSONA_LOGIN_DOMAIN
+supabase secrets set PERSONA_MAX_REGISTRATIONS_PER_HOUR=200   # optional global ceiling on new Personas
+supabase secrets set PERSONA_REGISTRATIONS_PER_IP_HOUR=5      # optional best-effort per-IP limit
 ```
 
 `SUPABASE_URL`, `SUPABASE_ANON_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are
@@ -166,6 +174,92 @@ or an AI key in the website's `.env`.
 Before enabling `persona-respond`, have the privacy notice reviewed: sending
 someone's words to an external AI provider is a cross-border transfer of
 sensitive personal data under the Kenya Data Protection Act, 2019.
+
+---
+
+## Persona portal (anonymous counselling)
+
+### How identity works
+
+- A Persona is a **Supabase Auth user created by `persona-register`** with the
+  service role. Its login is a synthetic, undeliverable address
+  (`imp-xxxx-xxxx-xxxx@PERSONA_LOGIN_DOMAIN`) and its password is the
+  **recovery secret** (30 Crockford base32 characters ≈ 150 bits, generated
+  server-side with Web Crypto). Supabase stores only a one-way hash, so nobody
+  at Imela can see or recover the secret.
+- The **Persona ID identifies; only the secret grants access.** Knowing an ID
+  alone gives nothing.
+- Users are created pre-confirmed, so **no email is ever sent** and public
+  sign-ups can stay disabled in the dashboard.
+- Losing the secret means losing access — there is deliberately no email or
+  phone recovery. A signed-in Persona can rotate the secret
+  (`persona-account` → `rotate`, which also signs out every session) or delete
+  everything (`delete`, which cascades to cases, messages, notes and resources).
+- If Supabase rejects the `.invalid` login domain in your project, set
+  `PERSONA_LOGIN_DOMAIN` (and `VITE_PERSONA_LOGIN_DOMAIN`) to a subdomain you
+  control that has **no MX record**, e.g. `persona.imelaventures.com`.
+
+### What migration 0007 creates
+
+| Object | Purpose |
+| --- | --- |
+| `persona_profiles` | Persona ID ↔ auth user. No personal data; `last_active_on` is a date only. |
+| `persona_cases` | Concerns, optional story, preferred support, status, urgency, queue, assignee, follow-up date. |
+| `persona_my_cases` (view) | What a Persona sees about **its own** cases — no urgency, internal reason, queue or assignee identity. Personas cannot read the base table. |
+| `persona_messages` | Append-only thread between the Persona and counsellors. |
+| `persona_case_notes` | Internal staff notes. **Never** visible to Personas. |
+| `persona_case_resources` | Resources assigned to a case (relative or `https://` links only). |
+| `persona_triage_rules` | Transparent concern → queue / base urgency rules. Staff read; admins edit. |
+| `persona_risk_screen()` | Risk-language screen (mirrors the website's). A match only **raises** a case to `crisis_review` for prompt human review. |
+| Staff RPCs | `staff_open_case` (audits the view), `staff_assign_case`, `staff_set_case_status`, `staff_set_case_urgency` (reason required), `staff_set_follow_up`, `staff_persona_workload` (admins). There is **no** direct UPDATE policy; every change is audited in `audit_events` without copying counselling content. |
+| Limits (triggers) | ≤ 3 open cases per Persona; ≤ 5 new cases per 24 h; ≤ 30 Persona messages per hour. Client-supplied status, urgency, queue and assignee are ignored on insert. |
+| Access rules | Admins see all cases. Practitioners see the unassigned queue and their own cases, may only self-assign unassigned cases, and may only reply/note on cases assigned to them. A Persona identity can never be granted a staff role. |
+| `purge_closed_persona_cases(days)` | Deletes closed cases older than the retention period (min 30, default 365). Not callable from the website. |
+
+Schedule retention (pg_cron):
+
+```sql
+select cron.schedule('persona-retention', '15 2 * * *',
+       $$select public.purge_closed_persona_cases(365)$$);
+```
+
+Inactive Persona logins are removed with the Auth admin API (deleting the
+auth user cascades to everything above).
+
+### Supabase settings to check
+
+- **Auth → Rate limits:** keep sign-in limits on — they slow down guessing
+  (with ~150-bit secrets guessing is infeasible, but limits also curb load).
+- **Auth → JWT expiry:** 3600 s (default) or shorter. The website also signs a
+  Persona out after 15 minutes without interaction and never stores the
+  session in `localStorage`.
+- **Email confirmations** don't apply (admin-created users are confirmed).
+  **Public sign-ups can stay disabled.**
+- **CORS:** set `ALLOWED_ORIGIN` to the production site.
+
+### Honest privacy limits (tell people)
+
+- Supabase Auth keeps its own audit/request logs, which include **IP
+  addresses**, and hosting/CDN providers log requests too. Imela's tables
+  never store IPs or device fingerprints, but those infrastructure logs exist;
+  check their retention for your Supabase plan and hosting provider.
+- Anything a person writes in their story or messages is visible to the
+  counsellors handling the case.
+- Confidentiality has limits where there is serious risk of harm or a legal
+  obligation; describe the escalation process in the privacy notice.
+
+### Testing
+
+`scripts/test-db.sh` builds a throwaway PostgreSQL cluster, applies a stub of
+Supabase's `auth` schema (`supabase/tests/00_auth_stub.sql`), applies every
+migration **twice**, and runs `supabase/tests/persona_portal_rls.sql`
+(74 named assertions covering isolation between Personas, hidden internal
+fields, triage, risk escalation, append-only messages, rate limits, staff
+scoping, auditing, anonymous access and cascade deletion):
+
+```bash
+sudo scripts/test-db.sh        # needs PostgreSQL server binaries; set PGBIN if not in /usr/lib/postgresql/*/bin
+```
 
 ---
 
@@ -191,6 +285,10 @@ sensitive personal data under the Kenya Data Protection Act, 2019.
   - a random user calling the org summary gets `not authorised`;
   - admins cannot read client reflections;
   - anonymous visitors can insert `new` enquiries only, and cannot read them.
-- **Not verified:** real Supabase Auth/JWT behaviour, Realtime, and the edge
+- Migration 0007 (Persona portal) is covered by `scripts/test-db.sh` — 74
+  assertions, all passing; two deliberate policy regressions were confirmed
+  to make the suite fail.
+- **Not verified:** real Supabase Auth/JWT behaviour (including whether the
+  synthetic `.invalid` login domain is accepted), Realtime, and the edge
   functions at runtime. The edge functions were typechecked with `tsc` using
   a Deno shim; Deno itself was not available.

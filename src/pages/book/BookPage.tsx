@@ -24,6 +24,7 @@ const individualServices = SERVICES.filter((s) => s.audience === 'individual' &&
 
 function StepIndicator({ step }: { step: Step }) {
   return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
     <ol className="flex flex-wrap items-center gap-2 text-sm" aria-label="Booking steps">
       {STEPS.map((label, i) => {
         const n = (i + 1) as Step;
@@ -47,6 +48,23 @@ function StepIndicator({ step }: { step: Step }) {
         );
       })}
     </ol>
+      {/* Phones show only the numbered dots above, so name the current step. */}
+      <p className="text-sm text-ink-soft sm:hidden" aria-hidden>
+        Step {step} of {STEPS.length} · <span className="font-semibold text-ink-strong">{STEPS[step - 1]}</span>
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Step navigation. On phones it is pinned to the bottom of the screen with a
+ * solid background, so it never covers content and stays within thumb reach.
+ */
+function ActionBar({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="sticky bottom-0 z-20 -mx-[var(--gutter)] mt-6 flex items-center gap-3 border-t border-line/10 bg-ivory/95 px-[var(--gutter)] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:static sm:mx-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0 sm:backdrop-blur-none [&>*:last-child]:ml-auto [&>*:last-child]:flex-1 sm:[&>*:last-child]:flex-none">
+      {children}
+    </div>
   );
 }
 
@@ -199,8 +217,8 @@ export default function BookPage() {
 
   return (
     <section className="shell py-6 sm:py-10 lg:py-14">
-      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <div>
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <div className="min-w-0">
           <p className="eyebrow">Schedule a consultation</p>
           <h1 ref={headingRef} tabIndex={-1} className="mt-1 font-display text-display-md focus:outline-none focus-visible:shadow-none">
             {step === 1 && 'What would you like to book?'}
@@ -211,6 +229,20 @@ export default function BookPage() {
           <div className="mt-5">
             <StepIndicator step={step} />
           </div>
+
+          {/* Phones: a one-line summary instead of the side panel. */}
+          {step > 1 && (
+            <div className="mt-4 flex items-center gap-3 rounded-2xl bg-lavender-soft px-3 py-2.5 text-sm lg:hidden">
+              <Companion variant="heart" mood="calm" pose="hold" hold="lantern" tone="rose" size={34} animate="none" />
+              <p className="min-w-0 flex-1">
+                <span className="block truncate font-semibold text-ink-strong">{service.name}</span>
+                <span className="block truncate text-ink-soft">{date && time ? `${formatDayLabel(date, 'short')} · ${time}` : durationLabel(service)}</span>
+              </p>
+              <button type="button" onClick={() => go(1)} className="shrink-0 rounded-pill px-2 py-1 text-xs font-semibold text-lavender-ink underline underline-offset-2">
+                Change
+              </button>
+            </div>
+          )}
 
           {orgRequested && (
             <Alert tone="info" className="mt-6" title={`${orgRequested.name} is arranged with organisations directly`}>
@@ -243,12 +275,11 @@ export default function BookPage() {
                     />
                   ))}
                 </div>
-                {/* Keeps Continue within thumb reach on phones while scrolling the options. */}
-                <div className="sticky bottom-3 z-10 mt-6 flex justify-end sm:static">
-                  <Button onClick={() => go(2)} className="shadow-lift sm:shadow-soft">
+                <ActionBar>
+                  <Button onClick={() => go(2)}>
                     Continue <ArrowRight className="h-4 w-4" aria-hidden />
                   </Button>
-                </div>
+                </ActionBar>
               </fieldset>
             )}
 
@@ -280,14 +311,14 @@ export default function BookPage() {
                     setSlotError(null);
                   }}
                 />
-                <div className="mt-8 flex justify-between gap-3">
-                  <Button variant="ghost" onClick={() => go(1)}>
-                    <ArrowLeft className="h-4 w-4" aria-hidden /> Service
+                <ActionBar>
+                  <Button variant="ghost" onClick={() => go(1)} className="px-3 sm:px-6">
+                    <ArrowLeft className="h-4 w-4" aria-hidden /> Back
                   </Button>
                   <Button onClick={() => go(3)} disabled={!date || !time}>
-                    Continue <ArrowRight className="h-4 w-4" aria-hidden />
+                    {date && time ? 'Continue' : 'Choose a time'} <ArrowRight className="h-4 w-4" aria-hidden />
                   </Button>
-                </div>
+                </ActionBar>
               </div>
             )}
 
@@ -366,22 +397,22 @@ export default function BookPage() {
                     </p>
                   )}
                 </div>
-                <div className="flex justify-between gap-3 pt-2">
-                  <Button variant="ghost" onClick={() => go(2)}>
-                    <ArrowLeft className="h-4 w-4" aria-hidden /> Time
+                <ActionBar>
+                  <Button variant="ghost" onClick={() => go(2)} className="px-3 sm:px-6">
+                    <ArrowLeft className="h-4 w-4" aria-hidden /> Back
                   </Button>
                   <Button type="submit">
                     Review <ArrowRight className="h-4 w-4" aria-hidden />
                   </Button>
-                </div>
+                </ActionBar>
               </form>
             )}
 
             {step === 4 && (
               <div>
-                <dl className="divide-y divide-line/10 rounded-card bg-paper px-5 shadow-soft">
+                <dl className="divide-y divide-line/10 rounded-card bg-paper px-4 shadow-soft sm:px-5">
                   {summaryRows.map(([k, v]) => (
-                    <div key={k} className="grid grid-cols-3 gap-4 py-3 text-sm">
+                    <div key={k} className="grid grid-cols-3 gap-3 py-3 text-sm sm:gap-4">
                       <dt className="text-ink-soft">{k}</dt>
                       <dd className="col-span-2 break-words font-medium text-ink-strong">{v}</dd>
                     </div>
@@ -397,22 +428,34 @@ export default function BookPage() {
                 <p className="mt-5 text-sm text-ink-soft">
                   This sends a booking <strong>request</strong>. It's confirmed once the Imela team has reviewed it.
                 </p>
-                <div className="mt-6 flex justify-between gap-3">
-                  <Button variant="ghost" onClick={() => go(3)} disabled={submitting}>
-                    <ArrowLeft className="h-4 w-4" aria-hidden /> Edit details
+                <ActionBar>
+                  <Button variant="ghost" onClick={() => go(3)} disabled={submitting} className="px-3 sm:px-6">
+                    <ArrowLeft className="h-4 w-4" aria-hidden /> Edit
                   </Button>
-                  <Button variant="accent" size="lg" onClick={submit} disabled={submitting}>
+                  <Button variant="accent" onClick={submit} disabled={submitting} className="sm:h-14 sm:px-8">
                     <CalendarCheck className="h-4 w-4" aria-hidden />
-                    {submitting ? 'Sending request…' : 'Send booking request'}
+                    {submitting ? 'Sending…' : 'Send request'}
                   </Button>
-                </div>
+                </ActionBar>
               </div>
             )}
           </div>
         </div>
 
-        {/* Side panel */}
-        <div className="space-y-4 lg:sticky lg:top-32 lg:self-start">
+        {/* Phones: one short reassurance line instead of the full side panel. */}
+        <p className="-mt-4 flex items-start gap-2 text-xs leading-relaxed text-ink-soft lg:hidden">
+          <Lock className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+          <span>
+            Private and confidential. Prefer to talk? Call{' '}
+            <a href={ORG.phoneHref} className="font-semibold text-ink underline underline-offset-2">
+              {ORG.phoneDisplay}
+            </a>
+            . Imela is not an emergency service.
+          </span>
+        </p>
+
+        {/* Side panel (desktop) */}
+        <div className="hidden space-y-4 lg:sticky lg:top-32 lg:block lg:self-start">
           <div className="rounded-card bg-lavender p-5">
             <div className="flex items-center gap-3">
               <Companion variant="heart" mood="calm" pose="hold" hold="lantern" tone="rose" size={70} />

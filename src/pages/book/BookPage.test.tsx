@@ -28,7 +28,7 @@ async function fillToReview() {
   await user.type(screen.getByLabelText(/^Phone/), '+254 712 345 678');
   await user.click(screen.getByRole('checkbox'));
   await user.click(screen.getByRole('button', { name: /^Review/ }));
-  await user.click(screen.getByRole('button', { name: /Send booking request/ }));
+  await user.click(screen.getByRole('button', { name: /Send request/ }));
   return user;
 }
 

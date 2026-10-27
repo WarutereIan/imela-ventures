@@ -16,4 +16,11 @@ export const config = {
    * Function. Off by default: the built-in engine runs entirely in the browser.
    */
   personaAiEnabled: flag(import.meta.env.VITE_PERSONA_AI_ENABLED),
+  /**
+   * Anonymous counselling portal (Persona ID + recovery secret). Requires
+   * migration 0007 and the persona-register / persona-account Edge Functions.
+   */
+  personaPortalEnabled: flag(import.meta.env.VITE_PERSONA_PORTAL_ENABLED),
+  /** Must match PERSONA_LOGIN_DOMAIN in the Edge Functions. */
+  personaLoginDomain: import.meta.env.VITE_PERSONA_LOGIN_DOMAIN || 'persona.imelaventures.invalid',
 } as const;

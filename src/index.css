@@ -56,10 +56,19 @@
     --dur-calm: 420ms;
     --dur-ambient: 5.5s;
 
+    /* Height reserved by the floating mobile tab bar (0 on desktop). */
+    --tabbar-offset: calc(5.25rem + env(safe-area-inset-bottom));
+
     /* Focus */
     --focus-ring: 0 0 0 3px rgb(var(--c-paper)), 0 0 0 6px rgb(var(--c-lavender-ink));
 
     color-scheme: light;
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --tabbar-offset: 0px;
+    }
   }
 
   html {

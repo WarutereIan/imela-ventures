@@ -62,7 +62,7 @@ function StepIndicator({ step }: { step: Step }) {
  */
 function ActionBar({ children }: { children: React.ReactNode }) {
   return (
-    <div className="sticky bottom-0 z-20 -mx-[var(--gutter)] mt-6 flex items-center gap-3 border-t border-line/10 bg-ivory/95 px-[var(--gutter)] pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:static sm:mx-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0 sm:backdrop-blur-none [&>*:last-child]:ml-auto [&>*:last-child]:flex-1 sm:[&>*:last-child]:flex-none">
+    <div className="sticky bottom-[var(--tabbar-offset)] z-20 -mx-[var(--gutter)] mt-6 flex items-center gap-3 rounded-t-2xl border-t border-line/10 bg-ivory/95 px-[var(--gutter)] pb-3 pt-3 backdrop-blur sm:static sm:mx-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:px-0 sm:pb-0 sm:pt-0 sm:backdrop-blur-none [&>*:last-child]:ml-auto [&>*:last-child]:flex-1 sm:[&>*:last-child]:flex-none">
       {children}
     </div>
   );

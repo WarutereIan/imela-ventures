@@ -2,6 +2,7 @@ import React, { lazy } from 'react';
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import SiteLayout from './components/layout/SiteLayout';
 import { NotFoundPage, RouteError } from './components/layout/PageStates';
+import { WithTabBar } from './components/layout/WithTabBar';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const WhoWeArePage = lazy(() => import('./pages/WhoWeArePage'));
@@ -83,9 +84,11 @@ export const router = createBrowserRouter([
     path: '/admin',
     errorElement: <RouteError />,
     element: (
-      <React.Suspense fallback={null}>
-        <AdminRoute />
-      </React.Suspense>
+      <WithTabBar>
+        <React.Suspense fallback={null}>
+          <AdminRoute />
+        </React.Suspense>
+      </WithTabBar>
     ),
   },
 ]);

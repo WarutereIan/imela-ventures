@@ -15,7 +15,7 @@ interface Tab {
 const TABS: Tab[] = [
   { id: 'home', label: 'Home', to: '/', icon: Home },
   { id: 'support', label: 'Support', to: '/support', icon: Compass },
-  { id: 'persona', label: 'Persona', to: '/persona', icon: MessageCircleHeart },
+  { id: 'persona', label: 'Imela', to: '/persona', icon: MessageCircleHeart },
   { id: 'book', label: 'Book', to: '/book', icon: CalendarHeart },
   { id: 'more', label: 'More', icon: LayoutGrid },
 ];

@@ -161,16 +161,16 @@ export default function ResourcesPage() {
             </EmptyState>
           </div>
         ) : (
-          <div className="mt-6 grid gap-6">
-            {featured && <ResourceCard resource={featured} size="feature" />}
+          <div className="mt-6 grid gap-3 sm:gap-6">
+            {featured && <ResourceCard resource={featured} size="feature" mobileList />}
             {rest.length > 0 && (
-              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <ul className="grid gap-3 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
                 {rest.map((r, i) => {
                   // Avoid a lone card on the last row: let it span the row as a feature.
                   const orphan = rest.length > 1 && rest.length % 3 === 1 && i === rest.length - 1;
                   return (
                     <li key={r.slug} className={orphan ? 'flex sm:col-span-2 lg:col-span-3 [&>article]:flex-1' : 'flex [&>article]:flex-1'}>
-                      <ResourceCard resource={r} size={orphan ? 'feature' : 'regular'} />
+                      <ResourceCard resource={r} size={orphan ? 'feature' : 'regular'} mobileList />
                     </li>
                   );
                 })}

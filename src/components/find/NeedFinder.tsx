@@ -10,6 +10,7 @@ import { ServiceCard } from '../services/ServiceCard';
 import { CrisisContacts } from '../layout/UrgentHelp';
 import { Button } from '../ui/Button';
 import { Alert, Chip } from '../ui/primitives';
+import { Carousel } from '../ui/Carousel';
 import Companion from '../characters/Companion';
 import { cn } from '../../lib/cn';
 
@@ -209,13 +210,20 @@ export function NeedFinder({ initialText = '' }: { initialText?: string }) {
               </div>
             </div>
 
-            <ul className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Carousel
+              label="Options that may fit"
+              className="mt-6"
+              gridFrom="md"
+              gridClassName="md:grid-cols-2 md:gap-4 xl:grid-cols-3"
+              slideClassName="w-[86%] sm:w-[60%]"
+            >
               {outcome.result.recommendations.map((r) => (
-                <li key={r.service.id}>
+                // `relative` keeps the card's visually-hidden labels inside the scrolling track.
+                <div key={r.service.id} className="relative">
                   <ServiceCard service={r.service} reason={r.reason} via="finder" className="h-full" />
-                </li>
+                </div>
               ))}
-            </ul>
+            </Carousel>
 
             {outcome.result.referrals.length > 0 && (
               <Alert tone="info" className="mt-4" title="Specialist support outside Imela">

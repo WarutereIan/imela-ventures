@@ -16,8 +16,11 @@ export default function FindSupportPage() {
 
   useEffect(() => {
     if (hash === '#catalogue' && highlight) {
-      const el = document.getElementById(`svc-${highlight}`) ?? document.getElementById(`svc-m-${highlight}`);
-      el?.scrollIntoView({ block: 'center' });
+      // Only one of the table row (desktop) and the card (phones) is visible at a time.
+      const el = [document.getElementById(`svc-${highlight}`), document.getElementById(`svc-m-${highlight}`)].find(
+        (node): node is HTMLElement => Boolean(node && node.offsetParent !== null)
+      );
+      el?.scrollIntoView({ block: 'center', inline: 'start' });
     }
   }, [hash, highlight]);
 

@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { Info, Sparkles } from 'lucide-react';
 import type { PersonaMessage } from '../../domain/persona/machine';
 import { ServiceCard } from '../services/ServiceCard';
+import { Carousel } from '../ui/Carousel';
 import { CrisisContacts } from '../layout/UrgentHelp';
 import { CRISIS_OUTSIDE_KENYA } from '../../data/crisis';
 import { cn } from '../../lib/cn';
@@ -80,13 +81,16 @@ export function MessageView({ message }: { message: PersonaMessage }) {
     case 'recommendations': {
       const { result } = message;
       return (
-        <section aria-label="Support options" className="space-y-3">
+        // w-0 + min-w-full: fills the chat column without letting the carousel's width stretch it.
+        <section aria-label="Support options" className="w-0 min-w-full space-y-3">
           {message.text && <Bubble from="persona">{message.text}</Bubble>}
-          <div className="grid gap-3 lg:grid-cols-2">
+          <Carousel label="Suggested support options" bleed={false} gridFrom="lg" gridClassName="lg:grid-cols-2 lg:gap-3" slideClassName="w-[88%] sm:w-[62%]">
             {result.recommendations.map((r) => (
-              <ServiceCard key={r.service.id} service={r.service} reason={r.reason} via="persona" headingLevel="h3" />
+              <div key={r.service.id} className="relative">
+                <ServiceCard service={r.service} reason={r.reason} via="persona" headingLevel="h3" className="h-full" />
+              </div>
             ))}
-          </div>
+          </Carousel>
           {result.referrals.length > 0 && (
             <div className="rounded-2xl bg-sky-soft px-4 py-3 text-sm text-sky-ink">
               <p className="font-semibold">Specialist support outside Imela</p>

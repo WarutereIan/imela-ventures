@@ -6,6 +6,7 @@ import { recordView, useResources } from '../../domain/resources';
 import { CATEGORY_BY_ID } from '../../data/resources';
 import RichText from '../../components/content/RichText';
 import ResourceCard, { DraftLabel } from '../../components/resources/ResourceCard';
+import { Carousel } from '../../components/ui/Carousel';
 import { categoryArt } from '../../components/resources/categoryArt';
 import Companion from '../../components/characters/Companion';
 import { NotFoundPage, PageLoader } from '../../components/layout/PageStates';
@@ -42,12 +43,12 @@ export default function ResourceArticlePage() {
   return (
     <article>
       <header className={`${art.surface} border-b border-line/10`}>
-        <div className="shell grid items-end gap-8 pt-10 md:grid-cols-[1fr_auto] md:pt-14">
-          <div className="pb-10 md:pb-14">
+        <div className="shell grid items-end gap-8 pt-6 md:grid-cols-[1fr_auto] md:pt-14">
+          <div className="pb-8 md:pb-14">
             <Link to="/resources" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-ink-strong">
               <ArrowLeft className="h-4 w-4" aria-hidden /> All resources
             </Link>
-            <p className="mt-6 text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft">{category?.label ?? 'Wellbeing'}</p>
+            <p className="mt-4 text-xs font-semibold uppercase tracking-[0.14em] text-ink-soft md:mt-6">{category?.label ?? 'Wellbeing'}</p>
             <h1 className="mt-2 max-w-3xl font-display text-display-lg">{resource.title}</h1>
             <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink-soft">
               <span>By {resource.author}</span>
@@ -62,23 +63,23 @@ export default function ResourceArticlePage() {
         </div>
       </header>
 
-      <div className="shell grid gap-12 py-12 lg:grid-cols-[minmax(0,1fr)_300px] lg:py-16">
+      <div className="shell grid gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-12 lg:py-16">
         <div>
           {resource.reviewStatus === 'draft' && (
-            <Alert tone="warning" className="mb-8 max-w-prose">
+            <Alert tone="warning" className="mb-6 max-w-prose md:mb-8">
               This is starter material written for general wellbeing. It hasn't yet been reviewed by an Imela counsellor and isn't professional
               advice for your situation.
             </Alert>
           )}
-          <p className="mb-8 max-w-prose font-display text-display-sm text-ink">{resource.excerpt}</p>
+          <p className="mb-6 max-w-prose font-display text-display-sm text-ink md:mb-8">{resource.excerpt}</p>
           <RichText source={resource.body} />
         </div>
 
-        <aside className="space-y-6 lg:sticky lg:top-32 lg:self-start" aria-label="Support options">
-          <div className="rounded-card bg-lavender-soft p-6">
+        <aside className="space-y-4 lg:sticky lg:top-32 lg:self-start lg:space-y-6" aria-label="Support options">
+          <div className="rounded-card bg-lavender-soft p-5 lg:p-6">
             <p className="font-hand text-2xl text-lavender-ink">Want to talk about it?</p>
             <p className="mt-2 text-sm leading-relaxed text-ink">You can explore privately with Persona, or book a short first conversation with a counsellor.</p>
-            <div className="mt-4 flex flex-col gap-2">
+            <div className="mt-4 flex flex-col gap-2 min-[420px]:flex-row lg:flex-col">
               <Link to="/persona" className={buttonClasses('accent', 'sm')}>
                 Talk to Imela Persona
               </Link>
@@ -87,7 +88,7 @@ export default function ResourceArticlePage() {
               </Link>
             </div>
           </div>
-          <div className="rounded-card border border-rose/30 bg-paper p-6 text-sm">
+          <div className="rounded-card border border-rose/30 bg-paper p-5 text-sm lg:p-6">
             <p className="flex items-center gap-2 font-semibold text-rose-ink">
               <LifeBuoy className="h-4 w-4" aria-hidden /> If you're not safe right now
             </p>
@@ -101,13 +102,11 @@ export default function ResourceArticlePage() {
           <h2 id="related-heading" className="font-display text-display-sm">
             {related.length > 0 ? 'Related reading' : 'More to read'}
           </h2>
-          <ul className="mt-6 grid gap-6 md:grid-cols-2">
+          <Carousel label="More to read" className="mt-6" gridFrom="md" gridClassName="md:grid-cols-2 md:gap-6" slideClassName="w-[80%] sm:w-[60%]">
             {[...related, ...more].map((r) => (
-              <li key={r.slug} className="flex [&>article]:flex-1">
-                <ResourceCard resource={r} />
-              </li>
+              <ResourceCard key={r.slug} resource={r} />
             ))}
-          </ul>
+          </Carousel>
         </section>
       )}
     </article>

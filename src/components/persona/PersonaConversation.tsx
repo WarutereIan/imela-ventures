@@ -279,7 +279,7 @@ export function PersonaConversation({ state, dispatch, onSay, onShowOptions, aiA
       </aside>
 
       {/* Conversation */}
-      <section aria-label="Conversation with Imela Persona" className="flex min-h-[70vh] flex-col rounded-[2rem] border border-line/10 bg-ivory-deep/60 p-3 sm:p-5">
+      <section aria-label="Conversation with Imela Persona" className="flex min-h-[70vh] min-w-0 flex-col rounded-[2rem] border border-line/10 bg-ivory-deep/60 p-3 sm:p-5">
         <p className="mx-auto mb-4 max-w-md rounded-pill bg-paper/80 px-4 py-1.5 text-center text-xs text-ink-soft">
           Automated guide · not a counsellor · not monitored
         </p>

@@ -6,6 +6,7 @@ import { getPractitioner } from '../../data/team';
 import type { Service, ServiceAudience } from '../../data/types';
 import { bookingHref, ServiceCard } from '../services/ServiceCard';
 import { StatusBadge } from '../ui/primitives';
+import { Carousel } from '../ui/Carousel';
 import { buttonClasses } from '../ui/Button';
 import { useAvailability, firstOpenSlot } from '../../domain/booking/useAvailability';
 import { formatDayLabel } from '../../domain/booking/slots';
@@ -147,14 +148,14 @@ export function ServiceTable({ highlight }: { highlight?: string | null }) {
         </table>
       </div>
 
-      {/* Mobile & tablet cards */}
-      <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:hidden">
+      {/* Phones & tablets: a swipe row of cards — eight table columns don't fit a small screen. */}
+      <Carousel label="Imela services" className="mt-4 lg:hidden" slideClassName="w-[86%] sm:w-[48%]">
         {rows.map((s) => (
-          <li key={s.id} id={`svc-m-${s.id}`}>
+          <div key={s.id} id={`svc-m-${s.id}`} className="relative scroll-mt-28">
             <ServiceCard service={s} via="finder" className={cn('h-full', highlight === s.id && 'ring-2 ring-lavender-ink')} />
-          </li>
+          </div>
         ))}
-      </ul>
+      </Carousel>
     </div>
   );
 }

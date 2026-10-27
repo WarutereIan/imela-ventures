@@ -54,7 +54,7 @@ function ServiceOption({ service, selected, onSelect }: { service: Service; sele
   return (
     <label
       className={cn(
-        'flex cursor-pointer gap-4 rounded-card border-2 bg-paper p-4 transition-colors sm:p-5',
+        'flex cursor-pointer gap-3 rounded-[1.25rem] border-2 bg-paper p-3.5 transition-colors sm:gap-4 sm:rounded-card sm:p-5',
         selected ? 'border-ink-strong shadow-sticker' : 'border-transparent shadow-soft hover:border-lavender'
       )}
     >
@@ -64,7 +64,7 @@ function ServiceOption({ service, selected, onSelect }: { service: Service; sele
           <span className="font-semibold text-ink-strong">{service.name}</span>
           {service.audienceNote && <Chip>{service.audienceNote}</Chip>}
         </span>
-        <span className="mt-1 block text-sm leading-relaxed text-ink-soft">{service.summary}</span>
+        <span className="mt-1 line-clamp-2 text-sm leading-relaxed text-ink-soft sm:line-clamp-none">{service.summary}</span>
         <span className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink">
           <span className="inline-flex items-center gap-1">
             <Clock className="h-3.5 w-3.5" aria-hidden /> {durationLabel(service)}
@@ -198,7 +198,7 @@ export default function BookPage() {
   }
 
   return (
-    <section className="shell py-10 lg:py-14">
+    <section className="shell py-6 sm:py-10 lg:py-14">
       <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem]">
         <div>
           <p className="eyebrow">Schedule a consultation</p>
@@ -225,11 +225,11 @@ export default function BookPage() {
             </Alert>
           )}
 
-          <div className="mt-8">
+          <div className="mt-6 sm:mt-8">
             {step === 1 && (
               <fieldset className="min-w-0">
                 <legend className="sr-only">Service</legend>
-                <div className="grid gap-3">
+                <div className="grid gap-2.5 sm:gap-3">
                   {individualServices.map((s) => (
                     <ServiceOption
                       key={s.id}
@@ -243,8 +243,9 @@ export default function BookPage() {
                     />
                   ))}
                 </div>
-                <div className="mt-6 flex justify-end">
-                  <Button onClick={() => go(2)}>
+                {/* Keeps Continue within thumb reach on phones while scrolling the options. */}
+                <div className="sticky bottom-3 z-10 mt-6 flex justify-end sm:static">
+                  <Button onClick={() => go(2)} className="shadow-lift sm:shadow-soft">
                     Continue <ArrowRight className="h-4 w-4" aria-hidden />
                   </Button>
                 </div>

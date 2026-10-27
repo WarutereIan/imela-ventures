@@ -1,3 +1,5 @@
+> ⚠️ **Superseded — do not apply the policies below.** The RLS policies in this document let any signed-in user read and update every booking, and "Policy 4" would expose all bookings publicly. Use `supabase/migrations/` and `supabase/README.md` instead. The Edge Function code below has been replaced by hardened versions in `supabase/functions/`.
+
 # Booking Flow Setup Guide
 
 This document provides complete setup instructions for the booking submission and confirmation flow.

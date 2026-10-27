@@ -5,7 +5,7 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  { ignores: ['dist'] },
+  { ignores: ['dist', 'supabase/functions'] },
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
@@ -24,5 +24,10 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
     },
+  },
+  {
+    // Route table and shared style helpers intentionally export non-components.
+    files: ['src/router.tsx', 'src/components/ui/Button.tsx', 'src/components/services/ServiceCard.tsx', 'src/components/characters/Companion.tsx', 'src/components/layout/Header.tsx', 'src/lib/auth.tsx'],
+    rules: { 'react-refresh/only-export-components': 'off' },
   }
 );

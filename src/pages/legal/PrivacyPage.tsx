@@ -21,32 +21,52 @@ const sections: LegalSection[] = [
   },
   {
     id: 'persona',
-    title: 'How Imela Persona handles what you type',
+    title: 'Imela Persona: anonymous counselling',
     body: (
       <>
         <p>
-          Imela Persona is a guided conversation that helps you put things into words and find a possible next step. It is not a counsellor, it does
-          not diagnose, and it is not monitored by a person.
+          Imela Persona lets you talk with an Imela counsellor by private written messages without giving your name, email address, phone number or
+          social media account. It is designed so that your identity is never required — but no online service can promise absolute anonymity, and
+          we explain the limits below.
         </p>
-        <h3>The built-in guide (default)</h3>
+        <h3>Your Persona ID and recovery secret</h3>
         <ul>
-          <li>Persona's responses and suggestions are worked out in your own browser, using Imela's service catalogue.</li>
-          <li>Your conversation is held only in memory while this browser tab is open, so you can look at another page of this site and come back to it. Refreshing or closing the tab, “Start over” or Quick exit clears it. It is not saved to our servers and is not written to your browser's storage.</li>
-          <li>Choosing <strong>Reset</strong>, leaving the page, or closing the tab clears it.</li>
-          <li>If you choose to download a summary, the file is created on your device and goes only where you save it.</li>
+          <li>When you start, our server creates a random Persona ID (for example IMP-7K3Q-9XWD-2MRA) and a separate recovery secret.</li>
+          <li>The Persona ID only identifies your private space. The recovery secret is what lets you in. It is stored only as a one-way hash, so no one at Imela can see or recover it.</li>
+          <li>If you lose your recovery secret, we cannot restore access. We do not offer email or phone recovery, because that would require identifying you.</li>
+          <li>You can issue a new recovery secret from your space at any time. Doing so signs out every session.</li>
         </ul>
-        <h3>Optional AI reflections</h3>
+        <h3>What we store</h3>
+        <ul>
+          <li>The support categories you choose, anything you write, messages between you and counsellors, and resources they share with you.</li>
+          <li>Timestamps of your conversations, and the date (not time) you were last active.</li>
+          <li>For counsellors only: internal case notes, how your conversation was routed (for example to a grief or relationships queue) and whether it was flagged for prompt review. You never need to provide your identity for any of this.</li>
+        </ul>
+        <h3>Who can see it</h3>
+        <ul>
+          <li>Imela counsellors who are assigned to, or picking up, your conversation, and Imela administrators. They see your Persona ID, not your identity.</li>
+          <li>Every time a staff member opens, assigns, replies to or adds a note to a conversation, that action is recorded in an access log.</li>
+          <li>Other people using Imela Persona can never see your space.</li>
+        </ul>
+        <h3>The honest limits of anonymity</h3>
+        <ul>
+          <li>Like any website, our hosting provider and sign-in system (Supabase) record technical data such as IP addresses in their own security logs. We do not copy these into your counselling records and do not use them to identify you.</li>
+          <li>Anything you choose to write — such as names, places or your workplace — can identify you to the counsellors handling your case.</li>
+          <li>If what you write suggests that someone may be at serious and imminent risk, a counsellor reviews it promptly and follows Imela's safeguarding process. Because we do not know who you are, we cannot send emergency help to you — please contact emergency services if you are in danger.</li>
+          <li>Imela may be required to disclose information where Kenyan law requires it.</li>
+        </ul>
+        <h3>How long we keep it, and deleting it</h3>
+        <ul>
+          <li>Imela's policy is to delete closed conversations 12 months after they close, using a scheduled clean-up.</li>
+          <li>You can permanently delete your Persona — including every conversation, message and resource — from your space's settings at any time.</li>
+          <li>Your sign-in session is kept only in this browser tab's memory (or, if you choose, until the tab closes), and ends automatically after 15 minutes without activity.</li>
+        </ul>
+        <h3>Exploring privately first</h3>
         <p>
-          Imela may switch on an optional feature that adds AI-generated reflections to the conversation. It is only used if Imela has enabled it
-          <strong> and</strong> you actively agree each time you start a conversation. If you agree, your most recent messages are sent to Imela's
-          server function and then to a third-party AI provider (currently configured by Imela) to generate a reply. These messages are not used for
-          advertising and are not saved by Imela. The AI provider processes them under its own terms. Service recommendations always come from
-          Imela's own catalogue, not from the AI.
-        </p>
-        <h3>Your conversation does not become a client record</h3>
-        <p>
-          If you move from Persona to booking, your conversation is not attached to your booking. You will be asked only for the contact details
-          needed to arrange the session.
+          The separate “explore privately” guide runs entirely in your browser. What you type there is held in memory only, is not sent to our servers and is
+          not connected to any Persona ID. If Imela switches on optional AI reflections there, they are used only if you actively agree, and your recent
+          messages are then sent to Imela's server function and a third-party AI provider to write a reply; they are not stored by Imela or used for
+          advertising. Suggestions always come from Imela's own service list.
         </p>
       </>
     ),

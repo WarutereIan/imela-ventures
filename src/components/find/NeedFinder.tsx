@@ -203,7 +203,7 @@ export function NeedFinder({ initialText = '' }: { initialText?: string }) {
                 <Companion variant="drift" mood="curious" tone="sage" size={56} />
                 <p className="text-sm">
                   Prefer to talk it through?{' '}
-                  <Link to="/persona?path=find" className="font-semibold text-lavender-ink underline underline-offset-2">
+                  <Link to="/persona/explore?path=find" className="font-semibold text-lavender-ink underline underline-offset-2">
                     Try Imela Persona
                   </Link>
                 </p>

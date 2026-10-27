@@ -30,7 +30,7 @@ export default function PersonaPage() {
   const latest = useRef(state);
   latest.current = state;
 
-  // Deep links from the homepage check-in, e.g. /persona?path=feelings
+  // Deep links from the homepage check-in, e.g. /persona/explore?path=feelings
   useEffect(() => {
     const p = params.get('path') as PersonaPath | null;
     if (p && PATHS.includes(p) && latest.current.step === 'entry') {

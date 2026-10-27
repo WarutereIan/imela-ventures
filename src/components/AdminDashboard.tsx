@@ -912,6 +912,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, userEmail }) 
               {id === 'sessions' && metrics.pending > 0 && <span className="rounded-pill bg-butter px-2 text-xs text-ink-strong">{metrics.pending}</span>}
             </button>
           ))}
+          <Link to="/staff/persona" className="inline-flex shrink-0 items-center gap-2 rounded-pill px-4 py-2 text-sm font-semibold text-lavender-ink hover:bg-lavender-soft">
+            Persona cases
+          </Link>
         </nav>
       </header>
 

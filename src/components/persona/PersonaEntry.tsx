@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowRight, EyeOff, HardDrive, ShieldCheck, UserX } from 'lucide-react';
+import { ArrowLeft, ArrowRight, EyeOff, HardDrive, ShieldCheck, UserX } from 'lucide-react';
 import Companion from '../characters/Companion';
 import Scene from '../characters/Scene';
 import { Sticker } from '../ui/Sticker';
@@ -44,10 +44,18 @@ export function PersonaEntry({ onStart }: { onStart: (path: PersonaPath) => void
   return (
     <div className="shell grid gap-10 py-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:py-16">
       <div>
-        <p className="eyebrow">Imela Persona</p>
+        <Link to="/persona" className="inline-flex items-center gap-1.5 text-sm font-semibold text-lavender-ink underline-offset-4 hover:underline">
+          <ArrowLeft className="h-4 w-4" aria-hidden /> Imela Persona
+        </Link>
+        <p className="eyebrow mt-4">Explore privately first</p>
         <h1 className="mt-2 font-display text-display-lg">You can begin without telling us who you are.</h1>
         <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
-          This is your space to put things into words, at your own pace. You choose what to share.
+          Put things into words at your own pace, with a guide that stays in this tab. Nothing here reaches a counsellor. When you're ready to talk to
+          one,{' '}
+          <Link to="/persona/start" className="font-semibold text-lavender-ink underline underline-offset-4">
+            get a Persona ID
+          </Link>
+          .
         </p>
 
         <ul className="mt-8 space-y-3" aria-label="Ways to begin">

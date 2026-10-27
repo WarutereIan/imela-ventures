@@ -13,6 +13,16 @@ const SupportDirectoryPage = lazy(() => import('./pages/support/SupportDirectory
 const SupportGroupPage = lazy(() => import('./pages/support/SupportGroupPage'));
 const ConcernPage = lazy(() => import('./pages/support/ConcernPage'));
 const PersonaPage = lazy(() => import('./pages/persona/PersonaPage'));
+const PortalLandingPage = lazy(() => import('./pages/persona/portal/PortalLandingPage'));
+const CreatePersonaPage = lazy(() => import('./pages/persona/portal/CreatePersonaPage'));
+const AccessPage = lazy(() => import('./pages/persona/portal/AccessPage'));
+const SpacePage = lazy(() => import('./pages/persona/portal/SpacePage'));
+const CaseThreadPage = lazy(() => import('./pages/persona/portal/CaseThreadPage'));
+const SpaceResourcesPage = lazy(() => import('./pages/persona/portal/SpaceResourcesPage'));
+const SpaceSettingsPage = lazy(() => import('./pages/persona/portal/SpaceSettingsPage'));
+const StaffCasesPage = lazy(() => import('./pages/staff/StaffCasesPage'));
+const StaffCasePage = lazy(() => import('./pages/staff/StaffCasePage'));
+const StaffPersonaAdminPage = lazy(() => import('./pages/staff/StaffPersonaAdminPage'));
 const FindSupportPage = lazy(() => import('./pages/find/FindSupportPage'));
 const BookPage = lazy(() => import('./pages/book/BookPage'));
 const OrganisationsPage = lazy(() => import('./pages/organisations/OrganisationsPage'));
@@ -41,6 +51,9 @@ const siteRoutes: RouteObject[] = [
   { path: 'organisations/workspace', element: <OrgWorkspacePage /> },
   { path: 'portal', element: <PortalPage /> },
   { path: 'practitioner', element: <PractitionerPage /> },
+  { path: 'staff/persona', element: <StaffCasesPage /> },
+  { path: 'staff/persona/admin', element: <StaffPersonaAdminPage /> },
+  { path: 'staff/persona/:caseId', element: <StaffCasePage /> },
   { path: 'privacy', element: <PrivacyPage /> },
   { path: 'terms', element: <TermsPage /> },
   ...(CompanionsGallery ? [{ path: 'dev/companions', element: <CompanionsGallery /> }] : []),
@@ -50,7 +63,22 @@ const siteRoutes: RouteObject[] = [
 export const router = createBrowserRouter([
   { path: '/', element: <SiteLayout />, errorElement: <RouteError />, children: siteRoutes },
   // Persona is a focused, distraction-free space: header (with urgent help) but no footer.
-  { path: '/persona', element: <SiteLayout bare />, errorElement: <RouteError />, children: [{ index: true, element: <PersonaPage /> }] },
+  {
+    path: '/persona',
+    element: <SiteLayout bare />,
+    errorElement: <RouteError />,
+    children: [
+      { index: true, element: <PortalLandingPage /> },
+      // The guided, browser-only reflection tool ("explore privately first").
+      { path: 'explore', element: <PersonaPage /> },
+      { path: 'start', element: <CreatePersonaPage /> },
+      { path: 'access', element: <AccessPage /> },
+      { path: 'space', element: <SpacePage /> },
+      { path: 'space/resources', element: <SpaceResourcesPage /> },
+      { path: 'space/settings', element: <SpaceSettingsPage /> },
+      { path: 'space/:caseId', element: <CaseThreadPage /> },
+    ],
+  },
   {
     path: '/admin',
     errorElement: <RouteError />,

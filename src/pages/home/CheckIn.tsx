@@ -20,8 +20,8 @@ const CHECK_IN_CHOICES: Choice[] = [
   { label: "I feel stuck in a pattern I can't break.", to: '/support/area/addiction-patterns', hint: 'Habits & behaviour patterns', look: { variant: 'sprout', mood: 'tired', pose: 'idle', tone: 'lime' }, surface: 'bg-lime' },
   { label: "I'm overwhelmed by life.", to: '/support/stress-overwhelm', hint: 'Stress & overwhelm', look: { variant: 'bloom', mood: 'tired', pose: 'reach', tone: 'butter' }, surface: 'bg-butter' },
   { label: "I'm struggling with who I am.", to: '/support/area/identity-growth', hint: 'Identity & self-worth', look: { variant: 'drift', mood: 'uncertain', pose: 'idle', tone: 'lavender' }, surface: 'bg-lavender-soft' },
-  { label: "I'm finding it difficult to cope.", to: '/persona?path=talk', hint: 'Talk it through privately', look: { variant: 'pebble', mood: 'lonely', pose: 'hug', tone: 'clay' }, surface: 'bg-[#EBDACF]' },
-  { label: "I'm not sure what I'm feeling.", to: '/persona?path=feelings', hint: 'Find the words with Persona', look: { variant: 'cloud', mood: 'curious', pose: 'idle', tone: 'lavender' }, surface: 'bg-sage' },
+  { label: "I'm finding it difficult to cope.", to: '/persona/explore?path=talk', hint: 'Talk it through privately', look: { variant: 'pebble', mood: 'lonely', pose: 'hug', tone: 'clay' }, surface: 'bg-[#EBDACF]' },
+  { label: "I'm not sure what I'm feeling.", to: '/persona/explore?path=feelings', hint: 'Find the words with Persona', look: { variant: 'cloud', mood: 'curious', pose: 'idle', tone: 'lavender' }, surface: 'bg-sage' },
   { label: 'Something else.', to: '/find-support', hint: 'Describe it in your own words', look: { variant: 'drift', mood: 'hopeful', pose: 'wave', tone: 'sage' }, surface: 'bg-ink-strong text-ivory' },
 ];
 

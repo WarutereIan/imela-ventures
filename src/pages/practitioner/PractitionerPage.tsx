@@ -9,7 +9,8 @@ import { getService } from '../../data/services';
 import { AccessDenied, SetupPending, SignInPanel, WorkspaceShell } from '../../components/workspace/WorkspaceStates';
 import { SESSION_STATUS_LABEL, formatSessionDate } from '../../components/workspace/format';
 import { useAsync, unwrap } from '../../components/workspace/useAsync';
-import { Button } from '../../components/ui/Button';
+import { Button, buttonClasses } from '../../components/ui/Button';
+import { Link } from 'react-router-dom';
 import { Alert, Card, Chip, EmptyState, Spinner, TextArea } from '../../components/ui/primitives';
 import Companion from '../../components/characters/Companion';
 import { nairobiDate } from '../../domain/booking/slots';
@@ -301,9 +302,16 @@ export default function PractitionerPage() {
       title="Your appointments"
       lede="Only appointments assigned to you are shown. Access is enforced by the database."
       actions={
-        <Button variant="outline" size="sm" onClick={auth.signOut}>
-          Sign out
-        </Button>
+        <>
+          {config.personaPortalEnabled && (
+            <Link to="/staff/persona" className={buttonClasses('soft', 'sm')}>
+              Anonymous cases
+            </Link>
+          )}
+          <Button variant="outline" size="sm" onClick={auth.signOut}>
+            Sign out
+          </Button>
+        </>
       }
     >
       {rolesLoading ? (

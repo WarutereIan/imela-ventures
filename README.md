@@ -93,6 +93,6 @@ supabase/
 - Starter resource guides in `src/data/resources.ts`. They are labelled "Draft · awaiting review" on the site.
 - Practitioner qualifications and languages (`src/data/team.ts`). They are deliberately left empty. The old site's "PhD / 15 years" claims conflicted with the company profile ("nearly a decade").
 - Crisis numbers in `src/data/crisis.ts` (999/112, Kenya Red Cross 1199). Verify them and add any partner helplines.
-- Services marked "Being confirmed" in `src/data/services.ts`: premarital counselling, psychological assessment, addiction counselling and specialist trauma therapy.
+- Specialist trauma therapy is still marked "Being confirmed" in `src/data/services.ts`. Premarital counselling, psychological assessment, addiction counselling and ADHD/autism assessment are confirmed as offered; their durations and fees are confirmed at consultation.
 - The privacy notice and terms. They need review by a qualified data-protection professional (Kenya Data Protection Act 2019).
 - Persona wording in `src/domain/persona/script.ts`.

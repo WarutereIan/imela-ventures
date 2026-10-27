@@ -662,7 +662,7 @@ export const CONCERNS: Concern[] = [
     tagline: 'Preparing for marriage, together.',
     intro: [
       'Before a wedding there is a lot to plan — but the conversations about expectations, money, family, faith and children matter most.',
-      'Premarital counselling offers couples a structured space to talk these through. Imela is confirming this service; couples counselling is available now.',
+      'Premarital counselling offers couples a structured space to talk these through, so you can build your marriage on shared understanding.',
     ],
     feelsLike: [
       "We're engaged and want to start well.",
@@ -1167,7 +1167,7 @@ export const CONCERNS: Concern[] = [
     tagline: 'Staying on the path — and finding your way back after a slip.',
     intro: [
       'Recovery is rarely a straight line. Slips can bring shame, but they are also information about what support you need.',
-      'Imela is confirming the scope of specialist recovery support. Individual counselling is available now to help you protect your progress.',
+      'Addiction and recovery counselling at Imela helps you understand your triggers, plan for difficult moments and protect your progress.',
     ],
     feelsLike: [
       "I've been doing well but I'm scared of slipping.",
@@ -1734,10 +1734,10 @@ export const CONCERNS: Concern[] = [
     slug: 'neurodiversity',
     group: 'specialist',
     title: 'Neurodiversity-informed support',
-    tagline: 'Understanding how your mind works — with the right specialists.',
+    tagline: 'Understanding how your mind works — ADHD, autism and neurodiversity.',
     intro: [
       'Many people wonder whether ADHD, autism or a learning difference might explain lifelong struggles with focus, sensory overwhelm or social situations.',
-      'A formal assessment requires specialist clinicians. Imela does not currently offer diagnostic assessment, but can offer referral guidance and talk with you about the emotional side of what you are experiencing.',
+      'Imela offers neurodiversity assessment for ADHD and autism, and space to talk about the emotional side of what you are experiencing — before, during and after an assessment.',
     ],
     feelsLike: [
       "I've always felt my brain works differently.",
@@ -1746,7 +1746,7 @@ export const CONCERNS: Concern[] = [
       "I think my child might be neurodivergent.",
     ],
     howSupportHelps: [
-      'Guidance on where to seek a specialist assessment.',
+      'An assessment for ADHD or autism, and help making sense of the results.',
       'Space to talk about the feelings that come with these questions.',
       'Support for families navigating a diagnosis.',
     ],
@@ -1770,7 +1770,7 @@ export const CONCERNS: Concern[] = [
     tagline: 'Structured assessment, interpreted by a qualified professional.',
     intro: [
       'Psychological assessments use properly licensed instruments to understand patterns in more depth and inform a support plan. They must be selected, administered and interpreted by qualified professionals.',
-      'Imela is confirming which individual assessments it offers. Online checklists and this website are not assessments and cannot give a diagnosis.',
+      'Imela offers psychological assessment. Online checklists and this website are not assessments and cannot give a diagnosis.',
     ],
     feelsLike: [
       "I want to understand myself in more depth.",

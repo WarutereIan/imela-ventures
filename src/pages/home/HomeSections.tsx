@@ -28,8 +28,8 @@ export function Pathways() {
           <p className="eyebrow text-sage-ink">For you & the people close to you</p>
           <h3 className="mt-2 max-w-md font-display text-display-md">Personal counselling, at a pace that feels safe.</h3>
           <p className="mt-4 max-w-lg text-ink">
-            One-to-one, couples, family and teen counselling in a confidential, non-judgemental space. Psychological assessment is being confirmed and will be
-            listed here once it's available.
+            One-to-one, couples, family, premarital and teen counselling, addiction support and psychological assessment — in a confidential,
+            non-judgemental space.
           </p>
           <ul className="mt-6 flex max-w-lg flex-wrap gap-2">
             {individual.map((s) => (

@@ -171,7 +171,7 @@ export default function WhoWeArePage() {
               id="services-heading"
               eyebrow="Counselling & assessment"
               title="Psychological support for the people in your life — including you."
-              lede="We offer counselling for adults, teenagers, couples and families, as well as small-group workshops. Psychological assessment is something we are confirming before we offer it."
+              lede="We offer counselling for adults, teenagers, couples and families, premarital and addiction counselling, small-group workshops, and psychological and neurodiversity (ADHD, autism) assessment."
             />
             <div className="mt-6 rounded-card border border-dashed border-butter-ink/40 bg-butter/30 p-4 sm:mt-8 sm:p-5">
               <div className="flex items-center gap-2">
@@ -179,8 +179,8 @@ export default function WhoWeArePage() {
                 <span className="font-semibold text-ink-strong">Psychological assessment</span>
               </div>
               <p className="mt-2 text-sm leading-relaxed text-ink">
-                Formal assessment requires properly licensed instruments and qualified interpretation. We will only list assessments once Imela
-                has confirmed which it offers. Until then, a consultation is the best place to talk about what you're looking for.
+                Assessment uses properly licensed instruments with qualified interpretation, to understand patterns in more depth and shape a
+                support plan. A consultation is the best place to talk about which assessment fits what you're looking for.
               </p>
             </div>
           </div>

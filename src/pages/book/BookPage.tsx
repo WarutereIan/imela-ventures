@@ -223,7 +223,7 @@ export default function BookPage() {
           <p className="eyebrow">Book counselling in Nairobi or online</p>
           <h1 ref={headingRef} tabIndex={-1} className="mt-1 font-display text-display-md focus:outline-none focus-visible:shadow-none">
             {step === 1 && 'What would you like to book?'}
-            {step === 2 && (service.bookingMode === 'slot' ? 'Choose a time that suits you' : `Request ${service.name.toLowerCase()}`)}
+            {step === 2 && (service.bookingMode === 'slot' ? 'Choose a time that suits you' : `Request ${service.name}`)}
             {step === 3 && 'A few details so we can reach you'}
             {step === 4 && 'Check everything looks right'}
           </h1>

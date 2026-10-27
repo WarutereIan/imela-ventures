@@ -25,9 +25,9 @@ describe('ConcernPage', () => {
   });
 
   it('never offers booking for a referral-only service', () => {
-    renderAt('/support/neurodiversity');
-    expect(screen.getByRole('heading', { level: 1, name: /Neurodiversity/ })).toBeInTheDocument();
-    const referralCard = screen.getByRole('heading', { name: /Neurodiversity Assessment/ }).closest('article')!;
+    renderAt('/support/specialist-referral');
+    expect(screen.getByRole('heading', { level: 1, name: /Specialist referrals/ })).toBeInTheDocument();
+    const referralCard = screen.getByRole('heading', { name: /Psychiatric Care/ }).closest('article')!;
     expect(within(referralCard).queryByRole('link', { name: /Book session/i })).toBeNull();
     expect(within(referralCard).getByRole('link', { name: /referral/i })).toBeInTheDocument();
   });

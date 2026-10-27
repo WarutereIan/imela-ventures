@@ -75,7 +75,7 @@ describe('BookPage', () => {
 
   it('offers a consultation instead of booking an unverified service', async () => {
     render(
-      <MemoryRouter initialEntries={['/book?service=addiction-support']}>
+      <MemoryRouter initialEntries={['/book?service=trauma-therapy']}>
         <BookPage />
       </MemoryRouter>
     );

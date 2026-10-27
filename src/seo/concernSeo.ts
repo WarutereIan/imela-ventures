@@ -120,10 +120,10 @@ export const CONCERN_SEO: Record<string, PageSeo> = {
       'Support for parents and co-parents in Nairobi and online — through teenage years, separation, blended families and the everyday pressure of raising children.',
   },
   premarital: {
-    kicker: 'Preparing for marriage · service being confirmed',
+    kicker: 'Preparing for marriage · Nairobi',
     title: 'Premarital Counselling in Nairobi',
     description:
-      'Preparing for marriage together. Imela is confirming its premarital counselling programme; couples counselling in Nairobi is available now in the meantime.',
+      'Premarital counselling in Nairobi for engaged couples: expectations, communication, money, family and faith, talked through before you marry.',
   },
 
   // Grief & loss
@@ -192,16 +192,16 @@ export const CONCERN_SEO: Record<string, PageSeo> = {
 
   // Addiction & behavioural patterns
   'alcohol-substance': {
-    kicker: 'Alcohol & drug use support · Nairobi',
-    title: 'Alcohol & Substance Use Support in Nairobi',
+    kicker: 'Addiction counselling · Nairobi & online',
+    title: 'Alcohol & Drug Addiction Counselling in Nairobi',
     description:
-      'When drinking or drug use costs more than it gives. Confidential counselling conversations in Nairobi and online, with medical referral when it is needed.',
+      'When drinking or drug use costs more than it gives. Confidential addiction counselling in Nairobi and online, with medical referral when it is needed.',
   },
   gambling: {
-    kicker: 'Gambling & betting support · Nairobi & online',
+    kicker: 'Gambling addiction counselling · Nairobi & online',
     title: 'Help for Gambling & Betting Addiction in Kenya',
     description:
-      'When betting stops being fun and starts being frightening. Confidential counselling support for gambling and sports betting problems in Nairobi and online.',
+      'When betting stops being fun and starts being frightening. Confidential gambling addiction counselling for sports betting problems in Nairobi and online.',
   },
   'compulsive-behaviours': {
     kicker: 'Support for compulsive behaviours · Nairobi & online',
@@ -216,8 +216,8 @@ export const CONCERN_SEO: Record<string, PageSeo> = {
       'When scrolling, gaming or screens have taken over. Counselling support for adults and teenagers in Nairobi and online to build healthier digital habits.',
   },
   'recovery-relapse': {
-    kicker: 'Recovery & relapse prevention support',
-    title: 'Addiction Recovery & Relapse Prevention Support',
+    kicker: 'Addiction recovery counselling · Nairobi & online',
+    title: 'Addiction Recovery & Relapse Prevention Counselling',
     description:
       'Staying on the path, and finding your way back after a slip. Counselling and group support for recovery and relapse prevention in Nairobi and online.',
   },
@@ -326,16 +326,16 @@ export const CONCERN_SEO: Record<string, PageSeo> = {
       'When nights are long and mornings come too soon. Counselling for the stress and worry behind poor sleep and insomnia, with medical referral when needed.',
   },
   neurodiversity: {
-    kicker: 'ADHD & autism · referrals and support',
-    title: 'ADHD & Autism: Neurodiversity Support & Referrals',
+    kicker: 'ADHD & autism assessment · Nairobi',
+    title: 'ADHD & Autism Assessment in Nairobi, Kenya',
     description:
-      'Understanding how your mind works. Neurodiversity-informed counselling in Nairobi, with referral to specialists for ADHD and autism assessment.',
+      'ADHD and autism assessment in Nairobi, with neurodiversity-informed counselling to make sense of the results and plan support for daily life.',
   },
   'psychological-assessment': {
-    kicker: 'Structured assessment · service being confirmed',
+    kicker: 'Structured assessment · Nairobi',
     title: 'Psychological Assessment in Nairobi',
     description:
-      'Structured psychological assessment interpreted by a qualified professional. Imela is confirming this service; book a consultation to discuss options.',
+      'Psychological assessment in Nairobi using licensed instruments, interpreted by a qualified professional, to understand patterns and shape a support plan.',
   },
   'specialist-referral': {
     kicker: 'Psychiatric & specialist referrals · Kenya',
@@ -371,10 +371,10 @@ export const GROUP_SEO: Record<string, PageSeo> = {
       'Trauma-informed counselling in Nairobi and online for difficult experiences, childhood trauma, attachment and emotional safety, explored at your pace.',
   },
   'addiction-patterns': {
-    kicker: 'Addiction & habit support · Nairobi & online',
-    title: 'Addiction Support: Alcohol, Gambling & Habits',
+    kicker: 'Addiction counselling · Nairobi & online',
+    title: 'Addiction Counselling: Alcohol, Drugs & Gambling',
     description:
-      'Confidential support in Nairobi and online for alcohol and drug use, gambling, compulsive behaviours, screen habits and relapse prevention.',
+      'Confidential addiction counselling in Nairobi and online for alcohol and drug use, gambling, compulsive behaviours, screen habits and relapse.',
   },
   'identity-growth': {
     kicker: 'Personal development counselling · Nairobi & online',
@@ -395,9 +395,9 @@ export const GROUP_SEO: Record<string, PageSeo> = {
       'Employee counselling, burnout prevention, leadership wellbeing, conflict resolution and psychological safety for workplaces in Nairobi and across Kenya.',
   },
   specialist: {
-    kicker: 'Specialist mental health pathways · Kenya',
-    title: 'Sleep, ADHD, Assessment & Specialist Referrals',
+    kicker: 'Assessment & specialist support · Nairobi',
+    title: 'Psychological, ADHD & Autism Assessment in Nairobi',
     description:
-      'Support for sleep problems, neurodiversity (ADHD and autism), psychological assessment and referrals to psychiatrists and specialists in Kenya.',
+      'Psychological assessment, ADHD and autism assessment, support for sleep problems and referrals to psychiatrists and specialists in Kenya.',
   },
 };

@@ -31,7 +31,7 @@ export function HomeHero() {
               Find the Support I Need <ArrowRight className="h-4 w-4" aria-hidden />
             </a>
             <Link to="/persona" className={buttonClasses('outline', 'lg')}>
-              Meet Imela Persona
+              Meet Imela
             </Link>
           </div>
           <p className="mt-6 flex max-w-md items-start gap-2 text-sm text-ink-soft">

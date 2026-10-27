@@ -5,7 +5,7 @@ import { screenForRisk, RISK_MESSAGE, type RiskKind } from '../safety';
 import * as S from './script';
 
 /**
- * Imela Persona conversation model.
+ * Imela conversation model.
  *
  * The state keeps four kinds of information strictly apart:
  *  - `statements`: what the person actually said (memory only, never persisted)

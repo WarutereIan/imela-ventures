@@ -10,7 +10,7 @@ const sections: LegalSection[] = [
     body: (
       <>
         <ul>
-          <li>You can explore this website and use Imela Persona without creating an account or telling us who you are.</li>
+          <li>You can explore this website and use Imela without creating an account or telling us who you are.</li>
           <li>By default, what you type into Persona stays in your browser. It is not sent to Imela or saved on our servers.</li>
           <li>When you book or enquire, we collect only the contact details we need to arrange your appointment.</li>
           <li>We never sell your information or use it for advertising.</li>
@@ -21,11 +21,11 @@ const sections: LegalSection[] = [
   },
   {
     id: 'persona',
-    title: 'Imela Persona: anonymous counselling',
+    title: 'Imela: anonymous counselling',
     body: (
       <>
         <p>
-          Imela Persona lets you talk with an Imela counsellor by private written messages without giving your name, email address, phone number or
+          Imela lets you talk with an Imela counsellor by private written messages without giving your name, email address, phone number or
           social media account. It is designed so that your identity is never required — but no online service can promise absolute anonymity, and
           we explain the limits below.
         </p>
@@ -46,7 +46,7 @@ const sections: LegalSection[] = [
         <ul>
           <li>Imela counsellors who are assigned to, or picking up, your conversation, and Imela administrators. They see your Persona ID, not your identity.</li>
           <li>Every time a staff member opens, assigns, replies to or adds a note to a conversation, that action is recorded in an access log.</li>
-          <li>Other people using Imela Persona can never see your space.</li>
+          <li>Other people using Imela can never see your space.</li>
         </ul>
         <h3>The honest limits of anonymity</h3>
         <ul>

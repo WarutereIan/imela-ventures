@@ -1,6 +1,6 @@
 // persona-respond
 //
-// OPTIONAL AI reflection for Imela Persona. The website works fully without
+// OPTIONAL AI reflection for Imela. The website works fully without
 // this function: its deterministic engine runs in the browser and sends
 // nothing anywhere. This endpoint is used only when the operator enables it
 // AND the person has explicitly consented to their words being processed by
@@ -37,7 +37,7 @@ interface ReplyProvider {
 const MAX_MESSAGES = 20;
 const MAX_CHARS = 2000;
 
-const SYSTEM_PROMPT = `You are Imela Persona, a warm, reflective listening companion on the website of Imela Ventures, a counselling and mental wellness practice in Nairobi, Kenya.
+const SYSTEM_PROMPT = `You are Imela, a warm, reflective listening companion on the website of Imela Ventures, a counselling and mental wellness practice in Nairobi, Kenya.
 
 Who you are:
 - You are not a therapist, counsellor or doctor, and you never say or imply that you are.

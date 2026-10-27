@@ -50,7 +50,7 @@ serious problems:
 | `20261027000004_persona_and_reflections.sql` | Owner-only `client_reflections`; opt-in, auto-expiring `persona_saved_journeys`; `practitioner_notes` (author + assigned practitioner only — admins have no access by default); `audit_events` + `log_audit()`. |
 | `20261027000005_organisations.sql` | `organisations`, `organisation_members`, `corporate_programmes`, `programme_events` (counts only); nullable `sessions.org_id`; `org_utilisation_summary()` with **k = 5 suppression**. Org admins can never read `sessions`. |
 | `20261027000006_enquiries.sql` | `enquiries` table for organisation, individual-by-enquiry and general contact requests. Public may insert `status = 'new'` only; admins read/update. |
-| `20261028000007_persona_portal.sql` | **Imela Persona anonymous counselling portal** — see "Persona portal" below. |
+| `20261028000007_persona_portal.sql` | **Imela anonymous counselling portal** — see "Persona portal" below. |
 
 All migrations are **idempotent and non-destructive**: they only create
 objects or add nullable columns, and drop only the four legacy policies named
@@ -133,7 +133,7 @@ select cron.schedule('purge-persona-journeys', '17 3 * * *',
 | `send-booking-confirmation` | E-mails the client that their booking is confirmed. Requires a signed-in **admin** (checked via `has_role`); only `bookingId` is read; booking must be `confirmed`. Subject: "Your Imela appointment". | Admins |
 | `persona-register` | Creates a pseudonymous Persona (ID + recovery secret). See "Persona portal". | Public (no session) |
 | `persona-account` | Rotates a Persona's recovery secret or deletes the Persona. | Signed-in Personas only |
-| `persona-respond` | Optional AI reflection for Imela Persona. Requires `consent: true`; returns `503 ai_not_configured` if no provider is set. Never logs or stores messages. | Public, only after the person consents |
+| `persona-respond` | Optional AI reflection for Imela. Requires `consent: true`; returns `503 ai_not_configured` if no provider is set. Never logs or stores messages. | Public, only after the person consents |
 
 Every function handles CORS preflight, validates input, escapes all HTML, and
 returns an error, never a fake success, when e-mail or AI is not configured.

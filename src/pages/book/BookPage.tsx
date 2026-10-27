@@ -477,7 +477,7 @@ export default function BookPage() {
             <p className="flex items-center gap-2 font-semibold text-ink-strong">
               <Lock className="h-4 w-4" aria-hidden /> Private and confidential
             </p>
-            <p className="mt-1.5 text-ink-soft">Your details are only used to arrange your care. If you came from Imela Persona, that conversation is not attached.</p>
+            <p className="mt-1.5 text-ink-soft">Your details are only used to arrange your care. If you came from Imela, that conversation is not attached.</p>
             <p className="mt-4 flex items-center gap-2 font-semibold text-ink-strong">
               <Phone className="h-4 w-4" aria-hidden /> Prefer to talk?
             </p>

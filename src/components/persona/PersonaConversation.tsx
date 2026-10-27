@@ -221,7 +221,7 @@ export function PersonaConversation({ state, dispatch, onSay, onShowOptions, aiA
             <Companion {...look} size={52} />
           </div>
           <div className="min-w-0">
-            <h1 className="font-display text-display-sm">Imela Persona</h1>
+            <h1 className="font-display text-display-sm">Imela</h1>
             <p className="flex items-center gap-1.5 text-xs text-ink-soft">
               <ShieldCheck className="h-3.5 w-3.5 text-sage-ink" aria-hidden />
               Private · kept in this tab only
@@ -279,7 +279,7 @@ export function PersonaConversation({ state, dispatch, onSay, onShowOptions, aiA
       </aside>
 
       {/* Conversation */}
-      <section aria-label="Conversation with Imela Persona" className="flex min-h-[70vh] min-w-0 flex-col rounded-[2rem] border border-line/10 bg-ivory-deep/60 p-3 sm:p-5">
+      <section aria-label="Conversation with Imela" className="flex min-h-[70vh] min-w-0 flex-col rounded-[2rem] border border-line/10 bg-ivory-deep/60 p-3 sm:p-5">
         <p className="mx-auto mb-4 max-w-md rounded-pill bg-paper/80 px-4 py-1.5 text-center text-xs text-ink-soft">
           Automated guide · not a counsellor · not monitored
         </p>

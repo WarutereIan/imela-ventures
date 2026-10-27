@@ -64,7 +64,7 @@ Sometimes it helps to say to yourself, "This is worry." Naming what is happening
 
 Grounding is a tool for difficult moments, not a cure for everything underneath. If worry is affecting your sleep, work or relationships, or you feel on edge most days, talking it through with someone can help you understand what keeps it going.
 
-You can [explore support for anxiety and worry](/support/anxiety-worry), or [start a private conversation with Imela Persona](/persona) if you're not sure where to begin.`,
+You can [explore support for anxiety and worry](/support/anxiety-worry), or [start a private conversation with Imela](/persona) if you're not sure where to begin.`,
   }),
   starter({
     slug: 'grief-has-no-timetable',
@@ -93,7 +93,7 @@ We also grieve the end of a relationship, a job, our health, a home, or a future
 
 If, after some time, grief is making it very hard to get through the day, or you feel alone with it, speaking to a counsellor can offer a space to carry it differently. You don't need to "be ready" or have the right words.
 
-You can [read more about bereavement support](/support/bereavement), or [talk to Imela Persona privately](/persona).`,
+You can [read more about bereavement support](/support/bereavement), or [talk to Imela privately](/persona).`,
   }),
   starter({
     slug: 'talking-when-things-feel-tense',
@@ -257,7 +257,7 @@ In many families and communities, there are strong expectations about duty and g
 
 Talking things through can help you understand where people-pleasing comes from and how to say what you need with confidence.
 
-You can [explore support for boundaries and people-pleasing](/support/boundaries) or [start a private conversation with Imela Persona](/persona).`,
+You can [explore support for boundaries and people-pleasing](/support/boundaries) or [start a private conversation with Imela](/persona).`,
   }),
   starter({
     slug: 'psychological-safety-at-work',

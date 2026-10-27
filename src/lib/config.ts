@@ -12,7 +12,7 @@ export const config = {
   /** Allow clients to create accounts for the optional portal. Requires platformDbReady. */
   clientPortalEnabled: flag(import.meta.env.VITE_PLATFORM_DB_READY) && flag(import.meta.env.VITE_ENABLE_CLIENT_PORTAL),
   /**
-   * Opt-in AI reflections in Imela Persona via the `persona-respond` Edge
+   * Opt-in AI reflections in Imela via the `persona-respond` Edge
    * Function. Off by default: the built-in engine runs entirely in the browser.
    */
   personaAiEnabled: flag(import.meta.env.VITE_PERSONA_AI_ENABLED),

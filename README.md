@@ -32,7 +32,7 @@ A design reference for the character system is available at `/dev/companions` in
 | `VITE_PLATFORM_DB_READY` | `false` | Set to `true` only after applying `supabase/migrations`. Turns on role checks in admin, the practitioner and organisation workspaces, and portal data. |
 | `VITE_ENABLE_CLIENT_PORTAL` | `false` | Optional client accounts. Also requires `VITE_PLATFORM_DB_READY=true`. |
 | `VITE_PERSONA_AI_ENABLED` | `false` | Optional AI reflections in the "explore privately" guide. Requires the `persona-respond` Edge Function and provider secrets. Each person must also opt in. |
-| `VITE_PERSONA_PORTAL_ENABLED` | `false` | Imela Persona anonymous counselling (Persona ID + recovery secret). Requires migration 0007 and the `persona-register` / `persona-account` Edge Functions. Staff pages also need `VITE_PLATFORM_DB_READY=true`. |
+| `VITE_PERSONA_PORTAL_ENABLED` | `false` | Imela anonymous counselling (Persona ID + recovery secret). Requires migration 0007 and the `persona-register` / `persona-account` Edge Functions. Staff pages also need `VITE_PLATFORM_DB_READY=true`. |
 | `VITE_PERSONA_LOGIN_DOMAIN` | `persona.imelaventures.invalid` | Synthetic login domain for Persona IDs. Must equal `PERSONA_LOGIN_DOMAIN` in the Edge Functions. |
 
 Edge Function secrets (`RESEND_API_KEY`, `PERSONA_AI_PROVIDER`, `ANTHROPIC_API_KEY`, `PERSONA_AI_MODEL`) are documented in `supabase/README.md`.
@@ -61,7 +61,7 @@ supabase/
   functions/     Hardened booking emails; optional provider-agnostic persona-respond
 ```
 
-### Imela Persona (anonymous counselling)
+### Imela (anonymous counselling)
 
 - `/persona` is the landing page. `/persona/start` gets you a Persona ID, lets you choose concerns and share (optionally), then submits. `/persona/access` is for returning. `/persona/space` holds the private inbox, threads, resources and settings (rotate the secret, delete). `/persona/explore` is the browser-only guided reflection tool.
 - `/staff/persona` is the counsellor case queue and audited case view. `/staff/persona/admin` holds workload, triage rules and access history (admins only).

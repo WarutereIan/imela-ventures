@@ -19,13 +19,13 @@ const STEPS = [
 ];
 
 export default function PortalLandingPage() {
-  useDocumentTitle('Imela Persona — anonymous counselling');
+  useDocumentTitle('Imela — anonymous counselling');
 
   return (
     <div className="pb-16">
       <section className="shell grid gap-10 py-10 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-14 lg:py-16">
         <div>
-          <p className="eyebrow">Imela Persona</p>
+          <p className="eyebrow">Imela</p>
           <h1 className="mt-2 font-display text-display-lg">Talk to a counsellor without telling us who you are.</h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">
             Anonymous counselling by private written messages. You get a Persona ID and a recovery secret instead of an account — so you can seek support, hear
@@ -84,7 +84,7 @@ export default function PortalLandingPage() {
         <h2 id="how-title" className="font-display text-display-sm">
           How it works
         </h2>
-        <Carousel label="How Imela Persona works" className="mt-5" gridFrom="sm" gridClassName="sm:grid-cols-2 sm:gap-3 lg:grid-cols-4" slideClassName="w-[80%]">
+        <Carousel label="How Imela works" className="mt-5" gridFrom="sm" gridClassName="sm:grid-cols-2 sm:gap-3 lg:grid-cols-4" slideClassName="w-[80%]">
           {STEPS.map(({ icon: Icon, title, text }, i) => (
             <div key={title} className="rounded-card bg-paper p-5 shadow-soft">
               <div className="flex items-center gap-3">

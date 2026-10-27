@@ -76,7 +76,7 @@ const Header: React.FC = () => {
           <NavLink to="/persona" className={navLinkClass}>
             <span className="inline-flex items-center gap-1.5">
               <span className="h-2 w-2 rounded-full bg-lavender-ink" aria-hidden />
-              Imela Persona
+              Imela
             </span>
           </NavLink>
         </nav>

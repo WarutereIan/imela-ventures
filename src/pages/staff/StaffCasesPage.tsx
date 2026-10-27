@@ -128,7 +128,7 @@ export default function StaffCasesPage() {
   useDocumentTitle('Anonymous counselling cases');
   return (
     <StaffGate
-      eyebrow="Staff · Imela Persona"
+      eyebrow="Staff · Imela"
       title="Anonymous counselling cases"
       lede="Review, pick up and respond to cases from the anonymous portal. Crisis-review cases are pinned at the top."
       actions={(ctx) =>

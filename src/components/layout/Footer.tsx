@@ -11,7 +11,7 @@ const columns = [
     links: [
       { to: '/support', label: 'What we help with' },
       { to: '/find-support', label: 'Service finder' },
-      { to: '/persona', label: 'Imela Persona' },
+      { to: '/persona', label: 'Imela' },
       { to: '/book', label: 'Book a session' },
     ],
   },
@@ -45,7 +45,7 @@ const Footer: React.FC = () => (
             Schedule Consultation
           </Link>
           <Link to="/persona" className={buttonClasses('outline', 'md', 'border-ivory/70 text-ivory hover:bg-ivory hover:text-ink-strong')}>
-            Meet Imela Persona
+            Meet Imela
           </Link>
         </div>
         <ul className="mt-10 space-y-3 text-sm text-ivory/80">

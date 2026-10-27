@@ -21,7 +21,7 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          Imela is not an emergency service, and this website — including Imela Persona — is not monitored around the clock. If you or someone else
+          Imela is not an emergency service, and this website — including the Imela private guide — is not monitored around the clock. If you or someone else
           is in immediate danger, contact emergency services now.
         </p>
         <div className="not-prose my-4">
@@ -40,7 +40,7 @@ const sections: LegalSection[] = [
           Some resources are marked as drafts awaiting review by an Imela counsellor.
         </p>
         <p>
-          Imela Persona and the service finder suggest possible next steps based on what you share. Their suggestions are not a diagnosis, a clinical
+          The Imela private guide and the service finder suggest possible next steps based on what you share. Their suggestions are not a diagnosis, a clinical
           assessment or a treatment plan, and they don't replace speaking with a qualified professional.
         </p>
       </>

@@ -155,7 +155,7 @@ export default function ResourcesPage() {
                   Clear filters
                 </button>
                 <Link to="/persona" className={buttonClasses('primary', 'sm')}>
-                  Talk to Imela Persona
+                  Talk to Imela
                 </Link>
               </div>
             </EmptyState>

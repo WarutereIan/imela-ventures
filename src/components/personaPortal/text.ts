@@ -2,7 +2,7 @@ import { formatRecoverySecret } from '../../../supabase/functions/_shared/person
 
 export function credentialsText(personaCode: string, recoverySecret: string) {
   return [
-    'Imela Persona — keep this private',
+    'Imela — keep this private',
     '',
     `Persona ID:       ${personaCode}`,
     `Recovery secret:  ${formatRecoverySecret(recoverySecret)}`,

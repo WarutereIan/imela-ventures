@@ -35,7 +35,7 @@ export function PortalShell({ children }: { children: (session: PortalSession) =
         <h1 className="font-display text-display-md">Your Persona space</h1>
         <p className="mt-3 text-ink-soft">Anonymous counselling isn't switched on yet.</p>
         <Link to="/persona" className={buttonClasses('primary', 'md', 'mt-4')}>
-          Back to Imela Persona
+          Back to Imela
         </Link>
       </div>
     );

@@ -108,7 +108,7 @@ export default function SupportDirectoryPage() {
             </ul>
           ) : (
             <div className="mt-4 flex flex-wrap items-center gap-3 rounded-card bg-lavender-soft p-5">
-              <p className="text-ink">Some things are hard to put into a search. Imela Persona can help you explore it in your own words.</p>
+              <p className="text-ink">Some things are hard to put into a search. Imela can help you explore it in your own words.</p>
               <Link to="/persona" className={buttonClasses('accent', 'sm')}>
                 Talk it through
               </Link>
@@ -216,7 +216,7 @@ export default function SupportDirectoryPage() {
         <Carousel label="Other ways to begin" gridFrom="md" gridClassName="md:grid-cols-2 md:gap-4" slideClassName="w-[86%] sm:w-[70%]">
           <Link to="/persona" className="group relative block overflow-hidden rounded-blob bg-lavender-ink p-6 text-white md:p-8">
             <Sparkles className="h-6 w-6" aria-hidden />
-            <p className="mt-4 font-display text-display-sm text-white">Not sure? Talk it through with Imela Persona.</p>
+            <p className="mt-4 font-display text-display-sm text-white">Not sure? Talk it through with Imela.</p>
             <p className="mt-2 max-w-sm text-white/80">Begin in your own words, without telling us who you are.</p>
             <span className="mt-6 inline-flex items-center gap-1.5 font-semibold">
               Meet Persona <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />

@@ -73,7 +73,7 @@ export function Pathways() {
   );
 }
 
-/* ---------- Imela Persona feature ---------- */
+/* ---------- Imela feature ---------- */
 export function PersonaFeature() {
   const points = [
     { icon: EyeOff, text: 'No name or sign-up needed' },
@@ -100,7 +100,7 @@ export function PersonaFeature() {
           </div>
         </Scene>
         <div className="p-7 sm:p-10">
-          <p className="eyebrow">Imela Persona</p>
+          <p className="eyebrow">Imela</p>
           <h2 id="persona-feature-title" className="mt-2 font-display text-display-md">
             A private, judgement-free place to begin.
           </h2>
@@ -120,7 +120,7 @@ export function PersonaFeature() {
           </ul>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/persona" className={buttonClasses('accent', 'lg')}>
-              Meet Imela Persona
+              Meet Imela
             </Link>
             <Link to="/privacy#persona" className={buttonClasses('ghost', 'lg')}>
               How it handles data
@@ -336,11 +336,11 @@ export function Confidentiality() {
 const FAQS = [
   {
     q: "I don't know what kind of help I need. Where do I start?",
-    a: "That's very common. You could talk it through with Imela Persona, try the service finder, or book a short initial consultation — a counsellor will help you work out what fits.",
+    a: "That's very common. You could talk it through with Imela, try the service finder, or book a short initial consultation — a counsellor will help you work out what fits.",
   },
   { q: 'Do I need to create an account?', a: 'No. You can explore, use Persona and request a booking without an account.' },
   {
-    q: 'Is Imela Persona a therapist?',
+    q: 'Is the Imela private guide a therapist?',
     a: "No. Persona is an automated guide that helps you put things into words and find relevant support. It doesn't diagnose, and no one is monitoring the conversation.",
   },
   {

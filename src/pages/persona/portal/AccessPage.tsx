@@ -148,7 +148,7 @@ export default function AccessPage() {
         {busy ? 'Signing in' : ''}
       </p>
       <Link to="/persona" className={buttonClasses('ghost', 'sm', 'justify-self-start lg:col-span-2')}>
-        Back to Imela Persona
+        Back to Imela
       </Link>
     </div>
   );

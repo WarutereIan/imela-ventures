@@ -153,7 +153,7 @@ export default function StaffCasePage() {
   const { caseId = '' } = useParams();
   useDocumentTitle('Case');
   return (
-    <StaffGate eyebrow="Staff · Imela Persona" title="Anonymous case">
+    <StaffGate eyebrow="Staff · Imela" title="Anonymous case">
       {(ctx) => <CaseWorkspace ctx={ctx} caseId={caseId} />}
     </StaffGate>
   );

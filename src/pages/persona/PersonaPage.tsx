@@ -22,7 +22,7 @@ function reducer(state: PersonaState, action: Parameters<typeof personaReducer>[
 const PATHS: PersonaPath[] = ['talk', 'feelings', 'find'];
 
 export default function PersonaPage() {
-  useDocumentTitle('Imela Persona');
+  useDocumentTitle('Imela');
   const [params, setParams] = useSearchParams();
   const [state, dispatch] = useReducer(reducer, memory?.state ?? initialPersonaState);
   const [aiConsent, setAiConsent] = useState(memory?.aiConsent ?? false);

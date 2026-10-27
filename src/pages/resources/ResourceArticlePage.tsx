@@ -81,7 +81,7 @@ export default function ResourceArticlePage() {
             <p className="mt-2 text-sm leading-relaxed text-ink">You can explore privately with Persona, or book a short first conversation with a counsellor.</p>
             <div className="mt-4 flex flex-col gap-2 min-[420px]:flex-row lg:flex-col">
               <Link to="/persona" className={buttonClasses('accent', 'sm')}>
-                Talk to Imela Persona
+                Talk to Imela
               </Link>
               <Link to="/book?service=consultation" className={buttonClasses('outline', 'sm')}>
                 Schedule Consultation

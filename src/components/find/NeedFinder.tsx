@@ -204,7 +204,7 @@ export function NeedFinder({ initialText = '' }: { initialText?: string }) {
                 <p className="text-sm">
                   Prefer to talk it through?{' '}
                   <Link to="/persona/explore?path=find" className="font-semibold text-lavender-ink underline underline-offset-2">
-                    Try Imela Persona
+                    Try Imela
                   </Link>
                 </p>
               </div>

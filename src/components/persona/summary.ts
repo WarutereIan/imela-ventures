@@ -10,7 +10,7 @@ import type { PersonaState } from '../../domain/persona/machine';
  */
 export function buildSummary(state: PersonaState, includeWords: boolean): string {
   const lines: string[] = [];
-  lines.push('Imela Persona — your summary');
+  lines.push('Imela — your summary');
   lines.push(new Date().toLocaleString('en-GB', { dateStyle: 'long', timeStyle: 'short' }));
   lines.push('');
 

@@ -253,7 +253,7 @@ function AdminWorkspace({ ctx }: { ctx: StaffContext }) {
 export default function StaffPersonaAdminPage() {
   useDocumentTitle('Persona settings & audit');
   return (
-    <StaffGate eyebrow="Admin · Imela Persona" title="Settings, triage & audit" requireAdmin>
+    <StaffGate eyebrow="Admin · Imela" title="Settings, triage & audit" requireAdmin>
       {(ctx) => <AdminWorkspace ctx={ctx} />}
     </StaffGate>
   );

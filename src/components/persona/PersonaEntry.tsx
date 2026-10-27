@@ -45,7 +45,7 @@ export function PersonaEntry({ onStart }: { onStart: (path: PersonaPath) => void
     <div className="shell grid gap-10 py-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:py-16">
       <div>
         <Link to="/persona" className="inline-flex items-center gap-1.5 text-sm font-semibold text-lavender-ink underline-offset-4 hover:underline">
-          <ArrowLeft className="h-4 w-4" aria-hidden /> Imela Persona
+          <ArrowLeft className="h-4 w-4" aria-hidden /> Imela
         </Link>
         <p className="eyebrow mt-4">Explore privately first</p>
         <h1 className="mt-2 font-display text-display-lg">You can begin without telling us who you are.</h1>

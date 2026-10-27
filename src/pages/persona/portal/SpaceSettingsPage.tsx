@@ -153,7 +153,7 @@ export default function SpaceSettingsPage() {
         <p className="mt-3 text-ink-soft">Everything linked to it has been removed. Thank you for trusting Imela. You're welcome back any time.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link to="/persona" className={buttonClasses('primary')}>
-            Imela Persona
+            Imela
           </Link>
           <Link to="/" className={buttonClasses('ghost')}>
             Home

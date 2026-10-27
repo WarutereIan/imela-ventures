@@ -18,20 +18,20 @@ function PractitionerCard({ member }: { member: TeamMember }) {
   const first = member.name.split(' ')[0];
   return (
     <article className="group relative grid overflow-hidden rounded-blob border border-line/10 bg-paper shadow-soft transition-shadow hover:shadow-lift md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-      <Scene environment={member.character.environment} className="min-h-[18rem]">
-        <div className="flex min-h-[18rem] flex-col items-center justify-end pb-4">
-          <Companion variant={member.character.variant} mood={member.character.mood} pose={member.character.pose} tone={member.character.tone} size={170} />
+      <Scene environment={member.character.environment} className="min-h-[12rem] md:min-h-[18rem]">
+        <div className="flex min-h-[12rem] flex-col items-center justify-end pb-3 md:min-h-[18rem] md:pb-4">
+          <Companion variant={member.character.variant} mood={member.character.mood} pose={member.character.pose} tone={member.character.tone} className="h-auto w-28 md:w-[170px]" />
           <p className="mt-1 rounded-pill bg-paper/85 px-3 py-1 text-xs text-ink-soft">Illustration — not a photo of {first}</p>
         </div>
       </Scene>
-      <div className="flex flex-col p-6 md:p-8">
+      <div className="flex flex-col p-5 md:p-8">
         <p className="eyebrow">{member.role}</p>
         <h2 className="mt-1 font-display text-display-md">
           <Link to={`/team/${member.slug}`} className="after:absolute after:inset-0">
             {member.name}
           </Link>
         </h2>
-        <p className="mt-3 leading-relaxed text-ink-soft">{member.bio[0]}</p>
+        <p className="mt-3 line-clamp-4 leading-relaxed text-ink-soft md:line-clamp-none">{member.bio[0]}</p>
         <ul className="mt-5 flex flex-wrap gap-2" aria-label="Areas of practice">
           {member.areas.slice(0, 5).map((a) => (
             <li key={a}>
@@ -43,7 +43,7 @@ function PractitionerCard({ member }: { member: TeamMember }) {
           <span className="font-semibold">Formats: </span>
           {member.formats ? member.formats.map((f) => FORMAT_LABEL[f]).join(' · ') : 'To be confirmed'}
         </p>
-        <span className="mt-auto inline-flex items-center gap-1 pt-6 text-sm font-semibold text-lavender-ink">
+        <span className="mt-auto inline-flex items-center gap-1 pt-4 text-sm font-semibold text-lavender-ink md:pt-6">
           View profile <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
         </span>
       </div>
@@ -67,18 +67,18 @@ export default function TeamPage() {
 
   return (
     <>
-      <section className="shell pb-10 pt-14 md:pt-20">
+      <section className="shell pb-6 pt-8 md:pb-10 md:pt-20">
         <div className="grid items-end gap-8 md:grid-cols-[1.4fr_1fr]">
           <div>
             <p className="eyebrow">The people behind Imela</p>
             <h1 className="mt-2 font-display text-display-lg">Real people, ready to listen.</h1>
           </div>
-          <p className="text-lg leading-relaxed text-ink-soft">
+          <p className="text-base leading-relaxed text-ink-soft md:text-lg">
             Our practitioners bring care, discretion and experience to every conversation. Profiles only list qualifications Imela has verified.
           </p>
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 rounded-card bg-ivory-deep/70 p-4 sm:flex-row sm:items-center sm:p-5">
+        <div className="mt-6 flex flex-col gap-3 rounded-card bg-ivory-deep/70 p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-5 md:mt-10">
           <div className="relative flex-1">
             <label htmlFor="team-search" className="sr-only">
               Search by name or area of practice
@@ -135,8 +135,8 @@ export default function TeamPage() {
         )}
       </section>
 
-      <section className="shell pt-16">
-        <div className="relative grid gap-6 overflow-hidden rounded-blob bg-lime p-8 md:grid-cols-[1fr_auto] md:items-center md:p-12">
+      <section className="shell pt-10 md:pt-16">
+        <div className="relative grid gap-6 overflow-hidden rounded-blob bg-lime p-6 sm:p-8 md:grid-cols-[1fr_auto] md:items-center md:p-12">
           <div>
             <h2 className="font-display text-display-md">Not sure who to see?</h2>
             <p className="mt-3 max-w-xl text-ink">
@@ -151,7 +151,7 @@ export default function TeamPage() {
               </Link>
             </div>
           </div>
-          <div className="relative mx-auto">
+          <div className="relative mx-auto hidden sm:block">
             <Companion variant="pebble" mood="joyful" pose="wave" tone="coral" size={140} />
             <div className="absolute -left-10 top-2">
               <Sticker tone="paper" tilt={-8}>

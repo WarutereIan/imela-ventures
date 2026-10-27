@@ -6,10 +6,10 @@ function webLogo(path: string): string {
   return path.replace('/clients/', '/clients/web/').replace(/\s+/g, '-');
 }
 
-function Logo({ name, logo, hidden = false }: { name: string; logo: string; hidden?: boolean }) {
+function Logo({ name, logo, hidden = false, className = 'h-16 w-32 sm:h-20 sm:w-40' }: { name: string; logo: string; hidden?: boolean; className?: string }) {
   return (
-    <li className="flex h-20 w-40 shrink-0 items-center justify-center rounded-2xl bg-paper px-5 shadow-soft" aria-hidden={hidden || undefined}>
-      <img src={webLogo(logo)} alt={hidden ? '' : name} loading="lazy" className="max-h-14 w-auto max-w-full object-contain" />
+    <li className={`flex shrink-0 items-center justify-center rounded-2xl bg-paper px-3 shadow-soft sm:px-5 ${className}`} aria-hidden={hidden || undefined}>
+      <img src={webLogo(logo)} alt={hidden ? '' : name} loading="lazy" className="max-h-10 w-auto max-w-full object-contain sm:max-h-14" />
     </li>
   );
 }
@@ -20,9 +20,9 @@ export function ClientMarquee() {
 
   if (reduced) {
     return (
-      <ul className="flex flex-wrap justify-center gap-4">
+      <ul className="shell grid grid-cols-3 gap-2 sm:flex sm:flex-wrap sm:justify-center sm:gap-4">
         {ORG.clients.map((c) => (
-          <Logo key={c.name} {...c} />
+          <Logo key={c.name} {...c} className="h-14 w-full sm:h-20 sm:w-40" />
         ))}
       </ul>
     );
@@ -30,7 +30,7 @@ export function ClientMarquee() {
 
   return (
     <div className="relative overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
-      <ul className="marquee-track flex w-max gap-4 py-2">
+      <ul className="marquee-track flex w-max gap-3 py-2 sm:gap-4">
         {ORG.clients.map((c) => (
           <Logo key={c.name} {...c} />
         ))}

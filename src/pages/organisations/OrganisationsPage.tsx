@@ -9,6 +9,7 @@ import { SectionHeading, StatusBadge } from '../../components/ui/primitives';
 import { EnquiryForm } from '../../components/organisations/EnquiryForm';
 import { ClientMarquee } from '../../components/organisations/ClientMarquee';
 import { useDocumentTitle } from '../../lib/useDocumentTitle';
+import { Carousel } from '../../components/ui/Carousel';
 
 const ORG_SERVICES = SERVICES.filter((s) => s.audience === 'organisation');
 
@@ -45,14 +46,14 @@ export default function OrganisationsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="shell grid items-center gap-12 pb-16 pt-12 lg:grid-cols-[1.15fr_1fr] lg:pt-20">
+      <section className="shell grid items-center gap-8 pb-10 pt-8 sm:gap-12 sm:pb-16 sm:pt-12 lg:grid-cols-[1.15fr_1fr] lg:pt-20">
         <div>
           <p className="eyebrow mb-3">For organisations</p>
           <h1 className="font-display text-display-xl">Healthier people. More thoughtful workplaces.</h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
+          <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft sm:mt-6 sm:text-lg">
             Practical, human-centred mental wellness support for organisations that want to care for their people.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3 sm:mt-8">
             <a href="#enquire" className={buttonClasses('primary', 'lg', 'h-auto min-h-14 w-full py-3 text-center sm:w-auto')}>
               Build a Workplace Wellness Programme
             </a>
@@ -78,7 +79,7 @@ export default function OrganisationsPage() {
             <span className="font-display text-2xl leading-none sm:text-3xl">leaders who listen</span>
             <Companion variant="sprout" mood="hopeful" pose="reach" tone="lavender" size={64} className="self-end sm:h-auto sm:w-[90px]" />
           </div>
-          <div className="relative flex min-h-[10.5rem] sm:aspect-square items-end rounded-card bg-lavender p-5">
+          <div className="relative hidden min-h-[10.5rem] items-end rounded-card bg-lavender p-5 sm:flex sm:aspect-square">
             <Sticker tone="lime" tilt={-6} className="absolute left-3 top-4 text-xs sm:text-sm">
               culture audit
             </Sticker>
@@ -87,7 +88,7 @@ export default function OrganisationsPage() {
             </Sticker>
             <Companion variant="cloud" mood="calm" pose="hug" tone="sky" size={76} className="sm:h-auto sm:w-[100px]" />
           </div>
-          <div className="flex min-h-[10.5rem] sm:aspect-square flex-col justify-between rounded-card bg-rose-soft p-5">
+          <div className="hidden min-h-[10.5rem] flex-col justify-between rounded-card bg-rose-soft p-5 sm:flex sm:aspect-square">
             <span className="font-display text-xl leading-tight sm:text-2xl">burnout isn’t a badge</span>
             <Companion variant="pebble" mood="tired" tone="coral" size={64} className="self-end sm:h-auto sm:w-[90px]" />
           </div>
@@ -95,7 +96,7 @@ export default function OrganisationsPage() {
       </section>
 
       {/* Offerings */}
-      <section className="bg-ivory-deep/60 py-20" aria-labelledby="offer-title">
+      <section className="bg-ivory-deep/60 py-12 sm:py-20" aria-labelledby="offer-title">
         <div className="shell">
           <SectionHeading
             id="offer-title"
@@ -103,9 +104,16 @@ export default function OrganisationsPage() {
             title="Support that fits how your organisation works"
             lede="Every engagement is shaped around your people and your culture. These are the services Imela offers organisations today."
           />
-          <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <Carousel
+            label="Services for organisations"
+            className="mt-8 sm:mt-12"
+            gridFrom="md"
+            gridClassName="md:grid-cols-2 md:gap-4 lg:grid-cols-3"
+            slideClassName="w-[84%] sm:w-[60%]"
+            slideClassNames={['lg:row-span-2']}
+          >
             {ORG_SERVICES.map((s, i) => (
-              <li key={s.id} className={`flex flex-col rounded-card p-6 ${TILE_STYLES[i % TILE_STYLES.length]} ${i === 0 ? 'lg:row-span-2' : ''}`}>
+              <article key={s.id} className={`flex flex-col rounded-card p-6 ${TILE_STYLES[i % TILE_STYLES.length]}`}>
                 <div className="flex items-center justify-between gap-3">
                   <h3 className={`text-xl font-semibold ${i % TILE_STYLES.length === 1 ? 'text-ivory' : ''}`}>{s.name}</h3>
                   <StatusBadge status={s.status} />
@@ -125,9 +133,9 @@ export default function OrganisationsPage() {
                 >
                   Enquire about {s.name.toLowerCase()} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
-              </li>
+              </article>
             ))}
-            <li className="flex flex-col rounded-card border-2 border-dashed border-ink/20 bg-paper/70 p-6">
+            <article className="flex flex-col rounded-card border-2 border-dashed border-ink/20 bg-paper/70 p-6">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-xl font-semibold">Team workshops</h3>
               </div>
@@ -135,8 +143,8 @@ export default function OrganisationsPage() {
                 Interactive sessions on stress, burnout, communication and resilience, delivered as part of the wellbeing training
                 above and tailored to your teams.
               </p>
-            </li>
-            <li className="flex flex-col rounded-card border-2 border-dashed border-ink/20 bg-paper/70 p-6">
+            </article>
+            <article className="flex flex-col rounded-card border-2 border-dashed border-ink/20 bg-paper/70 p-6">
               <div className="flex items-center justify-between gap-3">
                 <h3 className="text-xl font-semibold">Wellbeing assessments</h3>
                 <StatusBadge status="awaiting_verification" />
@@ -145,31 +153,37 @@ export default function OrganisationsPage() {
                 Imela is confirming which validated, properly licensed workplace wellbeing assessments it will offer. Until then,
                 assessment forms part of the culture audit conversation.
               </p>
-            </li>
-          </ul>
+            </article>
+          </Carousel>
         </div>
       </section>
 
       {/* Method */}
-      <section className="shell py-20" aria-labelledby="method-title">
+      <section className="shell py-12 sm:py-20" aria-labelledby="method-title">
         <SectionHeading id="method-title" eyebrow="How we work" title="From understanding your culture to measuring change" />
-        <ol className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <Carousel
+          label="How a workplace engagement unfolds"
+          className="mt-8 sm:mt-12"
+          gridFrom="md"
+          gridClassName="md:grid-cols-2 md:gap-6 lg:grid-cols-4"
+          slideClassName="w-[80%] sm:w-[55%]"
+        >
           {METHOD.map((m, i) => (
-            <li key={m.step} className="relative rounded-card bg-paper p-6 shadow-soft">
+            <div key={m.step} className="relative rounded-card bg-paper p-6 shadow-soft">
               <span className="font-display text-5xl text-lavender-ink">{m.step}</span>
               <h3 className="mt-2 text-lg font-semibold">{m.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{m.text}</p>
               {i < METHOD.length - 1 && (
                 <ArrowRight className="absolute -right-5 top-1/2 hidden h-6 w-6 -translate-y-1/2 text-ink-soft lg:block" aria-hidden />
               )}
-            </li>
+            </div>
           ))}
-        </ol>
+        </Carousel>
       </section>
 
       {/* Privacy promise */}
       <section className="shell" aria-labelledby="privacy-title">
-        <div className="grid gap-10 rounded-blob bg-ink-strong p-8 text-ivory sm:p-12 lg:grid-cols-[1.2fr_1fr]">
+        <div className="grid gap-6 rounded-blob bg-ink-strong p-6 text-ivory sm:gap-10 sm:p-12 lg:grid-cols-[1.2fr_1fr]">
           <div>
             <p className="font-hand text-2xl text-lime">A promise to your employees</p>
             <h2 id="privacy-title" className="mt-2 font-display text-display-md text-ivory">
@@ -180,14 +194,14 @@ export default function OrganisationsPage() {
               participation with small groups suppressed.
             </p>
           </div>
-          <ul className="grid gap-4 text-sm">
+          <ul className="grid gap-2.5 text-sm sm:gap-4">
             {[
               { icon: EyeOff, text: 'No names, notes or session content are ever shared with employers.' },
               { icon: Users, text: 'Participation figures are shown only for groups of five or more; smaller numbers are hidden.' },
               { icon: BarChart3, text: 'Reports show programme-level trends, never individuals.' },
               { icon: Lock, text: 'Access is enforced by the database itself, not just by what the website displays.' },
             ].map(({ icon: Icon, text }) => (
-              <li key={text} className="flex gap-3 rounded-2xl bg-ivory/10 p-4">
+              <li key={text} className="flex gap-3 rounded-2xl bg-ivory/10 p-3 sm:p-4">
                 <Icon className="mt-0.5 h-5 w-5 shrink-0 text-lime" aria-hidden />
                 {text}
               </li>
@@ -197,8 +211,8 @@ export default function OrganisationsPage() {
       </section>
 
       {/* Clients */}
-      <section className="py-20" aria-labelledby="clients-title">
-        <div className="shell mb-8">
+      <section className="py-12 sm:py-20" aria-labelledby="clients-title">
+        <div className="shell mb-6 sm:mb-8">
           <h2 id="clients-title" className="text-center font-display text-display-sm">
             Organisations Karen and the Imela team have worked with
           </h2>
@@ -208,8 +222,8 @@ export default function OrganisationsPage() {
       </section>
 
       {/* Enquiry */}
-      <section id="enquire" className="scroll-mt-28 bg-lavender-soft py-20" aria-labelledby="enquire-title">
-        <div className="shell grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+      <section id="enquire" className="scroll-mt-28 bg-lavender-soft py-12 sm:py-20" aria-labelledby="enquire-title">
+        <div className="shell grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-12">
           <div>
             <SectionHeading
               id="enquire-title"

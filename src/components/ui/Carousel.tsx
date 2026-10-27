@@ -133,7 +133,7 @@ export function Carousel({
         onKeyDown={onKeyDown}
         aria-label={`${label} — swipe or use arrow keys`}
         className={cn(
-          'scrollbar-hide flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-2 focus-visible:rounded-card',
+          'scrollbar-hide relative flex snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain pb-2 focus-visible:rounded-card',
           bleed && '-mx-[var(--gutter)] scroll-px-[var(--gutter)] px-[var(--gutter)]',
           grid?.track,
           gridClassName

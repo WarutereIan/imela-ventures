@@ -102,8 +102,11 @@ export interface RolesState {
 export function useRoles(user: User | null): RolesState {
   const [state, setState] = useState<RolesState>({ roles: [], loading: Boolean(user), error: null });
 
+  // Keyed on the user id: session refreshes hand us a new user object for the
+  // same person, and re-checking then would briefly blank whole screens.
+  const userId = user?.id ?? null;
   useEffect(() => {
-    if (!user || !config.platformDbReady) {
+    if (!userId || !config.platformDbReady) {
       setState({ roles: [], loading: false, error: null });
       return;
     }
@@ -112,7 +115,7 @@ export function useRoles(user: User | null): RolesState {
     supabase
       .from('user_roles')
       .select('role')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .then(({ data, error }) => {
         if (!active) return;
         if (error) setState({ roles: [], loading: false, error: 'We couldn’t check your access right now.' });
@@ -121,7 +124,7 @@ export function useRoles(user: User | null): RolesState {
     return () => {
       active = false;
     };
-  }, [user]);
+  }, [userId]);
 
   return state;
 }

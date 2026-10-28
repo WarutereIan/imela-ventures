@@ -51,6 +51,7 @@ serious problems:
 | `20261027000005_organisations.sql` | `organisations`, `organisation_members`, `corporate_programmes`, `programme_events` (counts only); nullable `sessions.org_id`; `org_utilisation_summary()` with **k = 5 suppression**. Org admins can never read `sessions`. |
 | `20261027000006_enquiries.sql` | `enquiries` table for organisation, individual-by-enquiry and general contact requests. Public may insert `status = 'new'` only; admins read/update. |
 | `20261028000007_persona_portal.sql` | **Imela anonymous counselling portal** — see "Persona portal" below. |
+| `20261029000008_admin_console.sql` | **Admin console** — notification inbox filled by triggers (bookings, cancellations, enquiries, anonymous cases and replies; never copies messages), `admin_summary()` counters, team management (`admin_staff_directory`, `admin_set_role`, `admin_link_practitioner`, all audited), internal notes on bookings/enquiries, and Realtime for the console. |
 
 All migrations are **idempotent and non-destructive**: they only create
 objects or add nullable columns, and drop only the four legacy policies named
@@ -176,6 +177,15 @@ someone's words to an external AI provider is a cross-border transfer of
 sensitive personal data under the Kenya Data Protection Act, 2019.
 
 ---
+
+## Admin console (migration 0008)
+
+The console at `/admin` brings everything together: Overview, Bookings, anonymous Cases, Enquiries, Articles, Availability (weekly hours and closed days, which the booking page follows), Notifications and Team & access.
+
+- **Live updates.** The migration adds `admin_notifications`, `sessions`, `enquiries` and `persona_cases` to the `supabase_realtime` publication, so new activity appears instantly. Realtime still applies RLS. Without Realtime, the console refreshes every minute.
+- **Who sees what.** Booking and enquiry notifications are admin-only. Anonymous-case notifications are visible to admins and counsellors. Notifications never copy client messages or case text.
+- **Giving access.** The person creates an account on the `/admin` sign-in page, then an admin adds them under **Team & access**. Counsellors use `/staff/persona`; admins see the same case screens inside the console.
+- **Tests.** `supabase/tests/admin_console_rls.sql` (33 assertions) covers who can read, change and create notifications, the summary and the role functions.
 
 ## Persona portal (anonymous counselling)
 

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useStaffBase } from './basePath';
 import { AlertTriangle, ArrowRight } from 'lucide-react';
 import type { StaffCase } from '../../domain/personaPortal/types';
 import { CaseStatusBadge, UrgencyBadge } from './badges';
@@ -14,6 +15,7 @@ function waiting(c: StaffCase): string {
 const isOpenCrisis = (c: StaffCase) => c.urgency === 'crisis_review' && c.status !== 'closed';
 
 export function CaseList({ cases: input, counsellorName }: { cases: StaffCase[]; counsellorName: (id: string | null) => string }) {
+  const base = useStaffBase();
   // Open crisis-review cases are always pinned to the top, whatever order the data arrives in.
   const cases = [...input.filter(isOpenCrisis), ...input.filter((c) => !isOpenCrisis(c))];
   const crisis = cases.filter(isOpenCrisis);
@@ -35,7 +37,7 @@ export function CaseList({ cases: input, counsellorName }: { cases: StaffCase[];
         {cases.map((c) => (
           <li key={c.id}>
             <Link
-              to={`/staff/persona/${c.id}`}
+              to={`${base}/${c.id}`}
               className={`block rounded-card border bg-paper p-4 shadow-soft ${c.urgency === 'crisis_review' ? 'border-2 border-rose' : 'border-line/10'}`}
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
@@ -89,7 +91,7 @@ export function CaseList({ cases: input, counsellorName }: { cases: StaffCase[];
                 <td className="px-3 py-3">{counsellorName(c.assigned_to)}</td>
                 <td className="whitespace-nowrap px-3 py-3">{formatDay(c.follow_up_on)}</td>
                 <td className="py-3 pl-3 pr-5 text-right">
-                  <Link to={`/staff/persona/${c.id}`} className="inline-flex items-center gap-1 font-semibold text-lavender-ink hover:underline" aria-label={`Open case ${c.persona_code}`}>
+                  <Link to={`${base}/${c.id}`} className="inline-flex items-center gap-1 font-semibold text-lavender-ink hover:underline" aria-label={`Open case ${c.persona_code}`}>
                     Open <ArrowRight className="h-4 w-4" aria-hidden />
                   </Link>
                 </td>

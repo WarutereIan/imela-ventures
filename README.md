@@ -62,12 +62,19 @@ supabase/
   functions/     Hardened booking emails; optional provider-agnostic persona-respond
 ```
 
+### Admin console
+
+- `/admin` (admins only): Overview with live counters, Bookings (confirm & email, call, WhatsApp, internal notes, agenda view), anonymous Cases (the counsellor screens, under `/admin/cases`), Enquiries, Articles (editor with preview), Availability (weekly hours and closed days that the booking page follows), Notifications (inbox, email and pop-up alerts) and Team & access.
+- Phones and tablets get their own glass tab bar (Overview, Bookings, Cases, Enquiries, More) with live badges; desktops get a sidebar.
+- Needs migration `0008` (`supabase/migrations/20261029000008_admin_console.sql`). Without it, bookings, enquiries, articles and availability still work, and the console says what to run.
+- `scripts/build-apply-all.sh` regenerates `supabase/apply_all.sql` after adding a migration.
+
 ### Imela (anonymous counselling)
 
 - `/persona` is the landing page. `/persona/start` gets you a Persona ID, lets you choose concerns and share (optionally), then submits. `/persona/access` is for returning. `/persona/space` holds the private inbox, threads, resources and settings (rotate the secret, delete). `/persona/explore` is the browser-only guided reflection tool.
 - `/staff/persona` is the counsellor case queue and audited case view. `/staff/persona/admin` holds workload, triage rules and access history (admins only).
 - Identity: each Persona is a Supabase Auth user, created server-side by `persona-register` with a synthetic login. The recovery secret is its password (hashed by Supabase, never visible to staff). The Persona ID alone never grants access.
-- Privacy is enforced in the database (`supabase/migrations/20261028000007_persona_portal.sql`): Personas see only their own records, through a narrow view. Internal notes and triage fields are staff-only. Staff changes go through audited functions, and rate limits live in triggers. There are 74 authorization assertions in `supabase/tests/`.
+- Privacy is enforced in the database (`supabase/migrations/20261028000007_persona_portal.sql`): Personas see only their own records, through a narrow view. Internal notes and triage fields are staff-only. Staff changes go through audited functions, and rate limits live in triggers. There are 107 authorization assertions in `supabase/tests/`.
 - Sessions are kept in memory (or, optionally, until the tab closes), never in localStorage, and end after 15 minutes of inactivity.
 - Before launch:
   - Confirm the safeguarding procedure text on the staff crisis panels.

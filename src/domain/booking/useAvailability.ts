@@ -16,7 +16,7 @@ export function useAvailability() {
     setState({ status: 'loading' });
     try {
       const snapshot = await fetchAvailability(today);
-      setState({ status: 'ready', snapshot, days: buildSchedule({ today, booked: snapshot.booked, closed: snapshot.closed }) });
+      setState({ status: 'ready', snapshot, days: buildSchedule({ today, booked: snapshot.booked, closed: snapshot.closed, weekly: snapshot.weekly }) });
     } catch {
       // Live availability failed; times can still be requested and are confirmed by the team.
       setState({ status: 'error', days: buildSchedule({ today, booked: new Set(), closed: new Set() }) });

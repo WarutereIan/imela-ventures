@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useStaffBase } from '../../components/staffPersona/basePath';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, KeyRound } from 'lucide-react';
 import { StaffGate, type StaffContext } from '../../components/staffPersona/StaffGate';
@@ -140,6 +141,7 @@ function TriagePanel({ userId }: { userId: string }) {
 }
 
 function AuditPanel({ nameFor }: { nameFor: (id: string | null) => string }) {
+  const base = useStaffBase();
   const [events, setEvents] = useState<AuditEvent[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [action, setAction] = useState('');
@@ -205,7 +207,7 @@ function AuditPanel({ nameFor }: { nameFor: (id: string | null) => string }) {
                   <td className="px-3 py-2">{ACTION_LABEL[e.action] ?? e.action}</td>
                   <td className="px-3 py-2">
                     {e.entity_id ? (
-                      <Link to={`/staff/persona/${e.entity_id}`} className="font-mono text-lavender-ink hover:underline">
+                      <Link to={`${base}/${e.entity_id}`} className="font-mono text-lavender-ink hover:underline">
                         {e.entity_id.slice(0, 8)}
                       </Link>
                     ) : (
@@ -222,11 +224,12 @@ function AuditPanel({ nameFor }: { nameFor: (id: string | null) => string }) {
   );
 }
 
-function AdminWorkspace({ ctx }: { ctx: StaffContext }) {
+export function AdminWorkspace({ ctx }: { ctx: StaffContext }) {
+  const base = useStaffBase();
   const { nameFor } = useCounsellors(ctx.user.id);
   return (
     <div className="space-y-6">
-      <Link to="/staff/persona" className={buttonClasses('ghost', 'sm')}>
+      <Link to={base} className={buttonClasses('ghost', 'sm')}>
         <ArrowLeft className="h-4 w-4" aria-hidden /> Cases
       </Link>
       <div className="grid gap-6 lg:grid-cols-2">

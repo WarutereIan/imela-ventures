@@ -1,8 +1,7 @@
 import React, { lazy } from 'react';
 import { createBrowserRouter, type RouteObject } from 'react-router-dom';
 import SiteLayout from './components/layout/SiteLayout';
-import { NotFoundPage, RouteError } from './components/layout/PageStates';
-import { WithTabBar } from './components/layout/WithTabBar';
+import { NotFoundPage, PageLoader, RouteError } from './components/layout/PageStates';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const WhoWeArePage = lazy(() => import('./pages/WhoWeArePage'));
@@ -32,7 +31,20 @@ const PortalPage = lazy(() => import('./pages/portal/PortalPage'));
 const PractitionerPage = lazy(() => import('./pages/practitioner/PractitionerPage'));
 const PrivacyPage = lazy(() => import('./pages/legal/PrivacyPage'));
 const TermsPage = lazy(() => import('./pages/legal/TermsPage'));
-const AdminRoute = lazy(() => import('./components/AdminRoute'));
+const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'));
+const AdminOverview = lazy(() => import('./pages/admin/OverviewPage'));
+const AdminBookings = lazy(() => import('./pages/admin/BookingsPage'));
+const AdminEnquiries = lazy(() => import('./pages/admin/EnquiriesPage'));
+const AdminArticles = lazy(() => import('./pages/admin/ArticlesPage'));
+const AdminAvailability = lazy(() => import('./pages/admin/AvailabilityPage'));
+const AdminNotifications = lazy(() => import('./pages/admin/NotificationsPage'));
+const AdminTeam = lazy(() => import('./pages/admin/TeamPage'));
+const AdminCases = lazy(() => import('./pages/admin/CasesPages').then((m) => ({ default: m.AdminCasesPage })));
+const AdminCase = lazy(() => import('./pages/admin/CasesPages').then((m) => ({ default: m.AdminCasePage })));
+const AdminCaseSettings = lazy(() => import('./pages/admin/CasesPages').then((m) => ({ default: m.AdminCaseSettingsPage })));
+
+/** Admin sections load on demand; a light spinner shows meanwhile. */
+const adminPage = (el: React.ReactNode) => <React.Suspense fallback={<PageLoader />}>{el}</React.Suspense>;
 // Development-only design reference; tree-shaken from production builds.
 const CompanionsGallery = import.meta.env.DEV ? lazy(() => import('./pages/dev/CompanionsGallery')) : null;
 
@@ -81,14 +93,26 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    // The admin console has its own sidebar and its own phone tab bar.
     path: '/admin',
     errorElement: <RouteError />,
     element: (
-      <WithTabBar>
-        <React.Suspense fallback={null}>
-          <AdminRoute />
-        </React.Suspense>
-      </WithTabBar>
+      <React.Suspense fallback={<PageLoader />}>
+        <AdminLayout />
+      </React.Suspense>
     ),
+    children: [
+      { index: true, element: adminPage(<AdminOverview />) },
+      { path: 'bookings', element: adminPage(<AdminBookings />) },
+      { path: 'cases', element: adminPage(<AdminCases />) },
+      { path: 'cases/settings', element: adminPage(<AdminCaseSettings />) },
+      { path: 'cases/:caseId', element: adminPage(<AdminCase />) },
+      { path: 'enquiries', element: adminPage(<AdminEnquiries />) },
+      { path: 'articles', element: adminPage(<AdminArticles />) },
+      { path: 'availability', element: adminPage(<AdminAvailability />) },
+      { path: 'notifications', element: adminPage(<AdminNotifications />) },
+      { path: 'team', element: adminPage(<AdminTeam />) },
+      { path: '*', element: <NotFoundPage /> },
+    ],
   },
 ]);

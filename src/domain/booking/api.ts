@@ -1,11 +1,13 @@
 import { isMissingFunction, isSupabaseConfigured, supabase } from '../../lib/supabase';
 import type { Service } from '../../data/types';
-import { BOOKING_WINDOW_DAYS, addDays, slotKey } from './slots';
+import { BOOKING_WINDOW_DAYS, addDays, slotKey, weeklyFromRows } from './slots';
 import type { ContactDetails } from './validation';
 
 export interface AvailabilitySnapshot {
   booked: Set<string>;
   closed: Set<string>;
+  /** Opening hours from the admin console, when set. */
+  weekly: Map<number, string[]> | null;
   /**
    * `live`: booked slots came from the database.
    * `unknown`: the availability RPC isn't deployed yet; any time can be
@@ -20,20 +22,22 @@ export async function fetchAvailability(today: string): Promise<AvailabilitySnap
   const to = addDays(today, BOOKING_WINDOW_DAYS);
   const booked = new Set<string>();
   const closed = new Set<string>();
-  if (!isSupabaseConfigured) return { booked, closed, source: 'unknown' };
+  if (!isSupabaseConfigured) return { booked, closed, weekly: null, source: 'unknown' };
 
-  const [bookedRes, closedRes] = await Promise.all([
+  const [bookedRes, closedRes, hoursRes] = await Promise.all([
     supabase.rpc('get_booked_slots', { from_date: from, to_date: to }),
     supabase.rpc('get_closed_dates', { from_date: from, to_date: to }),
+    supabase.from('availability_slots').select('weekday, slot_time, active'),
   ]);
+  const weekly = hoursRes.error ? null : weeklyFromRows((hoursRes.data ?? []) as { weekday: number; slot_time: string; active: boolean }[]);
 
   if (bookedRes.error) {
-    if (isMissingFunction(bookedRes.error)) return { booked, closed, source: 'unknown' };
+    if (isMissingFunction(bookedRes.error)) return { booked, closed, weekly, source: 'unknown' };
     throw new Error('availability_unavailable');
   }
   for (const row of (bookedRes.data ?? []) as { date: string; time: string }[]) booked.add(slotKey(row.date, row.time));
   if (!closedRes.error) for (const row of (closedRes.data ?? []) as { date: string }[]) closed.add(row.date);
-  return { booked, closed, source: 'live' };
+  return { booked, closed, weekly, source: 'live' };
 }
 
 export type BookingOutcome =

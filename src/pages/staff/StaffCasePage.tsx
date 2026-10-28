@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useStaffBase } from '../../components/staffPersona/basePath';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Eye } from 'lucide-react';
 import { StaffGate, type StaffContext } from '../../components/staffPersona/StaffGate';
@@ -30,7 +31,8 @@ import { Alert, Spinner } from '../../components/ui/primitives';
 import { buttonClasses } from '../../components/ui/Button';
 import { useDocumentTitle } from '../../lib/useDocumentTitle';
 
-function CaseWorkspace({ ctx, caseId }: { ctx: StaffContext; caseId: string }) {
+export function CaseWorkspace({ ctx, caseId }: { ctx: StaffContext; caseId: string }) {
+  const base = useStaffBase();
   const [detail, setDetail] = useState<CaseDetail | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [draft, setDraft] = useState('');
@@ -87,7 +89,7 @@ function CaseWorkspace({ ctx, caseId }: { ctx: StaffContext; caseId: string }) {
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link to="/staff/persona" className={buttonClasses('ghost', 'sm')}>
+        <Link to={base} className={buttonClasses('ghost', 'sm')}>
           <ArrowLeft className="h-4 w-4" aria-hidden /> All cases
         </Link>
         <p className="flex items-center gap-1.5 text-xs text-ink-soft">

@@ -113,7 +113,7 @@ export function TabBar({ onUrgentHelp }: { onUrgentHelp: () => void }) {
                   <span
                     key={`p${anim}`}
                     className={cn(
-                      'persona-glow -mt-7 grid h-14 w-14 place-items-center rounded-full border-4 border-ivory text-white transition-colors duration-calm',
+                      'persona-glow pointer-events-none -mt-7 grid h-14 w-14 place-items-center rounded-full border-4 border-ivory text-white transition-colors duration-calm',
                       isActive ? 'bg-ink-strong' : 'bg-lavender-ink',
                       anim ? 'tab-pop' : ''
                     )}
@@ -128,7 +128,7 @@ export function TabBar({ onUrgentHelp }: { onUrgentHelp: () => void }) {
             const inner = (
               <>
                 {ripple}
-                <span key={`i${anim}`} className={cn('relative grid h-7 w-7 place-items-center', anim ? 'tab-pop' : '')}>
+                <span key={`i${anim}`} className={cn('pointer-events-none relative grid h-7 w-7 place-items-center', anim ? 'tab-pop' : '')}>
                   <Icon
                     className={cn('h-[1.35rem] w-[1.35rem] transition-colors duration-calm', isActive ? 'text-lavender-ink' : 'text-ink-soft')}
                     strokeWidth={isActive ? 2.4 : 1.9}

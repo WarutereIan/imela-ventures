@@ -15,7 +15,7 @@ import { cn } from '../../lib/cn';
 type Scope = CaseFilters['scope'];
 const POLL_MS = 60_000;
 
-function CasesDashboard({ ctx }: { ctx: StaffContext }) {
+export function CasesDashboard({ ctx }: { ctx: StaffContext }) {
   const [scope, setScope] = useState<Scope>('queue');
   const [status, setStatus] = useState<CaseStatus | 'open' | ''>('open');
   const [urgency, setUrgency] = useState<Urgency | ''>('');

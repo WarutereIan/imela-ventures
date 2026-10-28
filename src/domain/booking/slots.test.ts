@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDays, buildSchedule, nairobiDate, slotKey, weekdayOf } from './slots';
+import { addDays, buildSchedule, nairobiDate, slotKey, weekdayOf, weeklyFromRows } from './slots';
 import { validateContact, validateNeed } from './validation';
 
 describe('schedule', () => {
@@ -38,5 +38,20 @@ describe('validation', () => {
     expect(validateNeed('hi')).toBeTruthy();
     expect(validateNeed('x'.repeat(1001))).toBeTruthy();
     expect(validateNeed('I feel overwhelmed')).toBeNull();
+  });
+});
+
+describe('opening hours from the admin console', () => {
+  it('uses each weekday’s own times, sorted, and can open a Saturday', () => {
+    const weekly = weeklyFromRows([
+      { weekday: 5, slot_time: '02:00 PM', active: true },
+      { weekday: 5, slot_time: '09:00 AM', active: true },
+      { weekday: 5, slot_time: '10:00 AM', active: false },
+      { weekday: 6, slot_time: '10:00 AM', active: true },
+    ]);
+    // 2026-10-30 Fri, 2026-10-31 Sat, 2026-11-02 Mon (no hours)
+    const days = buildSchedule({ today: '2026-10-29', booked: new Set(), closed: new Set(), days: 4, weekly });
+    expect(days.map((d) => d.date)).toEqual(['2026-10-30', '2026-10-31']);
+    expect(days[0].slots.map((s) => s.time)).toEqual(['09:00 AM', '02:00 PM']);
   });
 });

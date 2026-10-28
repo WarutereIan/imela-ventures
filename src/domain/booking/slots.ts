@@ -36,20 +36,47 @@ export function slotKey(date: string, time: string) {
  * Builds selectable days from tomorrow (Nairobi time) for the booking window.
  * Weekends and closed dates are excluded; booked slots are marked unavailable.
  */
+/** Minutes since midnight for a '09:00 AM' style time, for sorting. */
+export function timeToMinutes(time: string): number {
+  const m = time.match(/^(\d{1,2}):(\d{2}) (AM|PM)$/);
+  if (!m) return 0;
+  return ((Number(m[1]) % 12) + (m[3] === 'PM' ? 12 : 0)) * 60 + Number(m[2]);
+}
+
+/** Groups active weekly slots (from the admin's opening hours) by weekday. */
+export function weeklyFromRows(rows: { weekday: number; slot_time: string; active: boolean }[]): Map<number, string[]> {
+  const map = new Map<number, string[]>();
+  for (const r of rows) {
+    if (!r.active) continue;
+    map.set(r.weekday, [...(map.get(r.weekday) ?? []), r.slot_time]);
+  }
+  for (const [d, times] of map) map.set(d, times.sort((a, b) => timeToMinutes(a) - timeToMinutes(b)));
+  return map;
+}
+
+/**
+ * Builds selectable days from tomorrow (Nairobi time) for the booking window.
+ * With `weekly` (opening hours set in the admin console) each weekday offers
+ * its own times; without it, weekdays use the default times and weekends are
+ * closed. Closed dates are excluded; booked slots are marked unavailable.
+ */
 export function buildSchedule(opts: {
   today: string;
   booked: Set<string>;
   closed: Set<string>;
   days?: number;
   slotTimes?: string[];
+  weekly?: Map<number, string[]> | null;
 }): DaySlots[] {
-  const { today, booked, closed, days = BOOKING_WINDOW_DAYS, slotTimes = DEFAULT_SLOT_TIMES } = opts;
+  const { today, booked, closed, days = BOOKING_WINDOW_DAYS, slotTimes = DEFAULT_SLOT_TIMES, weekly } = opts;
   const out: DaySlots[] = [];
   for (let i = 1; i <= days; i += 1) {
     const date = addDays(today, i);
     const weekday = weekdayOf(date);
-    if (weekday === 0 || weekday === 6 || closed.has(date)) continue;
-    out.push({ date, weekday, slots: slotTimes.map((time) => ({ time, available: !booked.has(slotKey(date, time)) })) });
+    if (closed.has(date)) continue;
+    const times = weekly && weekly.size ? weekly.get(weekday) ?? [] : weekday === 0 || weekday === 6 ? [] : slotTimes;
+    if (!times.length) continue;
+    out.push({ date, weekday, slots: times.map((time) => ({ time, available: !booked.has(slotKey(date, time)) })) });
   }
   return out;
 }

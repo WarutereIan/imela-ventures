@@ -89,25 +89,33 @@ export interface RolesState {
   roles: Role[];
   loading: boolean;
   error: string | null;
+  /**
+   * True once the role tables exist in the database (the platform migrations
+   * are applied) — detected by reading user_roles, or forced on with
+   * VITE_PLATFORM_DB_READY=true. No redeploy is needed after migrating.
+   */
+  dbReady: boolean;
 }
+
+const MISSING_TABLE = ['42P01', 'PGRST205', 'PGRST106'];
 
 /**
  * Reads the signed-in user's roles from `user_roles` (RLS: a user can read only
- * their own rows). Only runs once the platform migrations are applied.
+ * their own rows). If the table doesn't exist yet, the migrations haven't been applied: `dbReady` is false.
  *
  * IMPORTANT: roles in the browser are a convenience for showing the right
  * screens. They are NOT access control — every protected table is guarded by
  * row-level security in the database, which is what actually keeps data safe.
  */
 export function useRoles(user: User | null): RolesState {
-  const [state, setState] = useState<RolesState>({ roles: [], loading: Boolean(user), error: null });
+  const [state, setState] = useState<RolesState>({ roles: [], loading: Boolean(user), error: null, dbReady: config.platformDbReady });
 
   // Keyed on the user id: session refreshes hand us a new user object for the
   // same person, and re-checking then would briefly blank whole screens.
   const userId = user?.id ?? null;
   useEffect(() => {
-    if (!userId || !config.platformDbReady) {
-      setState({ roles: [], loading: false, error: null });
+    if (!userId || !isSupabaseConfigured) {
+      setState({ roles: [], loading: false, error: null, dbReady: config.platformDbReady });
       return;
     }
     let active = true;
@@ -118,8 +126,9 @@ export function useRoles(user: User | null): RolesState {
       .eq('user_id', userId)
       .then(({ data, error }) => {
         if (!active) return;
-        if (error) setState({ roles: [], loading: false, error: 'We couldn’t check your access right now.' });
-        else setState({ roles: ((data ?? []) as { role: Role }[]).map((r) => r.role), loading: false, error: null });
+        if (error && MISSING_TABLE.includes(error.code ?? '')) setState({ roles: [], loading: false, error: null, dbReady: config.platformDbReady });
+        else if (error) setState({ roles: [], loading: false, error: 'We couldn’t check your access right now.', dbReady: true });
+        else setState({ roles: ((data ?? []) as { role: Role }[]).map((r) => r.role), loading: false, error: null, dbReady: true });
       });
     return () => {
       active = false;

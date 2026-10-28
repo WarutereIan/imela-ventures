@@ -20,7 +20,7 @@ vi.mock('../../lib/config', () => ({
 
 vi.mock('../../lib/auth', () => ({
   useAuth: () => authState,
-  useRoles: () => ({ roles, loading: false, error: null }),
+  useRoles: () => ({ roles, loading: false, error: null, dbReady: true }),
 }));
 
 vi.mock('../../domain/resources', () => ({

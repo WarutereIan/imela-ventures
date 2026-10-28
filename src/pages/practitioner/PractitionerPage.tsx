@@ -278,9 +278,9 @@ function PractitionerDashboard({ user }: { user: User }) {
 export default function PractitionerPage() {
   useDocumentTitle('Practitioner workspace');
   const auth = useAuth();
-  const { roles, loading: rolesLoading, error: rolesError } = useRoles(auth.user);
+  const { roles, loading: rolesLoading, error: rolesError, dbReady } = useRoles(auth.user);
 
-  if (!config.platformDbReady) {
+  if (auth.user && !rolesLoading && !dbReady) {
     return (
       <SetupPending title="Practitioner workspace">
         <p>Practitioners will see only the appointments assigned to them, with private session notes that no one else can read.</p>

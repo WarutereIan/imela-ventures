@@ -29,7 +29,7 @@ A design reference for the character system is available at `/dev/companions` in
 | Variable | Default | Purpose |
 | --- | --- | --- |
 | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | — | Public Supabase values. Never put the service-role key in the front end. |
-| `VITE_PLATFORM_DB_READY` | `false` | Set to `true` only after applying `supabase/migrations`. Turns on role checks in admin, the practitioner and organisation workspaces, and portal data. |
+| `VITE_PLATFORM_DB_READY` | `false` | Optional. The site detects applied migrations by itself (it checks that `user_roles` exists) and then turns on role checks. Setting `true` forces them on. |
 | `VITE_ENABLE_CLIENT_PORTAL` | `false` | Optional client accounts. Also requires `VITE_PLATFORM_DB_READY=true`. |
 | `VITE_PERSONA_AI_ENABLED` | `false` | Optional AI reflections in the "explore privately" guide. Requires the `persona-respond` Edge Function and provider secrets. Each person must also opt in. |
 | `VITE_PERSONA_PORTAL_ENABLED` | `false` | Imela anonymous counselling (Persona ID + recovery secret). Requires migration 0007 and the `persona-register` / `persona-account` Edge Functions. Staff pages also need `VITE_PLATFORM_DB_READY=true`. |

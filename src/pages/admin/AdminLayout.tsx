@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { AlertTriangle, Bell, ChevronRight, ExternalLink, LayoutGrid, LogOut, X } from 'lucide-react';
 import { useAuth, useRoles } from '../../lib/auth';
-import { config } from '../../lib/config';
 import { isSupabaseConfigured } from '../../lib/supabase';
 import { useDocumentTitle } from '../../lib/useDocumentTitle';
 import { cn } from '../../lib/cn';
@@ -39,7 +38,7 @@ function GateFrame({ children }: { children: React.ReactNode }) {
 export default function AdminLayout() {
   useDocumentTitle('Admin');
   const auth = useAuth();
-  const { roles, loading: rolesLoading, error: rolesError } = useRoles(auth.user);
+  const { roles, loading: rolesLoading, error: rolesError, dbReady } = useRoles(auth.user);
 
   if (auth.loading || (auth.user && rolesLoading)) {
     return (
@@ -69,7 +68,7 @@ export default function AdminLayout() {
       </GateFrame>
     );
   }
-  if (config.platformDbReady) {
+  if (dbReady) {
     if (rolesError) {
       return (
         <GateFrame>
@@ -84,6 +83,7 @@ export default function AdminLayout() {
         <GateFrame>
           <div className="w-full max-w-md space-y-4">
             <AccessDenied what="Imela administrators" onSignOut={auth.signOut} />
+            {!roles.includes('practitioner') && <NotAdminBanner email={auth.user.email ?? ''} owner />}
             {roles.includes('practitioner') && (
               <p className="text-center text-sm text-ink-soft">
                 Counsellors can answer anonymous cases in the{' '}
@@ -101,7 +101,7 @@ export default function AdminLayout() {
 
   return (
     <AdminProvider user={auth.user} signOut={auth.signOut}>
-      <Console />
+      <Console dbReady={dbReady} />
     </AdminProvider>
   );
 }
@@ -127,7 +127,7 @@ function SidebarLink({ item }: { item: AdminNavItem }) {
   );
 }
 
-function Console() {
+function Console({ dbReady }: { dbReady: boolean }) {
   const { user, signOut, summary, notAdmin } = useAdmin();
   const { pathname } = useLocation();
   const migrationMissing = summary === 'missing';
@@ -166,12 +166,12 @@ function Console() {
       <div className="min-w-0">
         <TopBar />
         <main id="main" className="shell max-w-6xl space-y-6 pb-[calc(var(--tabbar-offset)+2rem)] pt-5 lg:pb-12 lg:pt-8">
-          {!config.platformDbReady && (
+          {!dbReady && (
             <div role="note" className="flex gap-3 rounded-card border-2 border-rose/50 bg-rose-soft p-4 text-sm text-rose-ink">
               <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
               <p>
-                <strong>Security setup pending.</strong> Set <code>VITE_PLATFORM_DB_READY=true</code> in Vercel once the database migrations are applied, so
-                only administrators can open this console.
+                <strong>Database setup pending.</strong> Run <code>supabase/apply_all.sql</code> in the Supabase SQL Editor, then reload this page. Until
+                then, any signed-in account can open this console.
               </p>
             </div>
           )}
@@ -462,14 +462,16 @@ function AdminMoreSheet({ open, onClose }: { open: boolean; onClose: () => void 
  * Row-level security then hides cases, bookings and enquiries, so the console
  * would otherwise look empty with no explanation.
  */
-function NotAdminBanner({ email }: { email: string }) {
+function NotAdminBanner({ email, owner = false }: { email: string; owner?: boolean }) {
   const sql = `insert into public.user_roles (user_id, role)\nselect id, 'admin' from auth.users where email = '${email.replace(/'/g, "''")}'\non conflict do nothing;`;
   const [copied, setCopied] = useState(false);
   return (
     <div role="alert" className="rounded-card border-2 border-rose bg-rose-soft p-4 text-sm text-rose-ink sm:p-5">
       <p className="flex items-start gap-2 font-semibold">
         <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
-        This login ({email}) isn't an administrator in the database yet, so cases, bookings and enquiries are hidden from it.
+        {owner
+          ? `Setting up Imela? Make ${email} the first administrator.`
+          : `This login (${email}) isn't an administrator in the database yet, so cases, bookings and enquiries are hidden from it.`}
       </p>
       <p className="mt-2 text-ink">
         In Supabase, open <strong>SQL Editor</strong>, run the line below, then reload this page. Your data is safe — it's only hidden from accounts without the

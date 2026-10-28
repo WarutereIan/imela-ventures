@@ -12,8 +12,6 @@ export interface StaffContext {
   signOut: () => Promise<void>;
 }
 
-/** The staff Persona tools need both the platform migrations and the portal migration (0007). */
-const staffPersonaReady = config.platformDbReady && config.personaPortalEnabled;
 
 /**
  * Sign-in, role check and setup gate for the staff Persona pages.
@@ -38,7 +36,9 @@ export function StaffGate({
   children: (ctx: StaffContext) => React.ReactNode;
 }) {
   const auth = useAuth();
-  const { roles, loading: rolesLoading, error: rolesError } = useRoles(auth.user);
+  const { roles, loading: rolesLoading, error: rolesError, dbReady } = useRoles(auth.user);
+  // The staff Persona tools need the portal switched on and the platform migrations applied (detected at runtime).
+  const staffPersonaReady = config.personaPortalEnabled && (dbReady || rolesLoading || !auth.user);
 
   if (!staffPersonaReady) {
     return (

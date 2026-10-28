@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CalendarDays, EyeOff, Receipt } from 'lucide-react';
-import { config } from '../../lib/config';
 import { supabase } from '../../lib/supabase';
 import { useAuth, useRoles } from '../../lib/auth';
 import { useDocumentTitle } from '../../lib/useDocumentTitle';
@@ -197,18 +196,18 @@ function OrgDashboard({ orgId }: { orgId: string }) {
 export default function OrgWorkspacePage() {
   useDocumentTitle('Organisation workspace');
   const auth = useAuth();
-  const { roles, loading: rolesLoading, error: rolesError } = useRoles(auth.user);
+  const { roles, loading: rolesLoading, error: rolesError, dbReady } = useRoles(auth.user);
   const [selectedOrg, setSelectedOrg] = useState<string | null>(null);
 
   const memberships = useAsync<Membership[]>(
-    config.platformDbReady && auth.user && roles.includes('org_admin')
+    dbReady && auth.user && roles.includes('org_admin')
       ? async () =>
           unwrap(await supabase.from('organisation_members').select('org_id, organisations(name)').eq('user_id', auth.user!.id).eq('role', 'org_admin'))
       : null,
     [auth.user?.id, roles.join(',')]
   );
 
-  if (!config.platformDbReady) {
+  if (auth.user && !rolesLoading && !dbReady) {
     return (
       <SetupPending title="Organisation workspace">
         <p>

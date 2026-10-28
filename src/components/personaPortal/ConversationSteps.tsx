@@ -6,7 +6,7 @@ import { screenForRisk } from '../../domain/safety';
 import { CrisisContacts } from '../layout/UrgentHelp';
 import { Alert } from '../ui/primitives';
 import { Button } from '../ui/Button';
-import { PrivacyLimits, StepHeading } from './shared';
+import { PrivacyLimits, StepActions, StepHeading } from './shared';
 import { cn } from '../../lib/cn';
 
 /** Step: choose one or more support areas. */
@@ -59,13 +59,11 @@ export function ConcernStep({
           Please choose at least one area — “Other / not sure yet” is fine.
         </p>
       )}
-      <div className="mt-8 flex flex-wrap justify-between gap-3">
-        {onBack ? (
+      <StepActions>
+        {onBack && (
           <Button variant="ghost" onClick={onBack}>
             Back
           </Button>
-        ) : (
-          <span />
         )}
         <Button
           onClick={() => {
@@ -76,9 +74,9 @@ export function ConcernStep({
             onNext();
           }}
         >
-          Continue
+          {value.length === 0 ? 'Choose at least one' : `Continue · ${value.length} chosen`}
         </Button>
-      </div>
+      </StepActions>
     </div>
   );
 }
@@ -167,14 +165,14 @@ export function StoryStep({
         </Alert>
       )}
 
-      <div className="mt-8 flex flex-wrap justify-between gap-3">
+      <StepActions>
         <Button variant="ghost" onClick={onBack} disabled={submitting}>
           Back
         </Button>
         <Button variant="accent" onClick={onSubmit} disabled={submitting}>
           {submitting ? 'Sending…' : 'Send to a counsellor'}
         </Button>
-      </div>
+      </StepActions>
     </div>
   );
 }

@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, EyeOff, LifeBuoy, ShieldCheck, UserRoundX } from 'lucide-react';
 import { createCase, portalAvailable, registerPersona, signInPersona, type NewPersona } from '../../../domain/personaPortal/api';
 import type { PortalConcern, PreferredSupport } from '../../../domain/personaPortal/types';
-import { CredentialCard, PrivacyLimits, StepHeading } from '../../../components/personaPortal/shared';
+import { CredentialCard, PrivacyLimits, StepActions, StepHeading } from '../../../components/personaPortal/shared';
 import { ConcernStep, StoryStep } from '../../../components/personaPortal/ConversationSteps';
 import { createCaseErrorMessage } from '../../../components/personaPortal/text';
 import { Alert } from '../../../components/ui/primitives';
@@ -19,11 +19,16 @@ const LABELS = ['Privacy', 'Your ID', 'Support', 'Your words', 'Sent'];
 function Progress({ step }: { step: Step }) {
   const current = ORDER.indexOf(step);
   return (
-    <ol className="flex items-center gap-1.5" aria-label={`Step ${current + 1} of ${ORDER.length}: ${LABELS[current]}`}>
-      {ORDER.map((s, i) => (
-        <li key={s} className={cn('h-1.5 flex-1 rounded-full', i <= current ? 'bg-lavender-ink' : 'bg-ink/10')} aria-hidden />
-      ))}
-    </ol>
+    <div>
+      <ol className="flex items-center gap-1.5" aria-hidden>
+        {ORDER.map((s, i) => (
+          <li key={s} className={cn('h-1.5 flex-1 rounded-full transition-colors duration-calm', i <= current ? 'bg-lavender-ink' : 'bg-ink/10')} />
+        ))}
+      </ol>
+      <p className="mt-2 text-xs font-semibold text-ink-soft">
+        Step {current + 1} of {ORDER.length} · {LABELS[current]}
+      </p>
+    </div>
   );
 }
 
@@ -47,12 +52,16 @@ export default function CreatePersonaPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-  const [lastFive, setLastFive] = useState('');
   const [confirmError, setConfirmError] = useState<string | null>(null);
   const [concerns, setConcerns] = useState<PortalConcern[]>([]);
   const [story, setStory] = useState('');
   const [support, setSupport] = useState<PreferredSupport>('not_sure');
   const [caseId, setCaseId] = useState<string | null>(null);
+
+  // Each step starts at the top, not wherever the last button was.
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [step]);
 
   if (!portalAvailable) {
     return (
@@ -83,17 +92,13 @@ export default function CreatePersonaPage() {
       return;
     }
     setPersona(res.data);
+    setStep('credentials');
   };
 
   const confirmSaved = async () => {
     if (!persona) return;
-    const expected = persona.recoverySecret.slice(-5);
     if (!saved) {
-      setConfirmError('Please confirm you have saved your recovery secret.');
-      return;
-    }
-    if (lastFive.replace(/[\s-]/g, '').toUpperCase().replace(/O/g, '0').replace(/[IL]/g, '1') !== expected) {
-      setConfirmError("Those characters don't match the end of your recovery secret. Please check what you saved.");
+      setConfirmError('Copy or download your recovery secret first, or tick the box once you have written it down.');
       return;
     }
     setConfirmError(null);
@@ -130,100 +135,116 @@ export default function CreatePersonaPage() {
       <div className="mt-8">
         {step === 'consent' && (
           <div>
-            <StepHeading eyebrow="Before you begin">Here's how your privacy works</StepHeading>
-            <div className="mt-6 rounded-card bg-paper p-5 shadow-soft sm:p-6">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.12em] text-ink">What we keep</h2>
-              <p className="mt-2 text-ink">
-                The support areas you choose, what you write, and when messages were sent. Closed conversations are deleted after a retention period (currently up to
-                one year). You can delete everything yourself at any time from your space.
+            <StepHeading eyebrow="Before you begin">Talk to a counsellor, without telling us who you are</StepHeading>
+            <ul className="mt-6 grid gap-3">
+              {[
+                { icon: UserRoundX, title: 'No name, email or phone number', text: 'You get a Persona ID and a recovery secret instead of an account.' },
+                { icon: EyeOff, title: 'Only your counsellor reads it', text: 'They see what you write, never who you are. You can delete everything at any time.' },
+                { icon: LifeBuoy, title: 'Not an emergency service', text: 'Replies come from real people during working hours. In danger? Call 999 or 112.' },
+              ].map(({ icon: Icon, title, text }) => (
+                <li key={title} className="flex gap-3 rounded-card bg-paper p-4 shadow-soft">
+                  <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-lavender-soft text-lavender-ink">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span>
+                    <span className="block font-semibold text-ink-strong">{title}</span>
+                    <span className="mt-0.5 block text-sm leading-relaxed text-ink">{text}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <details className="mt-4 rounded-2xl bg-paper/80 p-4 shadow-soft">
+              <summary className="cursor-pointer text-sm font-semibold text-ink-strong">Read the full privacy details</summary>
+              <p className="mt-3 text-sm leading-relaxed text-ink">
+                We keep the support areas you choose, what you write, and when messages were sent. Closed conversations are deleted after a retention period
+                (currently up to one year).
               </p>
-              <h2 className="mt-5 text-sm font-semibold uppercase tracking-[0.12em] text-ink">Who sees it, and the limits</h2>
               <div className="mt-3">
                 <PrivacyLimits />
               </div>
-            </div>
-            <label className="mt-6 flex items-start gap-3 text-ink">
-              <input type="checkbox" className="mt-1 h-4 w-4 accent-[#2A2623]" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
-              <span>
-                I understand how my information is handled, and I agree to it being stored to provide counselling support.{' '}
+            </details>
+            <label
+              className={cn(
+                'mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 text-ink transition-colors',
+                agreed ? 'border-ink-strong bg-lavender-soft' : 'border-line/15 bg-paper'
+              )}
+            >
+              <input type="checkbox" className="mt-1 h-5 w-5 accent-[#2A2623]" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+              <span className="text-sm leading-relaxed">
+                I understand how my information is handled and agree to it being stored to provide counselling support.{' '}
                 <Link to="/privacy#persona" className="font-semibold underline underline-offset-2" target="_blank" rel="noreferrer">
                   Privacy notice
                 </Link>
               </span>
             </label>
-            <div className="mt-8 flex flex-wrap justify-between gap-3">
+            {error && (
+              <Alert tone="danger" className="mt-5" live>
+                {error}
+              </Alert>
+            )}
+            <StepActions>
               <Link to="/persona" className={buttonClasses('ghost')}>
                 Back
               </Link>
-              <Button disabled={!agreed} onClick={() => setStep('credentials')}>
-                Continue <ArrowRight className="h-4 w-4" aria-hidden />
+              <Button
+                disabled={busy}
+                onClick={() => {
+                  if (!agreed) {
+                    setError('Please tick the box above to agree, then continue.');
+                    return;
+                  }
+                  void create();
+                }}
+              >
+                {busy ? 'Creating your ID…' : 'Get my Persona ID'} {!busy && <ArrowRight className="h-4 w-4" aria-hidden />}
               </Button>
-            </div>
+            </StepActions>
           </div>
         )}
 
-        {step === 'credentials' && (
+        {step === 'credentials' && persona && (
           <div>
-            <StepHeading eyebrow="Your Persona ID">{persona ? 'Save your recovery secret now' : 'Create your Persona ID'}</StepHeading>
-            {!persona ? (
-              <>
-                <p className="mt-3 text-ink-soft">
-                  We'll create a Persona ID and a private recovery secret for you. You'll need both to come back. Nothing about you is asked for or stored with them.
-                </p>
-                {error && (
-                  <Alert tone="danger" className="mt-5" live>
-                    {error}
-                  </Alert>
-                )}
-                <div className="mt-8 flex flex-wrap justify-between gap-3">
-                  <Button variant="ghost" onClick={() => setStep('consent')} disabled={busy}>
-                    Back
-                  </Button>
-                  <Button onClick={create} disabled={busy}>
-                    {busy ? 'Creating…' : 'Create my Persona ID'}
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <>
-                <Alert tone="warning" className="mt-5" title="This is the only time we can show your recovery secret">
-                  Imela never sees it and can't reset it — there's no email or phone recovery. If you lose it, you lose access to this space. Copy it, download it,
-                  or write it down somewhere only you can reach.
-                </Alert>
-                <div className="mt-5">
-                  <CredentialCard personaCode={persona.personaCode} recoverySecret={persona.recoverySecret} />
-                </div>
-                <div className="mt-6 space-y-4 rounded-card bg-paper p-5 shadow-soft">
-                  <label className="flex items-start gap-3 text-ink">
-                    <input type="checkbox" className="mt-1 h-4 w-4 accent-[#2A2623]" checked={saved} onChange={(e) => setSaved(e.target.checked)} />
-                    I've saved my recovery secret somewhere safe.
-                  </label>
-                  <div>
-                    <label htmlFor="last-five" className="text-sm font-semibold text-ink-strong">
-                      To check, type the last 5 characters of your recovery secret
-                    </label>
-                    <input
-                      id="last-five"
-                      value={lastFive}
-                      onChange={(e) => setLastFive(e.target.value.slice(0, 7))}
-                      autoComplete="off"
-                      spellCheck={false}
-                      className="mt-1.5 block w-40 rounded-2xl border border-line/20 bg-paper px-4 py-2.5 font-mono text-lg uppercase tracking-widest focus:border-lavender-ink focus:outline-none focus:ring-2 focus:ring-lavender-ink/30"
-                    />
-                  </div>
-                  {confirmError && (
-                    <p role="alert" className="text-sm font-medium text-danger">
-                      {confirmError}
-                    </p>
-                  )}
-                </div>
-                <div className="mt-8 flex justify-end">
-                  <Button onClick={confirmSaved} disabled={busy}>
-                    {busy ? 'Opening your space…' : 'I have saved it — continue'}
-                  </Button>
-                </div>
-              </>
+            <StepHeading eyebrow="Your Persona ID is ready">Save these two things</StepHeading>
+            <p className="mt-3 text-ink">
+              You'll need both to come back and read your counsellor's reply. This is the only time we can show your recovery secret — Imela can't reset it.
+            </p>
+            <div className="mt-5">
+              <CredentialCard
+                personaCode={persona.personaCode}
+                recoverySecret={persona.recoverySecret}
+                onSaved={() => {
+                  setSaved(true);
+                  setConfirmError(null);
+                }}
+              />
+            </div>
+            <label
+              className={cn(
+                'mt-5 flex cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 text-ink transition-colors',
+                saved ? 'border-ink-strong bg-lavender-soft' : 'border-line/15 bg-paper'
+              )}
+            >
+              <input
+                type="checkbox"
+                className="mt-1 h-5 w-5 accent-[#2A2623]"
+                checked={saved}
+                onChange={(e) => {
+                  setSaved(e.target.checked);
+                  setConfirmError(null);
+                }}
+              />
+              <span className="text-sm leading-relaxed">I've saved my Persona ID and recovery secret somewhere only I can reach.</span>
+            </label>
+            {confirmError && (
+              <p role="alert" className="mt-3 text-sm font-medium text-danger">
+                {confirmError}
+              </p>
             )}
+            <StepActions>
+              <Button onClick={confirmSaved} disabled={busy}>
+                {busy ? 'Opening your space…' : 'Continue'} {!busy && <ArrowRight className="h-4 w-4" aria-hidden />}
+              </Button>
+            </StepActions>
           </div>
         )}
 

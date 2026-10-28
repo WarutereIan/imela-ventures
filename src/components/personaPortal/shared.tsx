@@ -68,12 +68,25 @@ export function PrivacyLimits({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function CopyButton({ value, label }: { value: string; label: string }) {
+/**
+ * Buttons for a step. On phones they stay pinned just above the tab bar, so
+ * the next action is always in reach without scrolling to the bottom.
+ */
+export function StepActions({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="sticky bottom-[var(--tabbar-offset)] z-20 -mx-[var(--gutter)] mt-6 flex items-center gap-3 border-t border-line/10 bg-ivory/95 px-[var(--gutter)] py-3 backdrop-blur sm:static sm:mx-0 sm:mt-8 sm:border-0 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none [&>*:last-child]:ml-auto [&>*:last-child]:flex-1 sm:[&>*:last-child]:flex-none">
+      {children}
+    </div>
+  );
+}
+
+function CopyButton({ value, label, onCopied }: { value: string; label: string; onCopied?: () => void }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
+      onCopied?.();
       window.setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
@@ -88,7 +101,16 @@ function CopyButton({ value, label }: { value: string; label: string }) {
 }
 
 /** Shows a Persona ID and/or recovery secret with copy and download actions. */
-export function CredentialCard({ personaCode, recoverySecret }: { personaCode?: string; recoverySecret?: string }) {
+export function CredentialCard({
+  personaCode,
+  recoverySecret,
+  onSaved,
+}: {
+  personaCode?: string;
+  recoverySecret?: string;
+  /** Called when the secret is copied or downloaded. */
+  onSaved?: () => void;
+}) {
   return (
     <div className="space-y-4 rounded-card border-2 border-ink-strong bg-paper p-5 shadow-sticker sm:p-6">
       {personaCode && (
@@ -105,12 +127,16 @@ export function CredentialCard({ personaCode, recoverySecret }: { personaCode?: 
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-rose-ink">Recovery secret — keep private</p>
           <div className="mt-1.5 flex flex-wrap items-center justify-between gap-3">
             <code className="break-all font-mono text-xl font-bold tracking-wider text-ink-strong sm:text-2xl">{formatRecoverySecret(recoverySecret)}</code>
-            <CopyButton value={formatRecoverySecret(recoverySecret)} label="recovery secret" />
+            <CopyButton value={formatRecoverySecret(recoverySecret)} label="recovery secret" onCopied={onSaved} />
           </div>
         </div>
       )}
       {personaCode && recoverySecret && (
-        <Button size="sm" variant="outline" onClick={() => downloadText('imela-persona.txt', credentialsText(personaCode, recoverySecret))}>
+        <Button size="sm" variant="outline" onClick={() => {
+            downloadText('imela-persona.txt', credentialsText(personaCode, recoverySecret));
+            onSaved?.();
+          }}
+        >
           <Download className="h-4 w-4" aria-hidden /> Download as a text file
         </Button>
       )}

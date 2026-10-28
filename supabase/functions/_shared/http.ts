@@ -1,12 +1,31 @@
 // Shared helpers for Imela edge functions (Deno).
 
+/**
+ * ALLOWED_ORIGIN may list several origins separated by commas. The www and
+ * non-www forms of each are both allowed, since sites are often reachable at
+ * either. Unset means any origin.
+ */
+const allowedOrigins = (Deno.env.get('ALLOWED_ORIGIN') ?? '')
+  .split(',')
+  .map((o) => o.trim().replace(/\/+$/, ''))
+  .filter(Boolean)
+  .flatMap((o) => {
+    const m = o.match(/^(https?:\/\/)(www\.)?(.+)$/);
+    return m ? [`${m[1]}${m[3]}`, `${m[1]}www.${m[3]}`] : [o];
+  });
+
 export const corsHeaders: Record<string, string> = {
-  // Tighten to your production origin by setting ALLOWED_ORIGIN.
-  'Access-Control-Allow-Origin': Deno.env.get('ALLOWED_ORIGIN') ?? '*',
+  'Access-Control-Allow-Origin': allowedOrigins[0] ?? '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
   Vary: 'Origin',
 };
+
+/** Reflects the caller's origin when it is on the allow-list. Call once per request. */
+export function applyCors(req: Request) {
+  const origin = req.headers.get('Origin');
+  if (allowedOrigins.length && origin && allowedOrigins.includes(origin)) corsHeaders['Access-Control-Allow-Origin'] = origin;
+}
 
 export function json(body: unknown, status = 200, extraHeaders: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
@@ -40,6 +59,7 @@ export function clientIp(req: Request): string {
 }
 
 export function preflight(req: Request): Response | null {
+  applyCors(req);
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   if (req.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
   return null;

@@ -71,8 +71,10 @@ Deno.serve(async (req) => {
     if (createError || !created?.user) {
       // A clash with an existing login means the generated ID is taken: try another.
       const status = (createError as { status?: number } | null)?.status;
-      if (status === 422 || /already/i.test(createError?.message ?? '')) continue;
-      console.error('persona_register_create_failed', status ?? 'unknown');
+      const code = (createError as { code?: string } | null)?.code ?? '';
+      if (/already|exists/i.test(`${code} ${createError?.message ?? ''}`)) continue;
+      // e.g. email_address_invalid: PERSONA_LOGIN_DOMAIN was rejected by Supabase Auth.
+      console.error('persona_register_create_failed', status ?? 'unknown', code || 'no_code');
       return json({ error: 'failed' }, 500);
     }
 

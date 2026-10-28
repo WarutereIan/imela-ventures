@@ -4,7 +4,8 @@
  * the flag, so the live site never exposes features its database cannot
  * protect.
  */
-const flag = (value: string | undefined) => value === 'true';
+/** Tolerates stray spaces, quotes and capitals, which are easy to add when pasting into a hosting dashboard. */
+const flag = (value: string | undefined) => ['true', '1', 'yes', 'on'].includes((value ?? '').trim().replace(/^["']|["']$/g, '').toLowerCase());
 
 export const config = {
   /** Set once migrations 0001–0005 are applied (roles, RLS, portal, organisations). */

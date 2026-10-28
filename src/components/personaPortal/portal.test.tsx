@@ -82,49 +82,45 @@ describe('Create Persona wizard', () => {
     const user = userEvent.setup();
     api.registerPersona.mockResolvedValue({ ok: true, data: { personaCode: 'IMP-7K3Q-9XWD-2MRA', recoverySecret: SECRET } });
     at('/persona/start', <CreatePersonaPage />);
-    const cont = screen.getByRole('button', { name: /Continue/ });
-    expect(cont).toBeDisabled();
-    await user.click(screen.getByRole('checkbox'));
-    await user.click(cont);
-    await user.click(screen.getByRole('button', { name: /Create my Persona ID/ }));
+    const get = screen.getByRole('button', { name: /Get my Persona ID/ });
+    await user.click(get);
+    expect(screen.getByRole('alert')).toHaveTextContent(/tick the box/);
+    expect(api.registerPersona).not.toHaveBeenCalled();
+    await user.click(screen.getByRole('checkbox', { name: /I understand/ }));
+    await user.click(get);
     await screen.findByText('IMP-7K3Q-9XWD-2MRA');
     return user;
   }
 
-  it('shows the secret once and requires saving confirmation and the last 5 characters', async () => {
+  async function toConcerns(user: ReturnType<typeof userEvent.setup>) {
+    await user.click(screen.getByRole('checkbox', { name: /I've saved/ }));
+    api.signInPersona.mockResolvedValue({ ok: true, data: { personaCode: 'IMP-7K3Q-9XWD-2MRA' } });
+    await user.click(screen.getByRole('button', { name: /^Continue/ }));
+    await screen.findByRole('heading', { name: /Choose what feels closest/ });
+  }
+
+  it('shows the secret once and asks the person to save it before continuing', async () => {
     const user = await toCredentials();
     expect(screen.getByText('ABCDE-01234-56789-FGHJK-MNPQR-STVWX')).toBeInTheDocument();
-    const next = screen.getByRole('button', { name: /I have saved it/ });
+    const next = screen.getByRole('button', { name: /^Continue/ });
 
     await user.click(next);
-    expect(screen.getByRole('alert')).toHaveTextContent(/confirm you have saved/);
-
-    await user.click(screen.getByRole('checkbox', { name: /saved my recovery secret/ }));
-    await user.type(screen.getByLabelText(/last 5 characters/), 'WRONG');
-    await user.click(next);
-    expect(screen.getByRole('alert')).toHaveTextContent(/don't match/);
+    expect(screen.getByRole('alert')).toHaveTextContent(/Copy or download/);
     expect(api.signInPersona).not.toHaveBeenCalled();
 
-    await user.clear(screen.getByLabelText(/last 5 characters/));
-    await user.type(screen.getByLabelText(/last 5 characters/), 'stvwx');
-    api.signInPersona.mockResolvedValue({ ok: true, data: { personaCode: 'IMP-7K3Q-9XWD-2MRA' } });
-    await user.click(next);
+    await toConcerns(user);
     expect(api.signInPersona).toHaveBeenCalledWith('IMP-7K3Q-9XWD-2MRA', SECRET, false);
-    expect(await screen.findByRole('heading', { name: /Choose what feels closest/ })).toBeInTheDocument();
   });
 
   it('requires at least one concern, then sends the case and confirms only after success', async () => {
     const user = await toCredentials();
-    await user.click(screen.getByRole('checkbox', { name: /saved my recovery secret/ }));
-    await user.type(screen.getByLabelText(/last 5 characters/), 'STVWX');
-    api.signInPersona.mockResolvedValue({ ok: true, data: { personaCode: 'IMP-7K3Q-9XWD-2MRA' } });
-    await user.click(screen.getByRole('button', { name: /I have saved it/ }));
+    await toConcerns(user);
 
-    await user.click(await screen.findByRole('button', { name: /Continue/ }));
+    await user.click(screen.getByRole('button', { name: /Choose at least one/ }));
     expect(screen.getByRole('alert')).toHaveTextContent(/at least one area/);
 
     await user.click(screen.getByRole('checkbox', { name: /Grief and loss/ }));
-    await user.click(screen.getByRole('button', { name: /Continue/ }));
+    await user.click(screen.getByRole('button', { name: /Continue · 1 chosen/ }));
 
     api.createCase.mockResolvedValueOnce({ ok: false, reason: 'network' });
     await user.click(screen.getByRole('button', { name: /Send to a counsellor/ }));
@@ -140,11 +136,8 @@ describe('Create Persona wizard', () => {
 
   it('shows crisis contacts when the story suggests risk, without blocking it', async () => {
     const user = await toCredentials();
-    await user.click(screen.getByRole('checkbox', { name: /saved my recovery secret/ }));
-    await user.type(screen.getByLabelText(/last 5 characters/), 'STVWX');
-    api.signInPersona.mockResolvedValue({ ok: true, data: { personaCode: 'IMP-7K3Q-9XWD-2MRA' } });
-    await user.click(screen.getByRole('button', { name: /I have saved it/ }));
-    await user.click(await screen.findByRole('checkbox', { name: /Stress and anxiety/ }));
+    await toConcerns(user);
+    await user.click(screen.getByRole('checkbox', { name: /Stress and anxiety/ }));
     await user.click(screen.getByRole('button', { name: /Continue/ }));
     await user.type(screen.getByLabelText(/What's been happening/), "I don't want to live anymore");
     expect(screen.getByText('999 or 112')).toBeInTheDocument();

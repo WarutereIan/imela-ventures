@@ -55,6 +55,7 @@ function renderAdmin(path: string, el: React.ReactNode, toast = vi.fn()) {
     user: { id: 'admin-1', email: 'admin@example.com' } as User,
     signOut: vi.fn(async () => {}),
     summary,
+    notAdmin: false,
     notifications: [],
     unread: 0,
     live: false,

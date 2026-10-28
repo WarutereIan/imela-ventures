@@ -14,6 +14,8 @@ export interface AdminState {
   signOut: () => Promise<void>;
   /** null while loading; 'missing' until migration 0008 is applied. */
   summary: AdminSummary | 'missing' | null;
+  /** True when the database says this login is not an administrator (RLS then hides cases, bookings and enquiries). */
+  notAdmin: boolean;
   notifications: AdminNotification[];
   unread: number;
   live: boolean;

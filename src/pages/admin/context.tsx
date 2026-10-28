@@ -37,6 +37,7 @@ const POLL_MS = 60_000;
  */
 export function AdminProvider({ user, signOut, children }: { user: User; signOut: () => Promise<void>; children: React.ReactNode }) {
   const [summary, setSummary] = useState<AdminSummary | 'missing' | null>(null);
+  const [notAdmin, setNotAdmin] = useState(false);
   const [notifications, setNotifications] = useState<AdminNotification[]>([]);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [live, setLive] = useState(false);
@@ -53,6 +54,7 @@ export function AdminProvider({ user, signOut, children }: { user: User; signOut
     const [s, n] = await Promise.all([fetchSummary(), listNotifications()]);
     if (s.ok) setSummary(s.data);
     else if (s.reason === 'missing') setSummary('missing');
+    setNotAdmin(!s.ok && s.reason === 'forbidden');
     if (n.ok) setNotifications(n.data);
   }, []);
 
@@ -105,7 +107,7 @@ export function AdminProvider({ user, signOut, children }: { user: User; signOut
   const unread = notifications.filter((n) => !n.read_at).length;
 
   return (
-    <AdminContext.Provider value={{ user, signOut, summary, notifications, unread, live, refresh, markRead, toast }}>
+    <AdminContext.Provider value={{ user, signOut, summary, notAdmin, notifications, unread, live, refresh, markRead, toast }}>
       {children}
       <Toasts toasts={toasts} onDismiss={(id) => setToasts((prev) => prev.filter((x) => x.id !== id))} />
     </AdminContext.Provider>

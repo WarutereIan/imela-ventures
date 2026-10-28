@@ -128,7 +128,7 @@ function SidebarLink({ item }: { item: AdminNavItem }) {
 }
 
 function Console() {
-  const { user, signOut, summary } = useAdmin();
+  const { user, signOut, summary, notAdmin } = useAdmin();
   const { pathname } = useLocation();
   const migrationMissing = summary === 'missing';
 
@@ -175,6 +175,7 @@ function Console() {
               </p>
             </div>
           )}
+          {notAdmin && <NotAdminBanner email={user.email ?? ''} />}
           {migrationMissing && (
             <Alert tone="warning" title="One database update to go">
               Run <code className="break-all">supabase/migrations/20261029000008_admin_console.sql</code> in the Supabase SQL Editor to switch on live counters,
@@ -453,5 +454,35 @@ function AdminMoreSheet({ open, onClose }: { open: boolean; onClose: () => void 
       </div>
     </div>,
     document.body
+  );
+}
+
+/**
+ * Shown when the database does not recognise this login as an administrator.
+ * Row-level security then hides cases, bookings and enquiries, so the console
+ * would otherwise look empty with no explanation.
+ */
+function NotAdminBanner({ email }: { email: string }) {
+  const sql = `insert into public.user_roles (user_id, role)\nselect id, 'admin' from auth.users where email = '${email.replace(/'/g, "''")}'\non conflict do nothing;`;
+  const [copied, setCopied] = useState(false);
+  return (
+    <div role="alert" className="rounded-card border-2 border-rose bg-rose-soft p-4 text-sm text-rose-ink sm:p-5">
+      <p className="flex items-start gap-2 font-semibold">
+        <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0" aria-hidden />
+        This login ({email}) isn't an administrator in the database yet, so cases, bookings and enquiries are hidden from it.
+      </p>
+      <p className="mt-2 text-ink">
+        In Supabase, open <strong>SQL Editor</strong>, run the line below, then reload this page. Your data is safe — it's only hidden from accounts without the
+        admin role.
+      </p>
+      <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-all rounded-2xl bg-paper p-3 font-mono text-xs text-ink-strong">{sql}</pre>
+      <button
+        type="button"
+        onClick={() => void navigator.clipboard?.writeText(sql).then(() => setCopied(true))}
+        className={buttonClasses('outline', 'sm', 'mt-3 bg-paper')}
+      >
+        {copied ? 'Copied' : 'Copy SQL'}
+      </button>
+    </div>
   );
 }

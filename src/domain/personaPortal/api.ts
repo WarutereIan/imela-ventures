@@ -35,14 +35,36 @@ export async function registerPersona(): Promise<Result<NewPersona, 'unavailable
       const status = (error as { context?: { status?: number } }).context?.status;
       if (status === 429) return { ok: false, reason: 'rate_limited' };
       if (status === 503) return { ok: false, reason: 'unavailable' };
-      return { ok: false, reason: isNetworkError(error) ? 'network' : 'failed' };
+      if (status === 404) return { ok: false, reason: 'unavailable' };
+      if (!isNetworkError(error)) return { ok: false, reason: 'failed' };
+      return { ok: false, reason: await unreachableReason() };
     }
     const code = (data as { personaCode?: unknown })?.personaCode;
     const secret = (data as { recoverySecret?: unknown })?.recoverySecret;
     if (typeof code !== 'string' || typeof secret !== 'string') return { ok: false, reason: 'failed' };
     return { ok: true, data: { personaCode: code, recoverySecret: secret } };
   } catch {
-    return { ok: false, reason: 'network' };
+    return { ok: false, reason: await unreachableReason() };
+  }
+}
+
+/**
+ * The browser reports a blocked request the same way as a dropped connection.
+ * That happens when `persona-register` is not deployed, or its ALLOWED_ORIGIN
+ * secret does not include this site: the request never gets a readable reply.
+ * So ask the rest of the backend whether it answers. If it does, the person's
+ * connection is fine and the service is what is missing.
+ */
+async function unreachableReason(): Promise<'unavailable' | 'network'> {
+  const url = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+  const key = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+  if (!url || !key) return 'unavailable';
+  try {
+    await fetch(`${url}/auth/v1/health`, { headers: { apikey: key }, cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    console.error('persona-register could not be reached although Supabase is up. Check that the function is deployed with --no-verify-jwt and that ALLOWED_ORIGIN includes this site.');
+    return 'unavailable';
+  } catch {
+    return 'network';
   }
 }
 

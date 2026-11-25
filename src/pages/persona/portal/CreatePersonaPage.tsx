@@ -34,7 +34,7 @@ function Progress({ step }: { step: Step }) {
 
 const REGISTER_ERRORS: Record<string, string> = {
   rate_limited: 'Too many new Persona IDs have been requested from this connection. Please try again a little later.',
-  unavailable: 'Anonymous counselling is not available right now. Please try again later.',
+  unavailable: "Anonymous counselling isn't available right now — the problem is on our side, not your connection. Nothing was created. Please try again later.",
   network: "We couldn't reach Imela. Please check your connection and try again.",
   failed: 'Something went wrong while creating your Persona ID. Nothing was created — please try again.',
 };

@@ -124,8 +124,9 @@ const sections: LegalSection[] = [
           Persona.
         </p>
         <p>
-          This website loads fonts from Google Fonts. We do not use advertising trackers. We keep third-party scripts to a minimum, especially on
-          sensitive pages.
+          This website loads fonts from Google Fonts and uses Google Analytics, loaded through Google Tag Manager, to understand how the site is
+          used, such as which pages are visited. Analytics never receives anything you type. We do not use advertising trackers, and we keep
+          third-party scripts to a minimum.
         </p>
       </>
     ),
